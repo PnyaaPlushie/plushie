@@ -1,0 +1,31 @@
+####################################################################################
+# PlushieCStl Config module
+# Provides the "Standard library" for plushie, this is the functions and modules 
+# that I like to reuse a lot
+#
+# NOTE: This is the "LocalDev" install version. This is used for when you're 
+# using cstl and developing something inside cstl at the same time. It will set the
+# include dirs and values to this source dir 
+#
+# Installs using this config shouldn't be used for distributing 
+#
+# Defines :
+#    PlushieCStl_INCLUDE_DIRS
+#    PlushieCStl_FOUND
+####################################################################################
+
+set(PlushieCStlRoot "@_plushie_cstl_root@")
+set(PlushieCStl_INCLUDE_DIRS ${PlushieCStlRoot}/include)
+set(PlushieCStl_FOUND ON)
+
+if(NOT TARGET Plushie::CStl)
+    message(STATUS "[Plushie::CStl] Using local dev install located at ${PlushieCStlRoot}")
+
+    option(PLUSHIE_CSTL_BUILD_HEADER_ONLY "Include the header only library version" @PLUSHIE_CSTL_BUILD_HEADER_ONLY@ )
+    option(PLUSHIE_CSTL_BUILD_SHARED      "Include the shared library version"      @PLUSHIE_CSTL_BUILD_SHARED@)
+    option(PLUSHIE_CSTL_BUILD_STATIC      "Include the static library version"      @PLUSHIE_CSTL_BUILD_STATIC@)
+
+    add_subdirectory(${PlushieCStlRoot} _plushie/cstl)
+endif()
+
+

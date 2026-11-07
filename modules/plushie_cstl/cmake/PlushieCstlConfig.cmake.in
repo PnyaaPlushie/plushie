@@ -1,0 +1,20 @@
+####################################################################################
+# PlushieCStl Config module
+# Provides the "Standard library" for plushie, this is the functions and modules 
+# that I like to reuse a lot
+#
+# Defines :
+#    PlushieCStl_INCLUDE_DIRS
+#    PlushieCStl_FOUND
+####################################################################################
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+if(NOT TARGET Plushie::CStl)
+    include("${CMAKE_CURRENT_LIST_DIR}/PlushieCStlTargets.cmake")
+endif()
+
+check_required_components(PlushieCStl)
+
+set_and_check(PlushieCStl_INCLUDE_DIRS "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
