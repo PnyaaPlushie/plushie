@@ -18,7 +18,7 @@ export PlushieCStl_DIR="$pwd"
 
 ## Testing
 
-The CSTL repo itself should be small in file size, so that a user can download it easily. Obviously we need testing, so we put that in another repo : [GitHub - PnyaaPlushie/plushie_cstl_tests: Test cases for CSTL](https://github.com/PnyaaPlushie/plushie_cstl_tests) This way we can keep our redistributables small, and still validate the actual repo itself
+The CSTL repo itself should be small in file size, so that a user can download it easily. Obviously we need testing, so we put that in the monorepo: [plushie/modules/plushie_cstl_examples_tests at main · PnyaaPlushie/plushie · GitHub](https://github.com/PnyaaPlushie/plushie/tree/main/modules/plushie_cstl_examples_tests) This way we can keep our redistributables small, and still validate the actual repo itself
 
 ## Examples
 
