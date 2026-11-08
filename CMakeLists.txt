@@ -16,12 +16,20 @@ else()
     "Run 'cmake --list-presets' to see the available ones.")
 endif()
 
-# Override the find package behaviour for the modules which we build 
+
 include(FetchContent)
+
+# Use the environment variables to check if the user wants to fetch unitytest
+# as part of the build, useful in CI, since we don't have to manually fetch
+if(DEFINED ENV{PLUSHIE_FETCH_UNITY_TEST})
+	message(STATUS ["Plushie::Root Using fetch content for unity test"])
+	FetchContent_Declare(unity GIT_REPOSITORY https://github.com/ThrowTheSwitch/Unity.git GIT_TAG v2.6.1)
+  FetchContent_MakeAvailable(unity)
+endif()
+
+# Override the find package behaviour for the modules which we build 
 FetchContent_Declare(PlushieCStl SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/modules/plushie_cstl OVERRIDE_FIND_PACKAGE)
 FetchContent_MakeAvailable(PlushieCStl)
-
-
 
 
 set(plushie_search_dirs
