@@ -1,0 +1,354 @@
+{
+
+	"version": 10,
+	"cmakeMinimumRequired": { "major": 3, "minor": 31, "patch": 0 },
+	"$comment": 
+	[
+		"Minimum required version of schema and cmake to parse comment tags (3.31.0, 10)",
+		"Plushie build presets: build/<triple>, one preset per platform"
+	],
+	"configurePresets": 
+	[
+		{
+			"name"           : "base",
+			"$comment"       : "Information that is shared between all of the builds",
+			"hidden"         :  true,
+			"binaryDir"      : "${sourceDir}/build/${hostSystemName}/${presetName}",
+			"installDir"     : "${sourceDir}/install/${hostSystemName}/${presetName}",
+			"toolchainFile"  : "${sourceDir}/cmake/toolchains/${presetName}.cmake",
+			"cacheVariables" :
+			{
+				"PLUSHIE_PRESET_NAME"            : "${presetName}",
+
+				"PLUSHIE_CSTL_BUILD_HEADER_ONLY" : "ON",
+				"PLUSHIE_CSTL_BUILD_SHARED"      : "ON",
+				"PLUSHIE_CSTL_BUILD_STATIC"      : "ON",
+				"PLUSHIE_CSTL_INCLUDE_CXX"       : "ON"
+			}
+		},
+
+		{
+			"name"           : "base-ninja",
+			"hidden"         :  true,
+			"generator"      : "Ninja Multi-Config",
+			"cacheVariables" :
+			{
+				"CMAKE_EXPORT_COMPILE_COMMANDS" : "ON"
+			}
+		},
+
+
+
+		{
+			"name"           : "windows-host",
+			"$comment"       : "Inheriting this ensures the preset is only appears on windows",
+			"hidden"         : true,
+			"condition"      :
+			{
+				"type": "equals",
+        		"lhs" : "${hostSystemName}",
+        		"rhs" : "Windows"
+			}
+		},
+		{
+    		"name"           : "non-windows-host",
+    		"hidden"         : true,
+			"condition"      :
+			{
+				"type": "notEquals",
+        		"lhs" : "${hostSystemName}",
+        		"rhs" : "Windows"
+			}
+    	},
+		{
+      		"name"           : "linux-host",
+      		"hidden"         : true,
+      		"condition"      : 
+      		{
+        		"type": "equals",
+        		"lhs" : "${hostSystemName}",
+        		"rhs" : "Linux"
+      		}
+    	},
+    	
+
+
+    	{
+  			"name"            : "linux-x64-gcc",
+  			"displayName"     : "Linux x64 (GCC)",
+  			"inherits"        : ["base-ninja", "non-windows-host"],
+  			"cacheVariables"  : { "CMAKE_C_COMPILER": "gcc", "CMAKE_CXX_COMPILER": "g++" }
+		},
+		{
+  			"name"            : "linux-x64-clang",
+  			"displayName"     : "Linux x64 (Clang)",
+  			"inherits"        : ["base-ninja", "non-windows-host"],
+  			"cacheVariables"  : { "CMAKE_C_COMPILER": "clang", "CMAKE_CXX_COMPILER": "clang++" }
+		},
+
+
+
+		{
+			"name"           : "windows-x64-msvc",
+			"$comment"       : 
+			[
+				"This is the only preset that doesn't specify a generator",
+				"Because windows auto selects Visual studio generator versions",
+
+				"It is also the only target with a duplicate build that changes",
+				"on the given host, see `windows-x64-msvc-cross`"
+			],
+			"displayName"    : "Windows x64 MSVC (Windows host)",
+			"inherits"       : [ "base", "windows-host" ],
+			"architecture"   : { "value": "x64", "strategy": "set" },
+  			"toolset"        : { "value": "host=x64", "strategy": "set" }
+		},
+
+		{
+			"name"           : "windows-x64-msvc-cross",
+			"$comment"       : 
+			[
+				"Based of `windows-x64-msvc` this is the only preset with a duplicate",
+				"This is here to provide a ninja config on non windows hosts"
+			],
+			"displayName"    : "Windows x64 MSVC (Non Windows host)",
+			"inherits"       : [ "base", "non-windows-host" ],
+			"toolchainFile"  : "${sourceDir}/cmake/toolchains/windows-x64-msvc.cmake"
+		},
+		{
+			"name"           : "windows-x64-clang",
+			"displayName"    : "Windows x64 (Clang)",
+			"inherits"       : [ "base-ninja", "windows-host" ],
+			"cacheVariables" : 
+			{
+				"CMAKE_C_COMPILER"  : "clang",
+    			"CMAKE_CXX_COMPILER": "clang++"
+			}
+		},
+		{
+    		"name"           : "windows-x64-mingw",
+    		"displayName"    : "Windows x64 (MinGW-w64) ",
+    		"inherits"       : [ "base-ninja" ]
+    	},
+
+    	{
+    		"name"           : "linux-arm64-gcc",
+    		"displayName"    : "Linux Arm64 (GCC)",
+    		"$comment"       : "Seems to be most common form of arm64 over clang which still uses libgcc",
+    		"inherits"       : [ "base-ninja", "non-windows-host"]
+    	},
+    	{   
+    		"name"           : "android-arm64-clang",
+    		"displayName"    : "Android Arm64 (NDK)",
+    		"inherits"       : [ "base-ninja" ]
+    	},
+    	
+    	{
+    		"name"           : "macos-arm64-clang",
+    		"displayName"    : "MacOs Apple silicon (Clang)",
+    		"inherits"       : [ "base-ninja", "non-windows-host" ]
+    	},
+
+
+
+
+		{
+			"name": "devkitpro",
+			"hidden": true,
+			"inherits": "base-ninja",
+			"condition": 
+			{
+				"type": "notEquals",
+				"lhs" : "$penv{DEVKITPRO}",
+				"rhs" : ""
+      		}
+	  	},
+	  	{
+	  		"name": "gc-ppc-devkitppc",
+	  		"displayName": "Nintendo gamecube using the devkitpro toolchain",
+	  		"toolchainFile": "$penv{DEVKITPRO}/cmake/Wii.cmake",
+	  		"inherits" : [ "devkitpro" ]
+	  	},
+	  	{
+	  		"name": "wii-ppc-devkitppc",
+	  		"displayName": "Nintendo wii using the devkitpro toolchain",
+	  		"toolchainFile": "$penv{DEVKITPRO}/cmake/Wii.cmake",
+	  		"inherits" : [ "devkitpro" ]
+	  	}
+
+
+	],
+	
+	"buildPresets": 
+	[
+    	{
+    	  "name": "linux-x64-gcc-dbg",
+    	  "configurePreset": "linux-x64-gcc",
+    	  "configuration": "Debug"
+    	},
+    	{
+    	  "name": "linux-x64-gcc-rel",
+    	  "configurePreset": "linux-x64-gcc",
+    	  "configuration": "Release"
+    	},
+
+    	{
+    	  "name": "linux-x64-clang-dbg",
+    	  "configurePreset": "linux-x64-clang",
+    	  "configuration": "Debug"
+    	},
+    	{
+    	  "name": "linux-x64-clang-rel",
+    	  "configurePreset": "linux-x64-clang",
+    	  "configuration": "Release"
+    	},
+
+    	{
+    	  "name": "windows-x64-msvc-dbg",
+    	  "configurePreset": "windows-x64-msvc",
+    	  "configuration": "Debug"
+    	},
+    	{
+    	  "name": "windows-x64-msvc-rel",
+    	  "configurePreset": "windows-x64-msvc",
+    	  "configuration": "Release"
+    	},
+
+    	{
+    	  "name": "windows-x64-msvc-cross-dbg",
+    	  "configurePreset": "windows-x64-msvc-cross",
+    	  "configuration": "Debug"
+    	},
+    	{
+    	  "name": "windows-x64-msvc-cross-rel",
+    	  "configurePreset": "windows-x64-msvc-cross",
+    	  "configuration": "Release"
+    	},
+
+    	{
+    	  "name": "windows-x64-mingw-dbg",
+    	  "configurePreset": "windows-x64-mingw",
+    	  "configuration": "Debug"
+    	},
+    	{
+    	  "name": "windows-x64-mingw-rel",
+    	  "configurePreset": "windows-x64-mingw",
+    	  "configuration": "Release"
+    	},
+
+    	{
+    	  "name": "linux-arm64-gcc-dbg",
+    	  "configurePreset": "linux-arm64-gcc",
+    	  "configuration": "Debug"
+    	},
+    	{
+    	  "name": "linux-arm64-gcc-rel",
+    	  "configurePreset": "linux-arm64-gcc",
+    	  "configuration": "Release"
+    	},
+
+    	{
+    	  "name": "android-arm64-clang-dbg",
+    	  "configurePreset": "android-arm64-clang",
+    	  "configuration": "Debug"
+    	},
+    	{
+    	  "name": "android-arm64-clang-rel",
+    	  "configurePreset": "android-arm64-clang",
+    	  "configuration": "Release"
+    	},
+
+    	{
+    	  "name": "macos-arm64-clang-dbg",
+    	  "configurePreset": "macos-arm64-clang",
+    	  "configuration": "Debug"
+    	},
+    	{
+    	  "name": "macos-arm64-clang-rel",
+    	  "configurePreset": "macos-arm64-clang",
+    	  "configuration": "Release"
+    	},
+
+    	{
+    	  "name": "gc-ppc-devkitppc-dbg",
+    	  "configurePreset": "gc-ppc-devkitppc",
+    	  "configuration": "Debug"
+    	},
+    	{
+    	  "name": "gc-ppc-devkitppc-rel",
+    	  "configurePreset": "gc-ppc-devkitppc",
+    	  "configuration": "Release"
+    	},
+
+    	{
+    	  "name": "wii-ppc-devkitppc-dbg",
+    	  "configurePreset": "wii-ppc-devkitppc",
+    	  "configuration": "Debug"
+    	},
+    	{
+    	  "name": "wii-ppc-devkitppc-rel",
+    	  "configurePreset": "wii-ppc-devkitppc",
+    	  "configuration": "Release"
+    	}
+	],
+
+
+	"testPresets":
+	[
+		{
+			"name": "test-base",
+			"$comment": "Base test which runs all tests, one at a time, stops at first failure",
+			"hidden": true,
+			"output": { "outputOnFailure": true },
+			"execution": 
+			{
+				"jobs": 1,
+				"stopsOnFailure": true,
+				"noTestsAction" : "error"
+			}
+		},
+
+		{
+			"name": "windows-x64-msvc-dbg",
+			"inherits" : [ "test-base" ],
+			"configurePreset": "windows-x64-msvc",
+			"configuration": "Debug",
+			"condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
+		},
+		{
+			"name": "windows-x64-msvc-rel",
+			"inherits" : [ "test-base" ],
+			"configurePreset": "windows-x64-msvc",
+			"configuration": "Release",
+			"condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
+		}
+	],
+
+	"packagePresets":
+	[
+		{
+			"name": "windows-x64-msvc-rel",
+			"configurePreset": "windows-x64-msvc",
+			"configurations": ["Release"],
+			"generators": [ "ZIP" ],
+			"packageDirectory": "${sourceDir}/dist/${hostSystemName}/${presetName}",
+			"condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
+		}
+	],
+
+	"workflowPresets":
+	[
+		{
+			"name": "windows-x64-msvc",
+			"steps":
+			[
+				{ "type": "configure", "name": "windows-x64-msvc"      },
+				{ "type": "build"    , "name": "windows-x64-msvc-dbg"  },
+				{ "type": "test"     , "name": "windows-x64-msvc-dbg"  },
+				{ "type": "build"    , "name": "windows-x64-msvc-rel"  },
+				{ "type": "test"     , "name": "windows-x64-msvc-rel"  },
+				{ "type": "package"  , "name": "windows-x64-msvc-rel"  }
+			]
+		}
+	]
+}
