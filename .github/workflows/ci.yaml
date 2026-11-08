@@ -2,7 +2,7 @@ name: ci
 on: [push, pull_request]
 
 env:
-  PLUSHIE_FETCH_UNITY_TEST": "1"
+  PLUSHIE_FETCH_UNITY_TEST: "1"
 
 jobs:
   windows-x64-msvc:
