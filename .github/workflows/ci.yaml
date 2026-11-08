@@ -1,0 +1,17 @@
+name: ci
+on: [push, pull_request]
+
+jobs:
+  windows-x64-msvc:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: lukka/get-cmake@latest
+
+      - run: cmake --workflow --preset windows-x64-msvc
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-x64-msvc
+          path: dist/Windows/windows-x64-msvc/*.zip
