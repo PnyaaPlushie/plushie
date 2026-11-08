@@ -1,5 +1,7 @@
 # Top-level CMake for scanning subdirectories that contain CMakeLists.txt
 cmake_minimum_required(VERSION 4.0.0 FATAL_ERROR)
+option(PLUSHIE_ROOT_CSTL_ONLY "Should plushie root only configure for cstl for smaller build" OFF)
+
 enable_testing()
 project(Plushie VERSION 0.1.0 LANGUAGES C)
 
@@ -27,46 +29,50 @@ set(plushie_search_dirs
 	modules_lab
 	games)
 
-foreach(search_subdir ${plushie_search_dirs})
+if(${PLUSHIE_ROOT_CSTL_ONLY})
+	add_subdirectory("modules/plushie_cstl")
+	add_subdirectory("modules/plushie_cstl_examples_tests")
+else()
+	foreach(search_subdir ${plushie_search_dirs})
+		
+		# Search for different modules 
+		set(source_dir ${CMAKE_CURRENT_LIST_DIR}/${search_subdir})
+		if(EXISTS ${source_dir})
+			message(STATUS "[Plushie::Root] Loading subdir ${search_subdir}")
+		else()
+			message(STATUS "[Plushie::Root] Skipping empty subdir ${search_subdir}")
+			continue()
+		endif()
 	
-	# Search for different modules 
-	set(source_dir ${CMAKE_CURRENT_LIST_DIR}/${search_subdir})
-	if(EXISTS ${source_dir})
-		message(STATUS "[Plushie::Root] Loading subdir ${search_subdir}")
-	else()
-		message(STATUS "[Plushie::Root] Skipping empty subdir ${search_subdir}")
-		continue()
-	endif()
-
-	# Gather all of the subfolders of the modules
-	file(GLOB CHILD_ENTRIES RELATIVE "${source_dir}" "${source_dir}/*")
-
-	# For each subfile
-	foreach(_entry IN LISTS CHILD_ENTRIES)
-
-		# This should be the path to a subproject 
-		set(_path "${source_dir}/${_entry}")		
-		if(NOT (IS_DIRECTORY "${_path}"))
-			continue()
-		endif()
-
-		# Skip obvious build/artifact directories
-		if(_entry MATCHES "^(build|build_.*|\.git|\.vs)$")
-			continue()
-		endif()
-
-		# Does this project have a CMake list file?
-		if(NOT EXISTS "${_path}/CMakeLists.txt")
-			continue()
-		endif()
-
-		message(STATUS "[Plushie::${search_subdir}] Adding subdirectory: ${_entry}")
-		add_subdirectory(${_path})
-
-
+		# Gather all of the subfolders of the modules
+		file(GLOB CHILD_ENTRIES RELATIVE "${source_dir}" "${source_dir}/*")
+	
+		# For each subfile
+		foreach(_entry IN LISTS CHILD_ENTRIES)
+	
+			# This should be the path to a subproject 
+			set(_path "${source_dir}/${_entry}")		
+			if(NOT (IS_DIRECTORY "${_path}"))
+				continue()
+			endif()
+	
+			# Skip obvious build/artifact directories
+			if(_entry MATCHES "^(build|build_.*|\.git|\.vs)$")
+				continue()
+			endif()
+	
+			# Does this project have a CMake list file?
+			if(NOT EXISTS "${_path}/CMakeLists.txt")
+				continue()
+			endif()
+	
+			message(STATUS "[Plushie::${search_subdir}] Adding subdirectory: ${_entry}")
+			add_subdirectory(${_path})
+	
+	
+		endforeach()
 	endforeach()
-endforeach()
-
+endif()
 
 set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY OFF)
 set(CPACK_PACKAGE_NAME "plushie")
