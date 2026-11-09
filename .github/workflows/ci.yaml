@@ -8,13 +8,14 @@ jobs:
   windows-x64-msvc:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - uses: lukka/get-cmake@latest
 
       - run: cmake --workflow --preset windows-x64-msvc
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: windows-x64-msvc
-          path: dist/Windows/windows-x64-msvc/*.zip
+          archive: false
+          path: dist/Windows/windows-x64-msvc/plushie-0.1.0-win64.zip
