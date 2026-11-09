@@ -23,9 +23,14 @@ include(FetchContent)
 # as part of the build, useful in CI, since we don't have to manually fetch
 if(DEFINED ENV{PLUSHIE_FETCH_UNITY_TEST})
 	message(STATUS ["Plushie::Root Using fetch content for unity test"])
-	FetchContent_Declare(unity GIT_REPOSITORY https://github.com/ThrowTheSwitch/Unity.git GIT_TAG v2.6.1)
+	FetchContent_Declare(unity GIT_REPOSITORY https://github.com/ThrowTheSwitch/Unity.git
+		GIT_TAG        v2.6.1 
+		GIT_SHALLOW    TRUE
+		EXCLUDE_FROM_ALL
+		OVERRIDE_FIND_PACKAGE)
   FetchContent_MakeAvailable(unity)
 endif()
+find_package(unity REQUIRED QUIET)
 
 # Override the find package behaviour for the modules which we build 
 FetchContent_Declare(PlushieCStl SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/modules/plushie_cstl OVERRIDE_FIND_PACKAGE)
