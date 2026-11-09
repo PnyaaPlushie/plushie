@@ -18,4 +18,4 @@ jobs:
         with:
           name: windows-x64-msvc
           archive: false
-          path: dist/Windows/windows-x64-msvc/plushie-0.1.0-win64.zip
+          path: dist/Windows/windows-x64-msvc/plushie-host-windows-*.zip
