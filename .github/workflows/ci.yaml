@@ -12,6 +12,14 @@ jobs:
 
       - uses: lukka/get-cmake@latest
 
+      - run: cmake --workflow --preset windows-x64-msvc-cstl
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: windows-x64-msvc-cstl
+          archive: false
+          path: dist/Windows/windows-x64-msvc-cstl/plushie-host-windows-*.zip
+
       - run: cmake --workflow --preset windows-x64-msvc
 
       - uses: actions/upload-artifact@v7

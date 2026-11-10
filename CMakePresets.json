@@ -31,6 +31,7 @@
             "name"           : "base-ninja",
             "hidden"         :  true,
             "generator"      : "Ninja Multi-Config",
+            "inherits"       : "base",
             "cacheVariables" :
             {
                 "CMAKE_EXPORT_COMPILE_COMMANDS" : "ON"
@@ -265,7 +266,7 @@
             "execution": 
             {
                 "jobs": 1,
-                "stopsOnFailure": true,
+                "stopOnFailure": true,
                 "noTestsAction" : "error"
             }
         },
@@ -284,9 +285,25 @@
             "configuration": "Release",
             "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
         },
+        {
+            "name": "windows-x64-mingw-dbg",
+            "inherits" : [ "test-base" ],
+            "configurePreset": "windows-x64-mingw",
+            "configuration": "Debug"
+        },
+        {
+            "name": "windows-x64-mingw-rel",
+            "inherits" : [ "test-base" ],
+            "configurePreset": "windows-x64-mingw",
+            "configuration": "Release"
+        },
 
-        {   "name" : "windows-x64-msvc-cstl-dbg",     "configurePreset": "windows-x64-msvc-cstl", "inherits" : [ "windows-x64-msvc-dbg" ] },
-        {   "name" : "windows-x64-msvc-cstl-rel",     "configurePreset": "windows-x64-msvc-cstl", "inherits" : [ "windows-x64-msvc-rel" ] }
+        {   "name" : "windows-x64-msvc-cstl-dbg",     "configurePreset": "windows-x64-msvc-cstl",  "inherits" : [ "windows-x64-msvc-dbg" ] },
+        {   "name" : "windows-x64-msvc-cstl-rel",     "configurePreset": "windows-x64-msvc-cstl",  "inherits" : [ "windows-x64-msvc-rel" ] },
+        {   "name" : "windows-x64-mingw-cstl-dbg",    "configurePreset": "windows-x64-mingw-cstl", "inherits" : [ "windows-x64-mingw-dbg" ] },
+        {   "name" : "windows-x64-mingw-cstl-rel",    "configurePreset": "windows-x64-mingw-cstl", "inherits" : [ "windows-x64-mingw-rel" ] }
+
+
     ],
 
     "packagePresets":
@@ -307,6 +324,21 @@
             "generators": [ "ZIP" ],
             "packageDirectory": "${sourceDir}/dist/${hostSystemName}/${presetName}",
             "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
+        },
+
+        {
+            "name": "windows-x64-mingw",
+            "configurePreset": "windows-x64-mingw",
+            "configurations": [ "Debug", "Release" ],
+            "generators": [ "ZIP" ],
+            "packageDirectory": "${sourceDir}/dist/${hostSystemName}/${presetName}"
+        },
+        {
+            "name": "windows-x64-mingw-cstl",
+            "configurePreset": "windows-x64-mingw-cstl",
+            "configurations": [ "Debug", "Release" ],
+            "generators": [ "ZIP" ],
+            "packageDirectory": "${sourceDir}/dist/${hostSystemName}/${presetName}"
         }
     ],
 
@@ -333,6 +365,30 @@
                 { "type": "build",     "name": "windows-x64-msvc-cstl-rel" },
                 { "type": "test",      "name": "windows-x64-msvc-cstl-rel" },
                 { "type": "package",   "name": "windows-x64-msvc-cstl"     }
+            ]
+        },
+
+        {
+            "name": "windows-x64-mingw",
+            "steps":
+            [
+                { "type": "configure", "name": "windows-x64-mingw"      },
+                { "type": "build"    , "name": "windows-x64-mingw-dbg"  },
+                { "type": "test"     , "name": "windows-x64-mingw-dbg"  },
+                { "type": "build"    , "name": "windows-x64-mingw-rel"  },
+                { "type": "test"     , "name": "windows-x64-mingw-rel"  },
+                { "type": "package"  , "name": "windows-x64-mingw"      }
+            ]
+        },
+        { 
+            "name": "windows-x64-mingw-cstl", "steps": 
+            [
+                { "type": "configure", "name": "windows-x64-mingw-cstl" },
+                { "type": "build",     "name": "windows-x64-mingw-cstl-dbg" },
+                { "type": "test",      "name": "windows-x64-mingw-cstl-dbg" },
+                { "type": "build",     "name": "windows-x64-mingw-cstl-rel" },
+                { "type": "test",      "name": "windows-x64-mingw-cstl-rel" },
+                { "type": "package",   "name": "windows-x64-mingw-cstl"     }
             ]
         }
     ]
