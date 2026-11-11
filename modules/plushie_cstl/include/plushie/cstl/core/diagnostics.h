@@ -73,13 +73,13 @@ typedef struct PlushieDiagnosticSinkRingBuffer PlushieDiagnosticSinkRingBuffer;
 * Struct and API declarations
 *******************************************************************************/
 
-PlushieResult plushie_diagnostic_send(
+PLUSHIE_CSTL_API PlushieResult plushie_diagnostic_send(
 	PlushieDiagnosticsHost*   host,
 	PlushieUInt32             signal_val,
 	PlushieStr                msg
 );
 
-PlushieResult plushie_diagnostic_send_cstr(
+PLUSHIE_CSTL_API PlushieResult plushie_diagnostic_send_cstr(
 	PlushieDiagnosticsHost*   host,
 	PlushieUInt32             signal_val,
 	const char* const         msg
@@ -118,7 +118,7 @@ struct PlushieDiagnosticSinkRingBuffer
 };
 
 
-void plushie_diagnostic_sink_ring_buffer_write(
+PLUSHIE_CSTL_API void plushie_diagnostic_sink_ring_buffer_write(
 	PlushieStr    str,
 	PlushieUInt32 mask,
 	void*         udata
@@ -132,7 +132,7 @@ void plushie_diagnostic_sink_ring_buffer_write(
 #ifndef PLUSHIE_CSTL_CORE_DIAGNOSTICS_PROVIDE_IMPL_GUARD
 #define PLUSHIE_CSTL_CORE_DIAGNOSTICS_PROVIDE_IMPL_GUARD
 
-PlushieResult plushie_diagnostic_send(
+PLUSHIE_CSTL_API PlushieResult plushie_diagnostic_send(
 	PlushieDiagnosticsHost* host,
 	PlushieUInt32           signal_val,
 	PlushieStr              msg
@@ -146,7 +146,7 @@ PlushieResult plushie_diagnostic_send(
 	return kPlushieResultSuccess;
 }
 
-PlushieResult plushie_diagnostic_send_cstr(
+PLUSHIE_CSTL_API PlushieResult plushie_diagnostic_send_cstr(
 	PlushieDiagnosticsHost* host,
 	PlushieUInt32           signal_val,
 	const char* const       msg
@@ -164,7 +164,7 @@ PlushieResult plushie_diagnostic_send_cstr(
 // Ring buffer
 //
 
-void plushie_diagnostic_sink_ring_buffer_write(
+PLUSHIE_CSTL_API void plushie_diagnostic_sink_ring_buffer_write(
 	PlushieStr    str,
 	PlushieUInt32 mask,
 	void*         udata

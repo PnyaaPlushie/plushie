@@ -29,7 +29,7 @@ extern "C" {
 * @brief Provides the allocator which uses alloca, the most unsafe backing
 * allocator, but also the fastest. See the file-level warning about lifetime.
 */
-struct PlushieAllocator* plushie_allocator_get_alloca(
+PLUSHIE_CSTL_API struct PlushieAllocator* plushie_allocator_get_alloca(
 );
 
 /******************************************************************************
@@ -100,7 +100,7 @@ static PlushieAllocator sLocalPlushieAllocatorAlloca =
 	NULL
 };
 
-PlushieAllocator* plushie_allocator_get_alloca(
+PLUSHIE_CSTL_API PlushieAllocator* plushie_allocator_get_alloca(
 )
 {
 	return &sLocalPlushieAllocatorAlloca;

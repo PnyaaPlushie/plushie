@@ -69,12 +69,12 @@ typedef struct PlushieThreadInitInfo
 PlushieThreadInitInfo;
 
 
-PlushieResult plushie_thread_init(
+PLUSHIE_CSTL_API PlushieResult plushie_thread_init(
 	struct PlushieThread*  out_thread,
 	PlushieThreadInitInfo* init
 );
 
-PlushieResult plushie_thread_wait(
+PLUSHIE_CSTL_API PlushieResult plushie_thread_wait(
 	const struct PlushieThread* thread
 );
 
@@ -138,7 +138,7 @@ PLUSHIE_CSTL_API PlushieResult plushie_thread_init(
 }
 
 
-PlushieResult plushie_thread_wait(
+PLUSHIE_CSTL_API PlushieResult plushie_thread_wait(
 	const struct PlushieThread* thread
 )
 {

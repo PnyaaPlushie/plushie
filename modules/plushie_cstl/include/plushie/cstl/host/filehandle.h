@@ -90,16 +90,16 @@ typedef struct PlushieFileHandleCreateInfo
 }
 PlushieFileHandleCreateInfo;
 
-PlushieResult plushie_file_handle_open(
+PLUSHIE_CSTL_API PlushieResult plushie_file_handle_open(
 	PlushieFileHandle*           out,
 	PlushieFileHandleCreateInfo* info
 );
 
-PlushieResult plushie_file_handle_close(
+PLUSHIE_CSTL_API PlushieResult plushie_file_handle_close(
 	PlushieFileHandle* handle
 );
 
-PlushieResult plushie_file_handle_write(
+PLUSHIE_CSTL_API PlushieResult plushie_file_handle_write(
 	PlushieFileHandle* handle,
 	const void*        ptr,
 	PlushieUSize       len
@@ -117,7 +117,7 @@ PlushieResult plushie_file_handle_write(
 
 #include <Windows.h>
 
-PlushieResult plushie_file_handle_open(
+PLUSHIE_CSTL_API PlushieResult plushie_file_handle_open(
 	PlushieFileHandle*           out,
 	PlushieFileHandleCreateInfo* info
 )
@@ -182,7 +182,7 @@ PlushieResult plushie_file_handle_open(
 	return kPlushieResultSuccess;
 }
 
-PlushieResult plushie_file_handle_close(
+PLUSHIE_CSTL_API PlushieResult plushie_file_handle_close(
 	PlushieFileHandle* handle
 )
 {
@@ -198,7 +198,7 @@ PlushieResult plushie_file_handle_close(
 	return kPlushieResultSuccess;
 }
 
-PlushieResult plushie_file_handle_write(
+PLUSHIE_CSTL_API PlushieResult plushie_file_handle_write(
 	PlushieFileHandle* handle,
 	const void*        ptr,
 	PlushieUSize       len

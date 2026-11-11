@@ -21,7 +21,7 @@ extern "C" {
 /**
 * @brief Get the allocator based on libc, that uses malloc, free etc
 */
-struct PlushieAllocator* plushie_allocator_get_libc(
+PLUSHIE_CSTL_API struct PlushieAllocator* plushie_allocator_get_libc(
 );
 
 /******************************************************************************
@@ -78,7 +78,7 @@ static PlushieAllocator sLocalPlushieAllocatorLibc =
 	NULL
 };
 
-PlushieAllocator* plushie_allocator_get_libc(
+PLUSHIE_CSTL_API PlushieAllocator* plushie_allocator_get_libc(
 )
 {
 	return &sLocalPlushieAllocatorLibc;

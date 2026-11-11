@@ -98,7 +98,7 @@ PlushieVectorDecl(PlushieVecStr, PlushieStr, str);
 * @note This is perfect for wrapping static lifetime strings
 * @note Since this is a cstring we're assuming utf8 encoding by default
 */
-PlushieResult plushie_str_new_view_from_cstr(
+PLUSHIE_CSTL_API PlushieResult plushie_str_new_view_from_cstr(
     PlushieStr*  out_str,
     const void*  ptr,
     PlushieUSize size
@@ -109,7 +109,7 @@ PlushieResult plushie_str_new_view_from_cstr(
 * string-view which has its lifetime determined by the input ptr. No copy is
 * taken.
 */
-PlushieResult plushie_str_new_view_from_win32_wstr(
+PLUSHIE_CSTL_API PlushieResult plushie_str_new_view_from_win32_wstr(
     PlushieStr*    out_str,
     const wchar_t* ptr
 );
@@ -118,7 +118,7 @@ PlushieResult plushie_str_new_view_from_win32_wstr(
 * @brief Converts the string from src type encoding into the dst encoding type.
 * @note Allocator is an optional flag to pass for a new copy
 */
-PlushieResult plushie_str_convert(
+PLUSHIE_CSTL_API PlushieResult plushie_str_convert(
     PlushieStr*              src_str,
     PlushieStr*              dst_str,
     struct PlushieAllocator* alloc
@@ -128,7 +128,7 @@ PlushieResult plushie_str_convert(
 * @brief Calls the embedded allocator for a memory backed string in order to
 * release that memory
 */
-void plushie_str_release(
+PLUSHIE_CSTL_API void plushie_str_release(
     PlushieStr* src_str
 );
 
@@ -143,7 +143,7 @@ void plushie_str_release(
 * @note See `plushie_str_rawcvrt_wwcstr_size` to precalculate the size of
 * buffer required
 */
-PLUSHIE_API_CSTL PlushieResult plushie_str_rawcvrt_wwcstr(
+PLUSHIE_CSTL_API PlushieResult plushie_str_rawcvrt_wwcstr(
     char*            out_str,
     PlushieUSize*    out_size,
     PlushieUSize     buff_size,
@@ -155,7 +155,7 @@ PLUSHIE_API_CSTL PlushieResult plushie_str_rawcvrt_wwcstr(
 * function which calculates the size of an allocation required to convert a
 * win32 wide string to utf8, when that wstring is explicitly null terminated.
 */
-PLUSHIE_API_CSTL PlushieResult plushie_str_rawcvrt_wwcstr_size(
+PLUSHIE_CSTL_API PlushieResult plushie_str_rawcvrt_wwcstr_size(
     PlushieUSize*    out_size,
     PlushieWinWchar* pwstr
 );
@@ -168,7 +168,7 @@ PLUSHIE_API_CSTL PlushieResult plushie_str_rawcvrt_wwcstr_size(
 #ifndef PLUSHIE_CSTL_CONTAINERS_STRING_PROVIDE_IMPL_GUARD
 #define PLUSHIE_CSTL_CONTAINERS_STRING_PROVIDE_IMPL_GUARD
 
-PlushieResult plushie_str_new_view_from_cstr(
+PLUSHIE_CSTL_API PlushieResult plushie_str_new_view_from_cstr(
     PlushieStr*  out_str,
     const void*  ptr,
     PlushieUSize size
@@ -190,7 +190,7 @@ PlushieResult plushie_str_new_view_from_cstr(
     return kPlushieResultSuccess;
 }
 
-PlushieResult plushie_str_new_view_from_win32_wstr(
+PLUSHIE_CSTL_API PlushieResult plushie_str_new_view_from_win32_wstr(
     PlushieStr*    out_str,
     const wchar_t* ptr
 )
@@ -209,7 +209,7 @@ PlushieResult plushie_str_new_view_from_win32_wstr(
 #if PLUSHIE_TARGET_OS_ID == PLUSHIE_TARGET_OS_ID_WINDOWS
 #include <Windows.h>
 
-PLUSHIE_API_CSTL PlushieResult plushie_str_rawcvrt_wwcstr(
+PLUSHIE_CSTL_API PlushieResult plushie_str_rawcvrt_wwcstr(
     char*            out_str,
     PlushieUSize*    out_size,
     PlushieUSize     buff_size,
@@ -236,7 +236,7 @@ PLUSHIE_API_CSTL PlushieResult plushie_str_rawcvrt_wwcstr(
     return kPlushieResultSuccess;
 }
 
-PLUSHIE_API_CSTL PlushieResult plushie_str_rawcvrt_wwcstr_size(
+PLUSHIE_CSTL_API PlushieResult plushie_str_rawcvrt_wwcstr_size(
     PlushieUSize*    out_size,
     PlushieWinWchar* pwstr
 )

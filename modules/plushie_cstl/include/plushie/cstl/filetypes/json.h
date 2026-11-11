@@ -129,7 +129,7 @@ PlushieJson_ParserCtx;
 * object in the source string view.
 * @note The source string must stay valid while parsing is taking place
 */
-PlushieResult plushie_json_parser_ctx_new(
+PLUSHIE_CSTL_API PlushieResult plushie_json_parser_ctx_new(
 	PlushieJson_ParserCtx* out_ctx,
 	PlushieAllocator*      alloc,
 	PlushieU8StrSpan       source_span
@@ -139,7 +139,7 @@ PlushieResult plushie_json_parser_ctx_new(
 * @brief Parses the entire json tree and fills the top node for the caller on
 * success
 */
-PlushieResult plushie_json_parse(
+PLUSHIE_CSTL_API PlushieResult plushie_json_parse(
 	PlushieJson_Value*     out_val,
 	PlushieJson_ParserCtx* ctx
 );
@@ -449,7 +449,7 @@ static PlushieResult s_parse_value(PlushieJson_Value* out_val, PlushieJson_Parse
 }
 
 
-PlushieResult plushie_json_parser_ctx_new(
+PLUSHIE_CSTL_API PlushieResult plushie_json_parser_ctx_new(
 	PlushieJson_ParserCtx* out_ctx,
 	PlushieAllocator*      alloc,
 	PlushieU8StrSpan       source_span
@@ -462,7 +462,7 @@ PlushieResult plushie_json_parser_ctx_new(
 	return kPlushieResultSuccess;
 }
 
-PlushieResult plushie_json_parse(
+PLUSHIE_CSTL_API PlushieResult plushie_json_parse(
 	PlushieJson_Value*     out_val,
 	PlushieJson_ParserCtx* ctx
 )

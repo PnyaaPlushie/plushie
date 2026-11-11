@@ -10,6 +10,7 @@
 *******************************************************************************/
 #ifndef PLUSHIE_CSTL_CORE_ERROR_CODES_H
 #define PLUSHIE_CSTL_CORE_ERROR_CODES_H
+#include "plushie/cstl/core/platform.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -77,14 +78,14 @@ PlushieResult;
 /**
 * @brief Gets the (stable) name of an error code, e.g. "ErrNullptr"
 */
-const char* plushie_result_decode_name(
+PLUSHIE_CSTL_API const char* plushie_result_decode_name(
     PlushieResult result
 );
 
 /**
 * @brief Gets the human readable description of an error code
 */
-const char* plushie_result_decode_desc(
+PLUSHIE_CSTL_API const char* plushie_result_decode_desc(
     PlushieResult result
 );
 
@@ -102,7 +103,7 @@ const char* plushie_result_decode_desc(
 #define PLUSHIE_X(VAR_NAME, DESC) \
     case kPlushieResult##VAR_NAME: return #VAR_NAME;
 
-const char* plushie_result_decode_name(
+PLUSHIE_CSTL_API const char* plushie_result_decode_name(
     PlushieResult result
 )
 {
@@ -119,7 +120,7 @@ const char* plushie_result_decode_name(
 #define PLUSHIE_X(VAR_NAME, DESC) \
     case kPlushieResult##VAR_NAME: return DESC;
 
-const char* plushie_result_decode_desc(
+PLUSHIE_CSTL_API const char* plushie_result_decode_desc(
     PlushieResult result
 )
 {
@@ -137,7 +138,7 @@ const char* plushie_result_decode_desc(
 
 // Stub implementation if the user doesn't want any lookup functions
 
-const char* plushie_result_decode_name(
+PLUSHIE_CSTL_API const char* plushie_result_decode_name(
     PlushieResult result
 )
 {
@@ -145,7 +146,7 @@ const char* plushie_result_decode_name(
     return "";
 }
 
-const char* plushie_result_decode_desc(
+PLUSHIE_CSTL_API const char* plushie_result_decode_desc(
     PlushieResult result
 )
 {

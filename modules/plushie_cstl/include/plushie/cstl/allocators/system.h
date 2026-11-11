@@ -21,7 +21,7 @@ extern "C" {
 /**
 * @brief Get the system allocator which uses platform dependent code
 */
-struct PlushieAllocator* plushie_allocator_get_system(
+PLUSHIE_CSTL_API struct PlushieAllocator* plushie_allocator_get_system(
 );
 
 /******************************************************************************
@@ -90,7 +90,7 @@ static PlushieAllocator sLocalPlushieAllocatorWin32 =
 	NULL
 };
 
-PlushieAllocator* plushie_allocator_get_system(
+PLUSHIE_CSTL_API PlushieAllocator* plushie_allocator_get_system(
 )
 {
 	// Get the init status of the atomic, only set to 1 if current val is 0

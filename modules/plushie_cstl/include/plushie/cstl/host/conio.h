@@ -49,7 +49,7 @@ typedef struct PlushieConIoHost PlushieConIoHost;
 * Public API
 *******************************************************************************/
 
-void plushie_conio_write(
+PLUSHIE_CSTL_API void plushie_conio_write(
 	PlushieConIoHost* io,
 	PlushieStr        msg
 );
@@ -83,7 +83,7 @@ struct PlushieConIoHost
 #if PLUSHIE_CSTL_CONIO_ID == PLUSHIE_CSTL_CONIO_ID_LIBC
 #include <stdio.h>
 
-void plushie_conio_write(
+PLUSHIE_CSTL_API void plushie_conio_write(
 	PlushieConIoHost* io,
 	PlushieStr        msg
 )
