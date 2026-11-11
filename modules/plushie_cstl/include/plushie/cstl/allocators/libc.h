@@ -40,7 +40,7 @@ static void* s_local_plushie_allocator_libc_alloc(
 	PlushieUSize             size,
 	PlushieUSize             alignment,
 	PlushieUInt32            flags,
-	struct PlushieStr*       name
+	const char* const        name
 )
 {
 	(void)allocator;

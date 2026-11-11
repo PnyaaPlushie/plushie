@@ -48,7 +48,7 @@ static void* s_local_plushie_allocator_win32_alloc(
 	PlushieUSize             size,
 	PlushieUSize             alignment,
 	PlushieUInt32            flags,
-	struct PlushieStr*       name
+	const char* const        name
 )
 {
 	(void)allocator;

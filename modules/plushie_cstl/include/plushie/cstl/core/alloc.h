@@ -28,6 +28,10 @@ extern "C" {
 * Base allocator
 *******************************************************************************/
 
+// Forward declaration so the function pointer typedefs below refer to the
+// file-scope struct rather than declaring a new prototype-scoped one.
+struct PlushieAllocator;
+
 /**
 * @brief Function pointer type for an allocate function. Called when new memory
 * is requested.
