@@ -3,7 +3,7 @@
 # Entry CMakeLists file for header only additional c libs that I reuse
 # It can be used as a header only, or a packaged lib if you want everything
 ###############################################################################################
-cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.19.0 FATAL_ERROR)
 set(PlushieCStlVersion 0.1.0)
 
 project(PlushieCStl VERSION ${PlushieCStlVersion} LANGUAGES CXX C)
@@ -20,6 +20,10 @@ option(PLUSHIE_CSTL_BUILD_SHARED          "Include the shared library version"  
 option(PLUSHIE_CSTL_BUILD_STATIC          "Include the static library version"            OFF)
 option(PLUSHIE_CSTL_INCLUDE_INSTALL       "Include the install target for Plushie Cstl"   ON )
 option(PLUSHIE_CSTL_INSTALL_FOR_LOCAL_DEV "Generate find_package to use dev source files" OFF)
+
+option(PLUSHIE_CSTL_HAS_LIBC_RUNTIME      "Build cstl using regular libc runtime"         ON )
+option(PLUSHIE_CSTL_HAS_LIBC_HEADERS      "Build cstl using libc stl headers"             ON )
+option(PLUSHIE_CSTL_HAS_LIBC_STARTUP      "If false includes libc startup into build"     ON )
 
 # List of targets built in this subdirectory
 set(plushie_cstl_targets "")
@@ -54,12 +58,6 @@ if(${PLUSHIE_CSTL_BUILD_HEADER_ONLY})
 	add_library(Plushie::CStl ALIAS PlushieCStl)
 	list(APPEND plushie_cstl_targets PlushieCStl)
 
-	set_target_properties(PlushieCStl PROPERTIES 
-		FOLDER "plushie/plushie_cstl"
-		EXPORT_NAME CStl)
-
-	target_include_directories(PlushieCStl INTERFACE 
-		${plushie_cstl_public_include_dirs}) 
 endif()
 
 ###############################################################################################
@@ -67,19 +65,17 @@ endif()
 ###############################################################################################
 
 if(${PLUSHIE_CSTL_BUILD_SHARED})
-	add_library(PlushieCStl_Shared 
+	add_library(PlushieCStl_Shared SHARED
 		${plushie_cstl_public_headers}
 		${plushie_cstl_private_sources})
 
 	add_library(Plushie::CStl_Shared ALIAS PlushieCStl_Shared)
 	list(APPEND plushie_cstl_targets PlushieCStl_Shared)
 
-	set_target_properties(PlushieCStl_Shared PROPERTIES 
-		FOLDER "plushie/plushie_cstl"
-		EXPORT_NAME CStl_Shared)
-
-	target_include_directories(PlushieCStl_Shared PUBLIC 
-		${plushie_cstl_public_include_dirs}) 
+	# Shared export while compiling, import for others using it
+	target_compile_definitions(PlushieCStl_Shared 
+		PRIVATE	  PLUSHIE_CSTL_USAGE_MODE=PLUSHIE_CSTL_USAGE_MODE_SHARED_BUILD
+		INTERFACE PLUSHIE_CSTL_USAGE_MODE=PLUSHIE_CSTL_USAGE_MODE_SHARED)
 endif()
 
 
@@ -88,20 +84,52 @@ endif()
 ###############################################################################################
 
 if(${PLUSHIE_CSTL_BUILD_STATIC})
-	add_library(PlushieCStl_Static
+	add_library(PlushieCStl_Static STATIC
 		${plushie_cstl_public_headers}
 		${plushie_cstl_private_sources})
 
 	add_library(Plushie::CStl_Static ALIAS PlushieCStl_Static)
 	list(APPEND plushie_cstl_targets PlushieCStl_Static)
 
-	set_target_properties(PlushieCStl_Static PROPERTIES 
-		FOLDER "plushie/plushie_cstl"
-		EXPORT_NAME CStl_Static)
-
-	target_include_directories(PlushieCStl_Static PUBLIC 
-		${plushie_cstl_public_include_dirs}) 
+	target_compile_definitions(PlushieCStl_Static 
+		PUBLIC PLUSHIE_CSTL_USAGE_MODE=PLUSHIE_CSTL_USAGE_MODE_STATIC)
 endif()
+
+###############################################################################################
+# Set the shared properties 
+###############################################################################################
+
+foreach(target ${plushie_cstl_targets})
+
+	# Header only libraries must use interface
+	if(${target} STREQUAL "PlushieCStl")	
+		target_include_directories(${target} INTERFACE ${plushie_cstl_public_include_dirs}) 
+	else()
+		target_include_directories(${target} PUBLIC ${plushie_cstl_public_include_dirs}) 
+	endif()
+
+	# Extract the export name
+	# i.e PlushieCStl_Static -> CStl_Static
+	string(REPLACE "Plushie" "" target_export_name "${target}")
+
+	# Extract the library name
+	# i.e PlushieCStl_Static -> PlushieCStl
+	string(REPLACE "_" "" target_output_name "${target}")
+
+	# Set the properties for the non header libraries that output libraries
+	set_target_properties(${target} PROPERTIES 
+		EXPORT_NAME             ${target_export_name}
+		OUTPUT_NAME             ${target_output_name}
+		FOLDER                  "plushie/plushie_cstl"
+		PREFIX                  "lib"
+		IMPORT_PREFIX           "lib"
+		DEBUG_POSTFIX           "Dbg"
+		RELEASE_POSTFIX         "Rel"
+		RELWITHDEBINFO_POSTFIX  "RelDbg"
+		MINSIZEREL_POSTFIX      "RelMin"
+		)
+
+endforeach()
 
 ###############################################################################################
 # Install logic
