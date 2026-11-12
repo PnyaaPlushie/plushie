@@ -3,6 +3,8 @@
 # Provides the examples and tests for plushie_cstl. This is placed in a seperate repo 
 # too keep the contents of the CStl streamlined, that way there's less content to download
 # when using fetch_content or something similar
+#
+# 4.3 
 ###############################################################################################
 cmake_minimum_required(VERSION 3.21.0 FATAL_ERROR) # 3.21 for TARGET_RUNTIME_DLLS
 project(PlushieCStlExamples VERSION 0.1.0 LANGUAGES C)
@@ -90,23 +92,23 @@ if(${PLUSHIE_CSTL_BUILD_TESTS})
 	# Install the test exes along with the DLLs they need, so the installed /
 	# packaged copies run standalone (the build tree doesn't need this, the root
 	# CMakeLists puts all exes and DLLs in one bin folder).
-	#
-	# $<TARGET_RUNTIME_DLLS:tgt> is the list of DLLs from CMake targets that tgt
-	# links against (empty off Windows and for header-only / static). Installing
-	# them beside the exe makes it self-contained. It's known at generate time,
-	# nothing is scanned at install.
-	#
-	# Not used: install(TARGETS ... RUNTIME_DEPENDENCIES). It scans the binaries
-	# (so it also finds 3rd party / toolchain DLLs) but on CMake 4.3+ every scan
-	# warns about policy CMP0207 unless the policy or a max version is set.
-	if(${PLUSHIE_CSTL_INSTALL_TESTS})
+	if(POLICY CMP0207)
+  		cmake_policy(SET CMP0207 NEW) # Prevents warning on path seperator conversions
+	endif()
+	if(${PLUSHIE_CSTL_INSTALL_TESTS} AND TARGET PlushieCStl_Shared)
 		install(TARGETS ${TEST_TARGETS}
 			RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}/tests)
 
-		foreach(target ${TEST_TARGETS})
-			install(FILES $<TARGET_RUNTIME_DLLS:${target}>
-				DESTINATION ${CMAKE_INSTALL_BINDIR}/tests)
-		endforeach()
+		install(TARGETS PlushieCStl_Shared PlushieCStl_Test_Shared
+        	RUNTIME_DEPENDENCY_SET plushie_cstl_runtime_deps
+        	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}/tests)
+
+		install(RUNTIME_DEPENDENCY_SET plushie_cstl_runtime_deps
+        	PRE_EXCLUDE_REGEXES  "api-ms-.*" "ext-ms-.*"            # Windows API sets
+        	POST_EXCLUDE_REGEXES ".*[/\\\\][Ss]ystem32[/\\\\].*"    # Windows system DLLs
+            	                 "^/lib/.*" "^/usr/lib/.*"          # Linux system libraries
+        	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}/tests )
+
 	endif()
 
 endif()
