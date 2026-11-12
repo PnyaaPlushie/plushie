@@ -95,7 +95,7 @@ PlushieElf_StructuredIdent;
 * @brief Attempts to validate and deserialize the identity section of the elf
 * file
 */
-PlushieResult plushie_elf_structured_ident_deserialize(
+PLUSHIE_CSTL_API PlushieResult plushie_elf_structured_ident_deserialize(
 	PlushieElf_StructuredIdent* out_ident,
 	PlushieUInt08*              bytes_ptr,
 	PlushieUSize                bytes_len
@@ -181,7 +181,7 @@ PlushieElf_SectionHeader;
 #ifndef PLUSHIE_CSTL_FILETYPES_ELF_PROVIDE_IMPL_GUARD
 #define PLUSHIE_CSTL_FILETYPES_ELF_PROVIDE_IMPL_GUARD
 
-PlushieResult plushie_elf_structured_ident_deserialize(
+PLUSHIE_CSTL_API PlushieResult plushie_elf_structured_ident_deserialize(
 	PlushieElf_StructuredIdent* out_ident,
 	PlushieUInt08*              bytes_ptr,
 	PlushieUSize                bytes_len

@@ -30,7 +30,7 @@ extern "C" {
 * @note It is valid for this function to return null for buffers and strings.
 * For example, if a user passes no arguments, we don't allocate an empty space.
 */
-PlushieResult plushie_cmdarg_wwinmain_convert(
+PLUSHIE_CSTL_API PlushieResult plushie_cmdarg_wwinmain_convert(
     PlushieStr**             out_strs,
     PlushieUInt32*           out_strs_count,
     void**                   out_buffer,
@@ -49,7 +49,7 @@ PlushieResult plushie_cmdarg_wwinmain_convert(
 #if PLUSHIE_TARGET_OS_ID == PLUSHIE_TARGET_OS_ID_WINDOWS
 #include <Windows.h>
 
-PlushieResult plushie_cmdarg_wwinmain_convert(
+PLUSHIE_CSTL_API PlushieResult plushie_cmdarg_wwinmain_convert(
     PlushieStr**             out_strs,
     PlushieUInt32*           out_strs_count,
     void**                   out_buffer,

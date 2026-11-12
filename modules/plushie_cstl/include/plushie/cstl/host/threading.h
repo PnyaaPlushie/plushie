@@ -69,12 +69,12 @@ typedef struct PlushieThreadInitInfo
 PlushieThreadInitInfo;
 
 
-PlushieResult plushie_thread_init(
+PLUSHIE_CSTL_API PlushieResult plushie_thread_init(
 	struct PlushieThread*  out_thread,
 	PlushieThreadInitInfo* init
 );
 
-PlushieResult plushie_thread_wait(
+PLUSHIE_CSTL_API PlushieResult plushie_thread_wait(
 	const struct PlushieThread* thread
 );
 
@@ -91,6 +91,7 @@ typedef struct PlushieThread
 {
 	HANDLE thread_handle;
 	DWORD thread_id;
+	PlushieThreadingStartPfn function;
 }
 PlushieThread;
 
@@ -110,7 +111,7 @@ PlushieMutex;
 #ifndef PLUSHIE_CSTL_HOST_THREADING_PROVIDE_IMPL_GUARD
 #define PLUSHIE_CSTL_HOST_THREADING_PROVIDE_IMPL_GUARD
 
-PlushieResult plushie_thread_init(
+PLUSHIE_CSTL_API PlushieResult plushie_thread_init(
 	struct PlushieThread*  out_thread,
 	PlushieThreadInitInfo* init
 )
@@ -119,6 +120,7 @@ PlushieResult plushie_thread_init(
 
 #if PLUSHIE_CSTL_THREADING_BACKEND_ID == PLUSHIE_CSTL_THREADING_BACKEND_ID_WIN32
 	// TODO: Pull in the options to configure instead of using default values
+	out_thread->function = init->function;
 	out_thread->thread_handle = CreateThread(
 		NULL,
 		0,
@@ -136,7 +138,7 @@ PlushieResult plushie_thread_init(
 }
 
 
-PlushieResult plushie_thread_wait(
+PLUSHIE_CSTL_API PlushieResult plushie_thread_wait(
 	const struct PlushieThread* thread
 )
 {

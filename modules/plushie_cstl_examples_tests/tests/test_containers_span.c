@@ -1,14 +1,11 @@
 // Tests the span generator macro (new / is_empty / size).
 // The header is pure macros + static inline, so no PROVIDE_IMPL is needed.
-#include "unity.h"
+#include "tests_shared.h"
 
 #include "plushie/cstl/containers/span.h"
 
 PLUSHIE_SPAN_DEFINE(TestU8Span, test_u8_span, PlushieUInt08)
 PLUSHIE_SPAN_DEFINE(TestU32Span, test_u32_span, PlushieUInt32)
-
-void setUp(void) {}
-void tearDown(void) {}
 
 void test_span_new_and_accessors(void)
 {
@@ -35,11 +32,15 @@ void test_span_empty(void)
 	TEST_ASSERT_EQUAL_UINT(0u, (unsigned)test_u8_span_size(&e));
 }
 
-int main(void)
+void containers_span_main(void)
 {
-	UNITY_BEGIN();
 	RUN_TEST(test_span_new_and_accessors);
 	RUN_TEST(test_span_size_scales_with_element);
 	RUN_TEST(test_span_empty);
-	return UNITY_END();
 }
+
+
+TestFunctions gTestFuncsContainersSpan =
+{
+	.mainPtr = containers_span_main,
+};

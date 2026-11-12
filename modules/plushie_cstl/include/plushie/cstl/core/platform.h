@@ -109,6 +109,50 @@
 #endif
 
 /******************************************************************************
+* Symbol visibility
+*******************************************************************************/
+#ifndef PLUSHIE_SYMBOL_EXPORT
+#  if PLUSHIE_TARGET_OS_ID == PLUSHIE_TARGET_OS_ID_WINDOWS
+#    define PLUSHIE_SYMBOL_EXPORT __declspec(dllexport)
+#    define PLUSHIE_SYMBOL_IMPORT __declspec(dllimport)
+#    define PLUSHIE_SYMBOL_HIDDEN
+#  elif PLUSHIE_COMPILER_ID == PLUSHIE_COMPILER_ID_GCC || PLUSHIE_COMPILER_ID == PLUSHIE_COMPILER_ID_CLANG
+#    define PLUSHIE_SYMBOL_EXPORT __attribute__((visibility("default")))
+#    define PLUSHIE_SYMBOL_IMPORT __attribute__((visibility("default")))
+#    define PLUSHIE_SYMBOL_HIDDEN __attribute__((visibility("hidden")))
+#  else
+#    define PLUSHIE_SYMBOL_EXPORT
+#    define PLUSHIE_SYMBOL_IMPORT
+#    define PLUSHIE_SYMBOL_HIDDEN
+#  endif
+#endif
+
+// Each library needs to have it's own api signal
+#define PLUSHIE_CSTL_USAGE_MODE_HEADER_ONLY   0  // header-only
+#define PLUSHIE_CSTL_USAGE_MODE_STATIC        1  // static library
+#define PLUSHIE_CSTL_USAGE_MODE_SHARED        2  // using the DLL / .so (import)
+#define PLUSHIE_CSTL_USAGE_MODE_SHARED_BUILD  3  // building the DLL / .so (export)
+
+// By default we assume the user is using the library in header only mode
+#ifndef PLUSHIE_CSTL_USAGE_MODE
+#  define PLUSHIE_CSTL_USAGE_MODE PLUSHIE_CSTL_USAGE_MODE_HEADER_ONLY
+#endif
+
+#ifndef PLUSHIE_CSTL_API
+#  if PLUSHIE_CSTL_USAGE_MODE == PLUSHIE_CSTL_USAGE_MODE_HEADER_ONLY
+#    define PLUSHIE_CSTL_API static inline
+#  elif PLUSHIE_CSTL_USAGE_MODE == PLUSHIE_CSTL_USAGE_MODE_SHARED
+#    define PLUSHIE_CSTL_API PLUSHIE_SYMBOL_IMPORT
+#  elif PLUSHIE_CSTL_USAGE_MODE == PLUSHIE_CSTL_USAGE_MODE_SHARED_BUILD
+#    define PLUSHIE_CSTL_API PLUSHIE_SYMBOL_EXPORT
+#  elif PLUSHIE_CSTL_USAGE_MODE == PLUSHIE_CSTL_USAGE_MODE_STATIC
+#    define PLUSHIE_CSTL_API
+#  else
+#    error "PLUSHIE_CSTL_USAGE_MODE has an unknown value"
+#  endif 
+#endif
+
+/******************************************************************************
 * C Standard version detection
 *******************************************************************************/
 

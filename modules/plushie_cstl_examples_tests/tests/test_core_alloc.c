@@ -1,16 +1,13 @@
 // Tests the allocator flag masks and the alloc/free/realloc wrappers.
 // Regression guard: the combined flag masks used to be built with bitwise-AND
 // (evaluating to 0); they must be bitwise-OR now.
-#include "unity.h"
+#include "tests_shared.h"
 
 #if PLUSHIE_CSTL_TESTS_PROVIDE_IMPL
 #  define PLUSHIE_CSTL_ALLOCATORS_LIBC_PROVIDE_IMPL 1
 #endif
 #include "plushie/cstl/core/alloc.h"
 #include "plushie/cstl/allocators/libc.h"
-
-void setUp(void) {}
-void tearDown(void) {}
 
 void test_flag_masks_are_nonzero(void)
 {
@@ -57,12 +54,16 @@ void test_realloc_fallback_preserves_bytes(void)
 	plushie_free(a, q);
 }
 
-int main(void)
+void core_alloc_main(void)
 {
-	UNITY_BEGIN();
 	RUN_TEST(test_flag_masks_are_nonzero);
 	RUN_TEST(test_flag_masks_contain_expected_bits);
 	RUN_TEST(test_libc_alloc_roundtrip);
 	RUN_TEST(test_realloc_fallback_preserves_bytes);
-	return UNITY_END();
 }
+
+TestFunctions gTestFuncsCoreAlloc =
+{
+	.mainPtr = core_alloc_main,
+};
+

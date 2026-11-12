@@ -5,6 +5,12 @@ option(PLUSHIE_ROOT_CSTL_ONLY "Should plushie root only configure for cstl for s
 enable_testing()
 project(Plushie VERSION 0.1.0 LANGUAGES C)
 
+# Put every exe and DLL from every module in one folder (bin/<Config> for
+# multi-config generators). Windows has no rpath, so an exe only finds its DLLs
+# when they sit beside it; this makes ctest, the IDE and the build dir just work.
+# Must be set before any module is added. Target output names must be unique.
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 # It's advised thart user's use the preset directory 
 if(DEFINED PLUSHIE_PRESET_NAME)
   message(STATUS "[Plushie::Root] preset '${PLUSHIE_PRESET_NAME}' (generator: ${CMAKE_GENERATOR})")
