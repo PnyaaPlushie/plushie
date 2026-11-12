@@ -4,7 +4,7 @@
 # too keep the contents of the CStl streamlined, that way there's less content to download
 # when using fetch_content or something similar
 ###############################################################################################
-cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.21.0 FATAL_ERROR) # 3.21 for TARGET_RUNTIME_DLLS
 project(PlushieCStlExamples VERSION 0.1.0 LANGUAGES C)
 
 option(PLUSHIE_CSTL_BUILD_EXAMPLES   "Build examples for plushie::cstl"     ON )
@@ -23,6 +23,7 @@ option(PLUSHIE_CSTL_EXAMPLES_USE_STARTUP "Use custom premain function" OFF)
 option(PLUSHIE_CSTL_TESTS_USE_STARTUP    "Use custom premain function" OFF)
 
 find_package(PlushieCStl QUIET REQUIRED)
+include(GNUInstallDirs)
 
 ###############################################################################################
 # Examples
@@ -75,12 +76,37 @@ if(${PLUSHIE_CSTL_BUILD_TESTS})
 
 	# Apply the shared testing properties 
 	foreach(target ${TEST_TARGETS})
-		set_target_properties(${target} PROPERTIES FOLDER "plushie/plushie_cstl/tests")
-		target_link_libraries(${target} PRIVATE unity::framework)
+		set_target_properties(${target} PROPERTIES 
+			FOLDER                  "plushie/plushie_cstl/tests"
+			DEBUG_POSTFIX           "Dbg"
+			RELEASE_POSTFIX         "Rel"
+			RELWITHDEBINFO_POSTFIX  "RelDbg"
+			MINSIZEREL_POSTFIX      "RelMin")
 
+		target_link_libraries(${target} PRIVATE unity::framework)
 		add_test(NAME ${target} COMMAND ${target})
 	endforeach()
-	
 
+	# Install the test exes along with the DLLs they need, so the installed /
+	# packaged copies run standalone (the build tree doesn't need this, the root
+	# CMakeLists puts all exes and DLLs in one bin folder).
+	#
+	# $<TARGET_RUNTIME_DLLS:tgt> is the list of DLLs from CMake targets that tgt
+	# links against (empty off Windows and for header-only / static). Installing
+	# them beside the exe makes it self-contained. It's known at generate time,
+	# nothing is scanned at install.
+	#
+	# Not used: install(TARGETS ... RUNTIME_DEPENDENCIES). It scans the binaries
+	# (so it also finds 3rd party / toolchain DLLs) but on CMake 4.3+ every scan
+	# warns about policy CMP0207 unless the policy or a max version is set.
+	if(${PLUSHIE_CSTL_INSTALL_TESTS})
+		install(TARGETS ${TEST_TARGETS}
+			RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}/tests)
+
+		foreach(target ${TEST_TARGETS})
+			install(FILES $<TARGET_RUNTIME_DLLS:${target}>
+				DESTINATION ${CMAKE_INSTALL_BINDIR}/tests)
+		endforeach()
+	endif()
 
 endif()
