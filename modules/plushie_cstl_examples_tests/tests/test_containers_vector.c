@@ -1,5 +1,5 @@
 // Tests the collapsed typed vector generator (init / push_back / grow / free).
-#include "unity.h"
+#include "tests_shared.h"
 
 #if PLUSHIE_CSTL_TESTS_PROVIDE_IMPL
 #  define PLUSHIE_CSTL_ALLOCATORS_LIBC_PROVIDE_IMPL 1
@@ -11,9 +11,6 @@
 // ships PlushieVecStr), so it never collides with the linked library.
 PlushieVectorDecl(PlushieVecInt, int, i32);
 PlushieVectorDefine(PlushieVecInt, int, i32);
-
-void setUp(void) {}
-void tearDown(void) {}
 
 void test_vector_push_grows_and_reads_back(void)
 {
@@ -60,11 +57,15 @@ void test_vector_null_args(void)
 	TEST_ASSERT_EQUAL(kPlushieResultErrNullptr, plushie_vec_i32_push_back(NULL, 1));
 }
 
-int main(void)
+void containers_vector_main(void)
 {
-	UNITY_BEGIN();
 	RUN_TEST(test_vector_push_grows_and_reads_back);
 	RUN_TEST(test_vector_reserve_is_monotonic);
 	RUN_TEST(test_vector_null_args);
-	return UNITY_END();
 }
+
+TestFunctions gTestFuncsContainersVector =
+{
+	.mainPtr = containers_vector_main,
+};
+

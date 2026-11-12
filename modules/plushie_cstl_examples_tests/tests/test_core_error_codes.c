@@ -1,15 +1,12 @@
 // Tests the PlushieResult X-macro schema and the decode lookups.
 // Regression guard: the decode functions used to fall off their non-void
 // default path without a return.
-#include "unity.h"
+#include "tests_shared.h"
 
 #if PLUSHIE_CSTL_TESTS_PROVIDE_IMPL
 #  define PLUSHIE_CSTL_CORE_ERROR_CODES_PROVIDE_IMPL 1
 #endif
 #include "plushie/cstl/core/error_codes.h"
-
-void setUp(void) {}
-void tearDown(void) {}
 
 void test_decode_name_nonempty_for_all(void)
 {
@@ -44,12 +41,16 @@ void test_decode_default_out_of_range(void)
 	TEST_ASSERT_EQUAL_STRING("Error not found", plushie_result_decode_desc((PlushieResult)9999));
 }
 
-int main(void)
+void core_error_codes_main(void)
 {
-	UNITY_BEGIN();
 	RUN_TEST(test_decode_name_nonempty_for_all);
 	RUN_TEST(test_decode_desc_nonempty_for_all);
 	RUN_TEST(test_decode_specific_names);
 	RUN_TEST(test_decode_default_out_of_range);
-	return UNITY_END();
 }
+
+TestFunctions gTestFuncsCoreErrorCodes =
+{
+	.mainPtr = core_error_codes_main,
+};
+

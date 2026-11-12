@@ -1,15 +1,12 @@
 // Tests the elf ident deserializer and its PlushieResult error mapping.
 // Regression guard: this used to return magic negative ints (-1..-4); it now
 // returns typed PlushieResult codes.
-#include "unity.h"
+#include "tests_shared.h"
 
 #if PLUSHIE_CSTL_TESTS_PROVIDE_IMPL
 #  define PLUSHIE_CSTL_FILETYPES_ELF_PROVIDE_IMPL 1
 #endif
 #include "plushie/cstl/filetypes/elf.h"
-
-void setUp(void) {}
-void tearDown(void) {}
 
 void test_elf_ident_valid(void)
 {
@@ -44,12 +41,16 @@ void test_elf_ident_null(void)
 		plushie_elf_structured_ident_deserialize(NULL, NULL, 0));
 }
 
-int main(void)
+void filetypes_elf_main(void)
 {
-	UNITY_BEGIN();
 	RUN_TEST(test_elf_ident_valid);
 	RUN_TEST(test_elf_ident_bad_magic);
 	RUN_TEST(test_elf_ident_truncated);
 	RUN_TEST(test_elf_ident_null);
-	return UNITY_END();
 }
+
+TestFunctions gTestFuncsFileTypeElf =
+{
+	.mainPtr = filetypes_elf_main,
+};
+

@@ -1,6 +1,6 @@
 // End-to-end test of the json parser after the rewrite (broken includes fixed,
 // PlushieJson_ReturnCode replaced with PlushieResult, allocator wrappers used).
-#include "unity.h"
+#include "tests_shared.h"
 #include <string.h>
 
 #if PLUSHIE_CSTL_TESTS_PROVIDE_IMPL
@@ -9,9 +9,6 @@
 #endif
 #include "plushie/cstl/allocators/libc.h"
 #include "plushie/cstl/filetypes/json.h"
-
-void setUp(void) {}
-void tearDown(void) {}
 
 static PlushieU8StrSpan span_from_cstr(const char* s)
 {
@@ -60,12 +57,16 @@ void test_json_null_args(void)
 	TEST_ASSERT_EQUAL(kPlushieResultErrNullptr, plushie_json_parse(NULL, NULL));
 }
 
-int main(void)
+void filetypes_json_main(void)
 {
-	UNITY_BEGIN();
 	RUN_TEST(test_json_parse_object);
 	RUN_TEST(test_json_parse_number);
 	RUN_TEST(test_json_parse_error);
 	RUN_TEST(test_json_null_args);
-	return UNITY_END();
 }
+
+TestFunctions gTestFuncsFileTypeJson =
+{
+	.mainPtr = filetypes_json_main,
+};
+
