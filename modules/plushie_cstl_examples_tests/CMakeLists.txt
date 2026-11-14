@@ -99,6 +99,12 @@ if(${PLUSHIE_CSTL_BUILD_TESTS})
 		install(TARGETS ${TEST_TARGETS}
 			RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}/tests)
 
+		# Runtime dependencies seem to fail to resolve 
+		if(CMAKE_CROSSCOMPILING)
+			# Backup for cross compiling
+    		install(FILES $<TARGET_RUNTIME_DLLS:PlushieCStl_Shared>
+			DESTINATION ${CMAKE_INSTALL_BINDIR}/tests)
+		else()
 		install(TARGETS PlushieCStl_Shared PlushieCStl_Test_Shared
         	RUNTIME_DEPENDENCY_SET plushie_cstl_runtime_deps
         	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}/tests)
@@ -108,7 +114,7 @@ if(${PLUSHIE_CSTL_BUILD_TESTS})
         	POST_EXCLUDE_REGEXES ".*[/\\\\][Ss]ystem32[/\\\\].*"    # Windows system DLLs
             	                 "^/lib/.*" "^/usr/lib/.*"          # Linux system libraries
         	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}/tests )
-
+		endif()
 	endif()
 
 endif()

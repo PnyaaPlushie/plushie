@@ -1,0 +1,22 @@
+name: Setup
+description: Per preset toolchain setup
+
+inputs: 
+  host-os:
+    description: Name of the host operating system
+    required: true
+  preset:
+    description: Name of the CMake preset being selected
+    required: true
+  
+runs:
+  using: composite
+  steps:
+    # All steps use cmake 
+    - name: CMake 
+      uses: lukka/get-cmake@latest
+
+    # For win32 msvc cross compile, we need to get xwin
+    - name: XWin
+      if: ${{ inputs.host-os == 'ubuntu-latest' && inputs.preset == 'windows-x64-msvc-cross-ci' }}
+      uses: ./.github/actions/setup-xwin

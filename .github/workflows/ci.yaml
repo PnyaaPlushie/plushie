@@ -5,25 +5,35 @@ env:
   PLUSHIE_FETCH_UNITY_TEST: "1"
 
 jobs:
-  windows-x64-msvc:
-    runs-on: windows-latest
+
+  build:
+    name: ${{ matrix.preset }}
+    runs-on: ${{ matrix.host-os }}
+    strategy:
+      fail-fast: false 
+      matrix:
+        include:
+          - { host-os: windows-latest, preset: windows-x64-msvc,          dist-path: "dist/Windows/windows-x64-msvc/plushie-host-windows-*.zip"   }
+          - { host-os: ubuntu-latest,  preset: windows-x64-msvc-cross-ci, dist-path: "dist/Linux/windows-x64-msvc-cross/plushie-host-linux-*.zip" }
+    
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v6
 
-      - uses: lukka/get-cmake@latest
-
-      - run: cmake --workflow --preset windows-x64-msvc-cstl
-
-      - uses: actions/upload-artifact@v7
+      - name: Setup
+        uses: ./.github/actions/setup
         with:
-          name: windows-x64-msvc-cstl
-          archive: false
-          path: dist/Windows/windows-x64-msvc-cstl/plushie-host-windows-*.zip
+          host-os: ${{ matrix.host-os }}
+          preset : ${{ matrix.preset }}
 
-      - run: cmake --workflow --preset windows-x64-msvc
+      - name: Workflow
+        run: cmake --workflow --preset ${{ matrix.preset }}
 
-      - uses: actions/upload-artifact@v7
+      - name: Archive 
+        if: matrix.dist-path != ''
+        uses: actions/upload-artifact@v7
         with:
-          name: windows-x64-msvc
+          name: ${{ matrix.preset }}
           archive: false
-          path: dist/Windows/windows-x64-msvc/plushie-host-windows-*.zip
+          path: ${{ matrix.dist-path }}
+

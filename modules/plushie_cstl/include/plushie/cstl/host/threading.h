@@ -124,7 +124,7 @@ PLUSHIE_CSTL_API PlushieResult plushie_thread_init(
 	out_thread->thread_handle = CreateThread(
 		NULL,
 		0,
-		init->function,
+		(LPTHREAD_START_ROUTINE)init->function,
 		NULL,
 		0,
 		&out_thread->thread_id
