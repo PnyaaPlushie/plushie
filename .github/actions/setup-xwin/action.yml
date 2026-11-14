@@ -4,7 +4,7 @@ description: Download MSVC CRT + Windows SDK via xwin for clang-cl cross builds
 inputs:
   xwin-version:
     description: XWin release to use
-    default    : '0.6.5'
+    default    : '0.10.0'
   win-sdk-version:
     description: Which windows sdk version to download, empty means latest
     default    : ''  
