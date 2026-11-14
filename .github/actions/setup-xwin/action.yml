@@ -42,7 +42,7 @@ runs:
       if: steps.cache-restore.outputs.cache-hit != 'true'
       shell: bash
       env:
-        XWIN_ACCEPT_LICENSE: '1'
+        XWIN_ACCEPT_LICENSE: 'true'
       run : |
         # Download splat
         v='${{ inputs.xwin-version }}'
