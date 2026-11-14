@@ -20,8 +20,6 @@ inputs:
   
 runs:
   using: composite
-  env: 
-    xwin-cache-key: xwin-${{ inputs.xwin-version }}-${{ inputs.arch }}-sdk${{ inputs.sdk-win-sdk-version }}-crt${{ inputs.win-crt-version }}
   steps:
 
     # LLVM Tools are going to be needed for xwin, can't be cached
@@ -37,7 +35,7 @@ runs:
       uses: actions/cache/restore@v4
       with:
         path: ${{ inputs.output-dir }}
-        key : ${{ env.xwin-cache-key }}
+        key : xwin-${{ inputs.xwin-version }}-${{ inputs.arch }}-sdk${{ inputs.win-sdk-version }}-crt${{ inputs.win-crt-version }}
     
     # Download if not accessible
     - name: Download and splat
@@ -47,7 +45,7 @@ runs:
         XWIN_ACCEPT_LICENSE: '1'
       run : |
         # Download splat
-        v = '${{ inputs.xwin-version }}'
+        v='${{ inputs.xwin-version }}'
         name="xwin-${v}-x86_64-unknown-linux-musl"
         curl -fsSL "https://github.com/Jake-Shadle/xwin/releases/download/${v}/${name}.tar.gz" | tar xz -C "$RUNNER_TEMP"
 
