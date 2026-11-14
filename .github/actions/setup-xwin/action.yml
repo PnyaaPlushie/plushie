@@ -1,0 +1,74 @@
+name: Setup xwin
+description: Download MSVC CRT + Windows SDK via xwin for clang-cl cross builds
+
+inputs:
+  xwin-version:
+    description: XWin release to use
+    default    : '0.6.5'
+  win-sdk-version:
+    description: Which windows sdk version to download, empty means latest
+    default    : ''  
+  win-crt-version:
+    description: Which version of the C runtime to download, empty means latest
+    default    : ''
+  arch:
+    description: Which architecture to target
+    default    : x86_64
+  output-dir:
+    default    : /opt/xwin
+
+  
+runs:
+  using: composite
+  env: 
+    xwin-cache-key: xwin-${{ inputs.xwin-version }}-${{ inputs.arch }}-sdk${{ inputs.sdk-win-sdk-version }}-crt${{ inputs.win-crt-version }}
+  steps:
+
+    # LLVM Tools are going to be needed for xwin, can't be cached
+    - name: Install LLVM tools
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y clang lld llvm ninja-build
+
+    # Check if we already have the value in cache
+    - name: Try restore cache
+      id: cache-restore
+      uses: actions/cache/restore@v4
+      with:
+        path: ${{ inputs.output-dir }}
+        key : ${{ env.xwin-cache-key }}
+    
+    # Download if not accessible
+    - name: Download and splat
+      if: steps.cache-restore.outputs.cache-hit != 'true'
+      shell: bash
+      env:
+        XWIN_ACCEPT_LICENSE: '1'
+      run : |
+        # Download splat
+        v = '${{ inputs.xwin-version }}'
+        name="xwin-${v}-x86_64-unknown-linux-musl"
+        curl -fsSL "https://github.com/Jake-Shadle/xwin/releases/download/${v}/${name}.tar.gz" | tar xz -C "$RUNNER_TEMP"
+
+        # Build the args
+        args=(--arch '${{ inputs.arch }}')
+        [[ -n '${{ inputs.win-sdk-version }}' ]] && args+=(--sdk-version '${{ inputs.win-sdk-version }}')
+        [[ -n '${{ inputs.win-crt-version }}' ]] && args+=(--crt-version '${{ inputs.win-crt-version }}')
+    
+        # Prep output dir
+        sudo mkdir -p '${{ inputs.output-dir }}' && sudo chown "$USER" '${{ inputs.output-dir }}'
+        "$RUNNER_TEMP/${name}/xwin" "${args[@]}" splat --output '${{ inputs.output-dir }}'
+
+    # Save to cache if we downloaded and were successful
+    - name: Save splat
+      if: steps.cache-restore.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v4
+      with:
+        path: ${{ inputs.output-dir }}
+        key: ${{ steps.cache-restore.outputs.cache-primary-key }}
+    
+    # Export the environment variable
+    - name: Export splat
+      shell: bash
+      run: echo "XWIN_DIR=${{ inputs.output-dir }}" >> "$GITHUB_ENV"

@@ -15,3 +15,8 @@ runs:
     # All steps use cmake 
     - name: CMake 
       uses: lukka/get-cmake@latest
+
+    # For win32 msvc cross compile, we need to get xwin
+    - name: XWin
+      if: ${{ inputs.host-os == 'windows' && inputs.preset == 'windows-x64-msvc-cross' }}
+      uses: ./.github/actions/setup-xwin
