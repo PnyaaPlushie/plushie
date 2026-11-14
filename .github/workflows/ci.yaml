@@ -27,7 +27,7 @@ jobs:
         if: matrix.dist-path != ''
         uses: actions/upload-artifact@v7
         with:
-          name: matrix.preset
+          name: ${{ matrix.preset }}
           archive: false
-          path: matrix.dist-path 
+          path: ${{ matrix.dist-path }}
 
