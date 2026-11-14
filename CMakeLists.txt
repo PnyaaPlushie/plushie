@@ -1,9 +1,11 @@
+# --- Plushie --------------------------------------------------------------------------------------------
 # Top-level CMake for scanning subdirectories that contain CMakeLists.txt
 cmake_minimum_required(VERSION 4.0.0 FATAL_ERROR)
 option(PLUSHIE_ROOT_CSTL_ONLY "Should plushie root only configure for cstl for smaller build" OFF)
 
 enable_testing()
 project(Plushie VERSION 0.1.0 LANGUAGES C)
+include(FetchContent)
 
 # Put every exe and DLL from every module in one folder (bin/<Config> for
 # multi-config generators). Windows has no rpath, so an exe only finds its DLLs
@@ -22,27 +24,63 @@ else()
     "Run 'cmake --list-presets' to see the available ones.")
 endif()
 
+# --- Unity tests ---------------------------------------------------------------------------------------
+# Unity test is the framework we use for testing
+find_package(unity QUIET)
+if(NOT unity_FOUND)
+	# Does the user already unity checked out out on their machine? They can set it with 
+	# PLUSHIE_UNITY_TEST_SRC_DIR. The usecase is for multiplatform builds without repulling
+	if(DEFINED ENV{PLUSHIE_UNITY_TEST_SRC_DIR})
+		message(VERBOSE "[Plushie::Root] Attempting to locate unity test from "
+		"$ENV{PLUSHIE_UNITY_TEST_SRC_DIR}")
 
-include(FetchContent)
+		if(NOT EXISTS "$ENV{PLUSHIE_UNITY_TEST_SRC_DIR}/CMakeLists.txt")
+			message(FATAL_ERROR "[Plushie::Root] No cmake file detected in "
+			"$ENV{PLUSHIE_UNITY_TEST_SRC_DIR}/CMakeLists.txt")
+		endif()
 
-# Use the environment variables to check if the user wants to fetch unitytest
-# as part of the build, useful in CI, since we don't have to manually fetch
-if(DEFINED ENV{PLUSHIE_FETCH_UNITY_TEST})
-	message(STATUS ["Plushie::Root Using fetch content for unity test"])
-	FetchContent_Declare(unity GIT_REPOSITORY https://github.com/ThrowTheSwitch/Unity.git
-		GIT_TAG        v2.6.1 
-		GIT_SHALLOW    TRUE
-		EXCLUDE_FROM_ALL
-		OVERRIDE_FIND_PACKAGE)
-  FetchContent_MakeAvailable(unity)
+		FetchContent_Declare(unity SOURCE_DIR $ENV{PLUSHIE_UNITY_TEST_SRC_DIR} 
+			EXCLUDE_FROM_ALL OVERRIDE_FIND_PACKAGE)
+	
+	# User can define PLUSHIE_FETCH_UNITY_TEST environment variable to let cmake fetch it 
+	# from github origin, this will pull for each build dir. Can be slow for multi target
+	elseif(DEFINED ENV{PLUSHIE_FETCH_UNITY_TEST})
+		message(VERBOSE "[Plushie::Root] Using fetch content for unity")
+		FetchContent_Declare(unity GIT_REPOSITORY https://github.com/ThrowTheSwitch/Unity.git
+			GIT_TAG        v2.6.1 
+			GIT_SHALLOW    TRUE
+			EXCLUDE_FROM_ALL
+			OVERRIDE_FIND_PACKAGE)
+	
+	# No specified method for unity
+	else()
+		message(FATAL_ERROR "No specified search method for Unity test use one of the following\n"
+		"  `PLUSHIE_UNITY_TEST_SRC_DIR`: Use local source checkout\n"
+		"  `PLUSHIE_FETCH_UNITY_TEST`  : Fetch from github in build tree")
+	endif()
+	
+	# Now make it available
+	FetchContent_MakeAvailable(unity)
+
+else()
+	message(VERBOSE "[Plushie::Root] Found unity test automatically")
 endif()
-find_package(unity REQUIRED QUIET)
+
+# Useful for editing any particular properties for unity test
+get_target_property(_unity_target unity::framework ALIASED_TARGET)
+get_target_property(_unity_imported ${_unity_target} IMPORTED)
+if(NOT _unity_target)
+	set(_unity_target unity::framework)
+endif()
+
+# --- Plushie Packages Override -------------------------------------------------------------------------
 
 # Override the find package behaviour for the modules which we build 
 FetchContent_Declare(PlushieCStl SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/modules/plushie_cstl OVERRIDE_FIND_PACKAGE)
 FetchContent_MakeAvailable(PlushieCStl)
 
 
+# --- Plushie our modules -------------------------------------------------------------------------------
 set(plushie_search_dirs
 	modules
 	modules_lab
@@ -93,7 +131,7 @@ else()
 	endforeach()
 endif()
 
-
+# --- Plushie Packaging ---------------------------------------------------------------------------------
 
 # Generate the project package name
 set(PLUSHIE_PACKAGE_FILE_NAME "plushie-host-${CMAKE_HOST_SYSTEM_NAME}-target")
