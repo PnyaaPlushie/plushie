@@ -73,6 +73,19 @@ if(NOT _unity_target)
 	set(_unity_target unity::framework)
 endif()
 
+# Clang-cl (Clang with the MSVC frontend) has an bug with not guarding noreturn
+# awaiting merge: https://github.com/ThrowTheSwitch/Unity/pull/863
+if(CMAKE_C_COMPILER_ID STREQUAL "Clang" AND CMAKE_C_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
+	target_compile_definitions(${_unity_target} INTERFACE UNITY_NORETURN=_Noreturn)
+
+	# When built from source: unity's CMakeLists passes -Wall -Werror for Clang, and
+	# under clang-cl -Wall means -Weverything. Silence warnings in third-party code.
+	if(NOT _unity_imported)
+		target_compile_definitions(${_unity_target} PRIVATE UNITY_NORETURN=_Noreturn)
+		target_compile_options(${_unity_target} PRIVATE -w)
+	endif()
+endif()
+
 # --- Plushie Packages Override -------------------------------------------------------------------------
 
 # Override the find package behaviour for the modules which we build 

@@ -111,8 +111,7 @@
                 "This is here to provide a ninja config on non windows hosts"
             ],
             "displayName"    : "Windows x64 MSVC (Non Windows host)",
-            "inherits"       : [ "base", "non-windows-host" ],
-            "toolchainFile"  : "${sourceDir}/cmake/toolchains/windows-x64-msvc.cmake"
+            "inherits"       : [ "base", "non-windows-host" ]
         },
         {
             "name"           : "windows-x64-clang",
@@ -298,6 +297,19 @@
             "configuration": "Release"
         },
 
+        {
+            "name": "windows-x64-msvc-cross-dbg",
+            "inherits" : [ "test-base" ],
+            "configurePreset": "windows-x64-msvc-cross",
+            "configuration": "Debug"
+        },
+        {
+            "name": "windows-x64-msvc-cross-rel",
+            "inherits" : [ "test-base" ],
+            "configurePreset": "windows-x64-msvc-cross",
+            "configuration": "Release"
+        },
+
         {   "name" : "windows-x64-msvc-cstl-dbg",     "configurePreset": "windows-x64-msvc-cstl",  "inherits" : [ "windows-x64-msvc-dbg" ] },
         {   "name" : "windows-x64-msvc-cstl-rel",     "configurePreset": "windows-x64-msvc-cstl",  "inherits" : [ "windows-x64-msvc-rel" ] },
         {   "name" : "windows-x64-mingw-cstl-dbg",    "configurePreset": "windows-x64-mingw-cstl", "inherits" : [ "windows-x64-mingw-dbg" ] },
@@ -390,6 +402,17 @@
                 { "type": "test",      "name": "windows-x64-mingw-cstl-rel" },
                 { "type": "package",   "name": "windows-x64-mingw-cstl"     }
             ]
+        },
+
+        {
+            "name": "windows-x64-msvc-cross",  "steps":
+            [
+                {"type": "configure", "name": "windows-x64-msvc-cross"},
+                {"type": "build",     "name": "windows-x64-msvc-cross-dbg"},
+                {"type": "test",      "name": "windows-x64-msvc-cross-dbg"}
+            ]
         }
+
+
     ]
 }
