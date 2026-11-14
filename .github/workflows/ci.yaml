@@ -24,7 +24,7 @@ jobs:
         run: cmake --workflow --preset ${{ matrix.preset }}
 
       - name: Archive 
-        if: matrix.dist-path != ""
+        if: matrix.dist-path != ''
         uses: actions/upload-artifact@v7
         with:
           name: matrix.preset
