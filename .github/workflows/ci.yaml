@@ -13,8 +13,8 @@ jobs:
       fail-fast: false 
       matrix:
         include:
-          - { host-os: windows-latest, preset: windows-x64-msvc       dist-path: "dist/Windows/windows-x64-msvc/plushie-host-windows-*.zip" }
-          - { host-os: ubuntu-latest,  preset: windows-x64-msvc-cross dist-path: ""                                                         }
+          - { host-os: windows-latest, preset: windows-x64-msvc,       dist-path: "dist/Windows/windows-x64-msvc/plushie-host-windows-*.zip" }
+          - { host-os: ubuntu-latest,  preset: windows-x64-msvc-cross, dist-path: ""                                                         }
     
     steps:
       - uses: actions/checkout@v6
