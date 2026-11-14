@@ -17,8 +17,16 @@ jobs:
           - { host-os: ubuntu-latest,  preset: windows-x64-msvc-cross, dist-path: ""                                                         }
     
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v6
+
       - uses: lukka/get-cmake@latest
+
+      - name: Setup
+        uses: ./.github/actions/setup
+        with:
+          host-os: ${{ matrix.host-os }}
+          preset : ${{ matrix.preset }}
 
       - name: Workflow
         run: cmake --workflow --preset ${{ matrix.preset }}

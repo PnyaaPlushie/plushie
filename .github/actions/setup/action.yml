@@ -1,0 +1,17 @@
+name: Setup
+description: Per preset toolchain setup
+
+inputs: 
+  host-os:
+    description: Name of the host operating system
+    required: true
+  preset:
+    description: Name of the CMake preset being selected
+    required: true
+  
+runs:
+  using: composite
+  steps:
+    # All steps use cmake 
+    - name: CMake 
+      uses: lukka/get-cmake@latest
