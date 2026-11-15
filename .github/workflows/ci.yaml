@@ -25,7 +25,7 @@ jobs:
         uses: ./.github/actions/setup
         with:
           host-os: ${{ matrix.host-os }}
-          preset : ${{ matrix.preset }}
+          preset : ${{ matrix.target }}
 
       - name: Workflow
         run: cmake --workflow --preset ${{ matrix.target }}-${{ matrix.workflow-postfix }}
