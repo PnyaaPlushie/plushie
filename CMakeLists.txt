@@ -68,10 +68,10 @@ endif()
 
 # Useful for editing any particular properties for unity test
 get_target_property(_unity_target unity::framework ALIASED_TARGET)
-get_target_property(_unity_imported ${_unity_target} IMPORTED)
 if(NOT _unity_target)
 	set(_unity_target unity::framework)
 endif()
+get_target_property(_unity_imported ${_unity_target} IMPORTED)
 
 # Clang-cl (Clang with the MSVC frontend) has an bug with not guarding noreturn
 # awaiting merge: https://github.com/ThrowTheSwitch/Unity/pull/863
