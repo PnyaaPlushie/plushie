@@ -1,0 +1,69 @@
+{
+    "version": 10,
+    "cmakeMinimumRequired": { "major": 3, "minor": 31, "patch": 0 },
+    "$comment": [ "Cross compiles For Windows msvc via xwin" ],
+    "include": [ "../common.json" ],
+
+    "configurePresets":
+    [
+        {
+            "name"           : "windows-x64-msvc-xwin",
+            "displayName"    : "Windows x64 MSVC (Non Windows host)",
+            "inherits"       : [ "base-ninja" ]
+        }
+    ],
+
+    "buildPresets": 
+    [
+        { "name": "windows-x64-msvc-xwin-dbg",      "configurePreset": "windows-x64-msvc-xwin",      "configuration": "Debug"   },        
+        { "name": "windows-x64-msvc-xwin-rel",      "configurePreset": "windows-x64-msvc-xwin",      "configuration": "Release" }
+    ],
+
+    "testPresets":
+    [
+        {
+            "name": "windows-x64-msvc-xwin-dbg",
+            "configurePreset": "windows-x64-msvc-xwin",
+            "inherits" : [ "test-base-dbg" ]
+        },
+        {
+            "name": "windows-x64-msvc-xwin-rel",
+            "configurePreset": "windows-x64-msvc-xwin",
+            "inherits" : [ "test-base-rel" ]
+        }
+        
+    ],
+
+    "packagePresets":
+    [
+        {
+            "name": "windows-x64-msvc-xwin",
+            "configurePreset": "windows-x64-msvc-xwin",
+            "inherits": ["package-base"]
+        }
+    ],
+
+    "workflowPresets":
+    [
+        {
+            "name": "windows-x64-msvc-xwin-build-package-test", "steps":
+            [
+                {"type": "configure", "name": "windows-x64-msvc-xwin"      },
+                {"type": "build",     "name": "windows-x64-msvc-xwin-dbg"  },
+                {"type": "test",      "name": "windows-x64-msvc-xwin-dbg"  },
+                {"type": "build",     "name": "windows-x64-msvc-xwin-rel"  },
+                {"type": "test",      "name": "windows-x64-msvc-xwin-rel"  },
+                {"type": "package",   "name": "windows-x64-msvc-xwin"      }
+            ]
+        },
+        {
+            "name": "windows-x64-msvc-xwin-build-package", "steps":
+            [
+                {"type": "configure", "name": "windows-x64-msvc-xwin"      },
+                {"type": "build",     "name": "windows-x64-msvc-xwin-dbg"  },
+                {"type": "build",     "name": "windows-x64-msvc-xwin-rel"  },
+                {"type": "package",   "name": "windows-x64-msvc-xwin"      }
+            ]
+        }
+    ]
+}

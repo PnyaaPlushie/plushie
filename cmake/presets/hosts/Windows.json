@@ -1,0 +1,13 @@
+{
+    "version": 10,
+    "cmakeMinimumRequired": { "major": 3, "minor": 31, "patch": 0 },
+    "$comment": 
+    [
+        "Workflows which can be executed from a linux host machine"
+    ],
+    "include" :
+    [
+        "../targets/windows-x64-msvc.json",
+        "../targets/windows-x64-mingw.json"
+    ]
+}

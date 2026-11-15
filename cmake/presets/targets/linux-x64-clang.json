@@ -1,0 +1,69 @@
+{
+    "version": 10,
+    "cmakeMinimumRequired": { "major": 3, "minor": 31, "patch": 0 },
+    "$comment": [ "Builds for linux x64 with clang" ],
+    "include": [ "../common.json" ],
+
+    "configurePresets":
+    [
+        {
+            "name"            : "linux-x64-clang",
+            "displayName"     : "Linux x64 (Clang)",
+            "inherits"        : [ "base-ninja" ],
+            "cacheVariables"  : { "CMAKE_C_COMPILER": "clang", "CMAKE_CXX_COMPILER": "clang++" }
+        }
+    ],
+
+    "buildPresets": 
+    [
+        { "name": "linux-x64-clang-dbg",             "configurePreset": "linux-x64-clang",             "configuration": "Debug"   },        
+        { "name": "linux-x64-clang-rel",             "configurePreset": "linux-x64-clang",             "configuration": "Release" }
+    ],
+
+    "testPresets":
+    [
+        {
+            "name": "linux-x64-clang-dbg",
+            "configurePreset": "linux-x64-clang",
+            "inherits" : [ "test-base-dbg" ]
+        },
+        {
+            "name": "linux-x64-clang-rel",
+            "configurePreset": "linux-x64-clang",
+            "inherits" : [ "test-base-rel" ]
+        }
+    ],
+
+    "packagePresets":
+    [
+        {
+            "name": "linux-x64-clang",
+            "configurePreset": "linux-x64-clang",
+            "inherits": ["package-base"]
+        }
+    ],
+
+    "workflowPresets":
+    [
+        {
+            "name": "linux-x64-clang-build-package-test", "steps":
+            [
+                {"type": "configure", "name": "linux-x64-clang"      },
+                {"type": "build",     "name": "linux-x64-clang-dbg"  },
+                {"type": "test",      "name": "linux-x64-clang-dbg"  },
+                {"type": "build",     "name": "linux-x64-clang-rel"  },
+                {"type": "test",      "name": "linux-x64-clang-rel"  },
+                {"type": "package",   "name": "linux-x64-clang"      }
+            ]
+        },
+        {
+            "name": "linux-x64-clang-build-package", "steps":
+            [
+                {"type": "configure", "name": "linux-x64-clang"      },
+                {"type": "build",     "name": "linux-x64-clang-dbg"  },
+                {"type": "build",     "name": "linux-x64-clang-rel"  },
+                {"type": "package",   "name": "linux-x64-clang"      }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,69 @@
+{
+    "version": 10,
+    "cmakeMinimumRequired": { "major": 3, "minor": 31, "patch": 0 },
+    "$comment": [ "Compiles For Windows MinGw" ],
+    "include": [ "../common.json" ],
+
+    "configurePresets":
+    [
+        {
+            "name"           : "windows-x64-mingw",
+            "displayName"    : "Windows x64 (MinGW-w64) ",
+            "inherits"       : [ "base-ninja" ]
+        }
+    ],
+
+    "buildPresets": 
+    [
+        { "name": "windows-x64-mingw-dbg",            "configurePreset": "windows-x64-mingw",          "configuration": "Debug"   },
+        { "name": "windows-x64-mingw-rel",            "configurePreset": "windows-x64-mingw",          "configuration": "Release" }
+    ],
+
+    "testPresets":
+    [
+        {
+            "name": "windows-x64-mingw-dbg",
+            "configurePreset": "windows-x64-mingw",
+            "inherits" : [ "test-base-dbg" ]
+        },
+        {
+            "name": "windows-x64-mingw-rel",
+            "configurePreset": "windows-x64-mingw",
+            "inherits" : [ "test-base-rel" ]
+        }
+        
+    ],
+
+    "packagePresets":
+    [
+        {
+            "name": "windows-x64-mingw",
+            "configurePreset": "windows-x64-mingw",
+            "inherits": ["package-base"]
+        }
+    ],
+
+    "workflowPresets":
+    [
+        {
+            "name": "windows-x64-mingw-build-package-test", "steps":
+            [
+                {"type": "configure", "name": "windows-x64-mingw"      },
+                {"type": "build",     "name": "windows-x64-mingw-dbg"  },
+                {"type": "test",      "name": "windows-x64-mingw-dbg"  },
+                {"type": "build",     "name": "windows-x64-mingw-rel"  },
+                {"type": "test",      "name": "windows-x64-mingw-rel"  },
+                {"type": "package",   "name": "windows-x64-mingw"      }
+            ]
+        },
+        {
+            "name": "windows-x64-mingw-build-package", "steps":
+            [
+                {"type": "configure", "name": "windows-x64-mingw"      },
+                {"type": "build",     "name": "windows-x64-mingw-dbg"  },
+                {"type": "build",     "name": "windows-x64-mingw-rel"  },
+                {"type": "package",   "name": "windows-x64-mingw"      }
+            ]
+        }
+    ]
+}
