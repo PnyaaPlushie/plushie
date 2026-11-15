@@ -1,0 +1,12 @@
+{
+    "version": 10,
+    "cmakeMinimumRequired": { "major": 3, "minor": 31, "patch": 0 },
+    "$comment": 
+    [
+        "Workflows which can be executed from a macos machine"
+    ],
+    "include" :
+    [
+        "../common.json"
+    ]
+}

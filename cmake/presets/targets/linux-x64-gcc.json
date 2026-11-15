@@ -1,0 +1,70 @@
+{
+    "version": 10,
+    "cmakeMinimumRequired": { "major": 3, "minor": 31, "patch": 0 },
+    "$comment": [ "Builds for linux x64 with gcc" ],
+    "include": [ "../common.json" ],
+
+    "configurePresets":
+    [
+        {
+            "name"            : "linux-x64-gcc",
+            "displayName"     : "Linux x64 (GCC)",
+            "inherits"        : [ "base-ninja" ],
+            "cacheVariables"  : { "CMAKE_C_COMPILER": "gcc", "CMAKE_CXX_COMPILER": "g++" }
+        }
+    ],
+
+    "buildPresets": 
+    [
+        { "name": "linux-x64-gcc-dbg",               "configurePreset": "linux-x64-gcc",               "configuration": "Debug"   },
+        { "name": "linux-x64-gcc-rel",               "configurePreset": "linux-x64-gcc",               "configuration": "Release" }
+    ],
+
+    "testPresets":
+    [
+        {
+            "name": "linux-x64-gcc-dbg",
+            "configurePreset": "linux-x64-gcc",
+            "inherits" : [ "test-base-dbg" ]
+        },
+        {
+            "name": "linux-x64-gcc-rel",
+            "configurePreset": "linux-x64-gcc",
+            "inherits" : [ "test-base-rel" ]
+        }
+        
+    ],
+
+    "packagePresets":
+    [
+        {
+            "name": "linux-x64-gcc",
+            "configurePreset": "linux-x64-gcc",
+            "inherits": ["package-base"]
+        }
+    ],
+
+    "workflowPresets":
+    [
+        {
+            "name": "linux-x64-gcc-build-package-test", "steps":
+            [
+                {"type": "configure", "name": "linux-x64-gcc"      },
+                {"type": "build",     "name": "linux-x64-gcc-dbg"  },
+                {"type": "test",      "name": "linux-x64-gcc-dbg"  },
+                {"type": "build",     "name": "linux-x64-gcc-rel"  },
+                {"type": "test",      "name": "linux-x64-gcc-rel"  },
+                {"type": "package",   "name": "linux-x64-gcc"      }
+            ]
+        },
+        {
+            "name": "linux-x64-gcc-build-package", "steps":
+            [
+                {"type": "configure", "name": "linux-x64-gcc"      },
+                {"type": "build",     "name": "linux-x64-gcc-dbg"  },
+                {"type": "build",     "name": "linux-x64-gcc-rel"  },
+                {"type": "package",   "name": "linux-x64-gcc"      }
+            ]
+        }
+    ]
+}

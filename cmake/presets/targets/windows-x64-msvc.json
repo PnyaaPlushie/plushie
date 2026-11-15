@@ -1,0 +1,72 @@
+{
+    "version": 10,
+    "cmakeMinimumRequired": { "major": 3, "minor": 31, "patch": 0 },
+    "$comment": [ "Compiles for Windows msvc, most likely via visual studio",
+                   "No generated is specified as cmake finds which VS to use" ],
+    "include": [ "../common.json" ],
+
+    "configurePresets":
+    [
+        {
+            "name"           : "windows-x64-msvc",
+            "displayName"    : "Windows x64 MSVC ",
+            "inherits"       : [ "base" ],
+            "architecture"   : { "value": "x64", "strategy": "set" },
+            "toolset"        : { "value": "host=x64", "strategy": "set" }
+        }
+    ],
+
+    "buildPresets": 
+    [
+        { "name": "windows-x64-msvc-dbg",      "configurePreset": "windows-x64-msvc",      "configuration": "Debug"   },        
+        { "name": "windows-x64-msvc-rel",      "configurePreset": "windows-x64-msvc",      "configuration": "Release" }
+    ],
+
+    "testPresets":
+    [
+        {
+            "name": "windows-x64-msvc-dbg",
+            "configurePreset": "windows-x64-msvc",
+            "inherits" : [ "test-base-dbg" ]
+        },
+        {
+            "name": "windows-x64-msvc-rel",
+            "configurePreset": "windows-x64-msvc",
+            "inherits" : [ "test-base-rel" ]
+        }
+        
+    ],
+
+    "packagePresets":
+    [
+        {
+            "name": "windows-x64-msvc",
+            "configurePreset": "windows-x64-msvc",
+            "inherits": ["package-base"]
+        }
+    ],
+
+    "workflowPresets":
+    [
+        {
+            "name": "windows-x64-msvc-build-package-test", "steps":
+            [
+                {"type": "configure", "name": "windows-x64-msvc"      },
+                {"type": "build",     "name": "windows-x64-msvc-dbg"  },
+                {"type": "test",      "name": "windows-x64-msvc-dbg"  },
+                {"type": "build",     "name": "windows-x64-msvc-rel"  },
+                {"type": "test",      "name": "windows-x64-msvc-rel"  },
+                {"type": "package",   "name": "windows-x64-msvc"      }
+            ]
+        },
+        {
+            "name": "windows-x64-msvc-build-package", "steps":
+            [
+                {"type": "configure", "name": "windows-x64-msvc"      },
+                {"type": "build",     "name": "windows-x64-msvc-dbg"  },
+                {"type": "build",     "name": "windows-x64-msvc-rel"  },
+                {"type": "package",   "name": "windows-x64-msvc"      }
+            ]
+        }
+    ]
+}

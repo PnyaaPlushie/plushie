@@ -13,43 +13,6 @@
 #define PLUSHIE_CSTL_CORE_PLATFORM_H
 
 /******************************************************************************
-* CSTL Runtime Availability
-* Plushie CSTL is built around using it with or without libc runtime and
-* headers. Most of the time a user has libc, and if not they at least have the
-* headers for typedecl.
-*******************************************************************************/
-
-// By default we assume you have libc
-#ifndef PLUSHIE_CSTL_HAS_LIBC_RUNTIME
-#  define PLUSHIE_CSTL_HAS_LIBC_RUNTIME 1
-#endif
-
-// Default availability of headers for libc.
-#ifndef PLUSHIE_CSTL_HAS_LIBC_HEADERS
-#  define PLUSHIE_CSTL_HAS_LIBC_HEADERS 1
-#endif
-
-// Stdint can be used without a runtime
-#ifndef PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDINT
-#  define PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDINT PLUSHIE_CSTL_HAS_LIBC_HEADERS
-#endif
-
-// Stddef can be used for size_t without a runtime
-#ifndef PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDDEF
-#  define PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDDEF PLUSHIE_CSTL_HAS_LIBC_HEADERS
-#endif
-
-// StdString contains useful implementations like memset
-#ifndef PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDSTRING
-#  define PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDSTRING PLUSHIE_CSTL_HAS_LIBC_HEADERS
-#endif
-
-// Stdio contains printf and friends
-#ifndef PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDIO
-#  define PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDIO PLUSHIE_CSTL_HAS_LIBC_HEADERS
-#endif
-
-/******************************************************************************
 * Target OS detection
 *******************************************************************************/
 
@@ -76,6 +39,18 @@
 #  endif
 
 #endif
+
+/******************************************************************************
+* Architecture detection
+*******************************************************************************/
+
+// List of architectures
+#define PLUSHIE_ARCH_ID_NONE    0
+#define PLUSHIE_ARCH_ID_X86_32  1
+#define PLUSHIE_ARCH_ID_X86_64  2
+#define PLUSHIE_ARCH_ID_ARM_32  3
+#define PLUSHIE_ARCH_ID_ARM_64  4
+
 
 /******************************************************************************
 * Compiler detection
@@ -106,6 +81,50 @@
 #    define PLUSHIE_COMPILER_ID PLUSHIE_COMPILER_ID_NONE
 #  endif
 
+#endif
+
+
+/******************************************************************************
+* C Standard version detection
+*******************************************************************************/
+
+// Normalize based on the stdc macro. We use the year.
+
+// Normalize msvc when user hasn't used conformance flag
+#if PLUSHIE_COMPILER_ID == PLUSHIE_COMPILER_ID_MSVC && !defined(PLUSHIE_C_STD)
+
+#  ifndef __STDC_VERSION__
+#    pragma message(__FILE__ " append /Zc:__STDC_VERSION__ for better conformance")
+#    if _MSC_VER >= 1928         /* VS 2019 v 16.8+ supports C11/C17 */
+#      define PLUSHIE_C_STD 2017
+#    elif _MSC_VER >= 1900       /* VS 2015+ has C99 support*/
+#      define PLUSHIE_C_STD 1999
+#    else                        /* Else we guess */
+#      define PLUSHIE_C_STD 1990
+#    endif
+#  endif
+
+#endif
+
+// Use __STDC_VERSION__ macro to determine standard
+#if !defined(PLUSHIE_C_STD) && defined __STDC_VERSION__
+
+#  if __STDC_VERSION__ >= 202311L
+#    define PLUSHIE_C_STD 2023
+#  elif __STDC_VERSION__ >= 201710L
+#    define PLUSHIE_C_STD 2017
+#  elif __STDC_VERSION__ >= 201112L
+#    define PLUSHIE_C_STD 2011
+#  elif __STDC_VERSION__ >= 199901L
+#    define PLUSHIE_C_STD 1999
+#  elif __STDC_VERSION__ == 199409L /* MSVC legacy value C95 ~= C90 */
+#    define PLUSHIE_C_STD 1990
+#  else
+#    define PLUSHIE_C_STD 1990
+#  endif
+
+#elif !defined(PLUSHIE_C_STD)
+#  define PLUSHIE_C_STD 1990  /* Final guess */
 #endif
 
 /******************************************************************************
@@ -153,58 +172,59 @@
 #endif
 
 /******************************************************************************
-* C Standard version detection
+* PlushieCSTL is designed to work with various levels of C standard library 
+* support, although the general assumption is that a user has standard support
+*
+* For example, if in kernel development, the user would have stdint headers, 
+* but no malloc support
 *******************************************************************************/
 
-// Normalize based on the stdc macro. We use the year.
+// --- Determine individual headers -------------------------------------------
 
-// Normalize msvc when user hasn't used conformance flag
-#if PLUSHIE_COMPILER_ID == PLUSHIE_COMPILER_ID_MSVC && !defined(PLUSHIE_C_STD)
-
-#  ifndef __STDC_VERSION__
-#    pragma message(__FILE__ " append /Zc:__STDC_VERSION__ for better conformance")
-#    if _MSC_VER >= 1928         /* VS 2019 v 16.8+ supports C11/C17 */
-#      define PLUSHIE_C_STD 2017
-#    elif _MSC_VER >= 1900       /* VS 2015+ has C99 support*/
-#      define PLUSHIE_C_STD 1999
-#    else                        /* Else we guess */
-#      define PLUSHIE_C_STD 1990
-#    endif
-#  endif
-
+// Default availability of headers for libc.
+#ifndef PLUSHIE_CSTL_HAS_LIBC_HEADERS
+#  define PLUSHIE_CSTL_HAS_LIBC_HEADERS 1
 #endif
 
-// Use __STDC_VERSION__ macro to determine standard
-#if !defined(PLUSHIE_C_STD) && defined __STDC_VERSION__
-
-#  if __STDC_VERSION__ >= 202311L
-#    define PLUSHIE_C_STD 2023
-#  elif __STDC_VERSION__ >= 201710L
-#    define PLUSHIE_C_STD 2017
-#  elif __STDC_VERSION__ >= 201112L
-#    define PLUSHIE_C_STD 2011
-#  elif __STDC_VERSION__ >= 199901L
-#    define PLUSHIE_C_STD 1999
-#  elif __STDC_VERSION__ == 199409L /* MSVC legacy value C95 ~= C90 */
-#    define PLUSHIE_C_STD 1990
-#  else
-#    define PLUSHIE_C_STD 1990
-#  endif
-
-#elif !defined(PLUSHIE_C_STD)
-#  define PLUSHIE_C_STD 1990  /* Final guess */
+// Stdint can be used without a runtime
+#ifndef PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDINT
+#  define PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDINT PLUSHIE_CSTL_HAS_LIBC_HEADERS
 #endif
 
-/******************************************************************************
-* Architecture detection
-*******************************************************************************/
+// Stddef can be used for size_t without a runtime
+#ifndef PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDDEF
+#  define PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDDEF PLUSHIE_CSTL_HAS_LIBC_HEADERS
+#endif
 
-// List of architectures
-#define PLUSHIE_ARCH_ID_NONE    0
-#define PLUSHIE_ARCH_ID_X86_32  1
-#define PLUSHIE_ARCH_ID_X86_64  2
-#define PLUSHIE_ARCH_ID_ARM_32  3
-#define PLUSHIE_ARCH_ID_ARM_64  4
+// StdString contains useful implementations like memset.
+// You also might find it being used for compiler built ins
+#ifndef PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDSTRING
+#  define PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDSTRING PLUSHIE_CSTL_HAS_LIBC_HEADERS
+#endif
+
+// Stdio contains printf and friends
+#ifndef PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDIO
+#  define PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDIO PLUSHIE_CSTL_HAS_LIBC_HEADERS
+#endif
+
+#ifndef PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDLIB
+#  define PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDLIB PLUSHIE_CSTL_HAS_LIBC_HEADERS
+#endif
+
+// --- Determine runtime features ---------------------------------------------
+
+// Default availability of c runtime
+#ifndef PLUSHIE_CSTL_HAS_LIBC_RUNTIME
+#  define PLUSHIE_CSTL_HAS_LIBC_RUNTIME 1
+#endif
+
+#ifndef PLUSHIE_CSTL_HAS_LIBC_RUNTIME_MALLOC
+#  define PLUSHIE_CSTL_HAS_LIBC_RUNTIME_MALLOC (PLUSHIE_CSTL_HAS_LIBC_RUNTIME && PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDLIB)
+#endif
+
+#ifndef PLUSHIE_CSTL_HAS_LIBC_RUNTIME_FREE
+#  define PLUSHIE_CSTL_HAS_LIBC_RUNTIME_FREE (PLUSHIE_CSTL_HAS_LIBC_RUNTIME && PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDLIB)
+#endif
 
 /******************************************************************************
 * Alignment macro
@@ -223,7 +243,8 @@
 #  define PLUSHIE_ALIGNOF(type) _Alignof(type)
 
 // Gcc/Clang: Use a GNU extension for pre-C11
-#elif (PLUSHIE_COMPILER_ID == PLUSHIE_COMPILER_ID_GCC) || (PLUSHIE_COMPILER_ID == PLUSHIE_COMPILER_ID_CLANG)
+#elif (PLUSHIE_COMPILER_ID == PLUSHIE_COMPILER_ID_GCC) || \
+      (PLUSHIE_COMPILER_ID == PLUSHIE_COMPILER_ID_CLANG)
 #  define PLUSHIE_ALIGNOF(type) __alignof__(type)
 
 // Final guess which is very bad, but if you take the size of the element

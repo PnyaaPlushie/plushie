@@ -1,0 +1,84 @@
+{
+
+    "version": 10,
+    "cmakeMinimumRequired": { "major": 3, "minor": 31, "patch": 0 },
+    "$comment": 
+    [
+        "Minimum required version of schema and cmake to parse comment tags (3.31.0, 10)",
+        "Plushie build presets: build/<triple>, one preset per platform"
+    ],
+
+    "configurePresets": 
+    [
+        {
+            "name"           : "base",
+            "$comment"       : "Information that is shared between all of the builds",
+            "hidden"         :  true,
+            "binaryDir"      : "${sourceDir}/build/${hostSystemName}/${presetName}",
+            "installDir"     : "${sourceDir}/install/${hostSystemName}/${presetName}",
+            "toolchainFile"  : "${sourceDir}/cmake/toolchains/${presetName}.cmake",
+            "cacheVariables" :
+            {
+                "PLUSHIE_PRESET_NAME"            : "${presetName}",
+
+                "PLUSHIE_CSTL_BUILD_HEADER_ONLY" : "ON",
+                "PLUSHIE_CSTL_BUILD_SHARED"      : "ON",
+                "PLUSHIE_CSTL_BUILD_STATIC"      : "ON",
+                "PLUSHIE_CSTL_INCLUDE_CXX"       : "ON"
+            }
+        },
+
+        {
+            "name"           : "base-ninja",
+            "hidden"         :  true,
+            "generator"      : "Ninja Multi-Config",
+            "inherits"       : "base",
+            "cacheVariables" :
+            {
+                "CMAKE_EXPORT_COMPILE_COMMANDS" : "ON"
+            }
+        }
+    ],
+
+
+    "testPresets":
+    [
+        {
+            "name": "test-base",
+            "$comment": "Base test which runs all tests, one at a time, stops at first failure",
+            "hidden": true,
+            "output": { "outputOnFailure": true },
+            "execution": 
+            {
+                "jobs": 1,
+                "stopOnFailure": true,
+                "noTestsAction" : "error"
+            }
+        },
+        {
+            "name": "test-base-dbg",
+            "inherits" : [ "test-base" ],
+            "configuration": "Debug",
+            "hidden": true
+        },
+        {
+            "name": "test-base-rel",
+            "inherits" : [ "test-base" ],
+            "configuration": "Release",
+            "hidden": true
+        }
+    ],
+
+    "packagePresets":
+    [
+        {
+            "name": "package-base",
+            "$comment": "Base packageing preset",
+            "hidden": true,
+            "configurations": [ "Debug", "Release" ],
+            "generators": [ "ZIP" ],
+            "packageDirectory": "${sourceDir}/dist/${hostSystemName}/${presetName}"
+        }
+    ]
+
+}
