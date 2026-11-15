@@ -28,7 +28,7 @@ jobs:
           preset : ${{ matrix.preset }}
 
       - name: Workflow
-        run: cmake --workflow --preset ${{ matrix.preset }}-${{ matrix.postfix }}
+        run: cmake --workflow --preset ${{ matrix.target }}-${{ matrix.workflow-postfix }}
 
       - name: Archive 
         if: matrix.dist-path != ''
