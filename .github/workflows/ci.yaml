@@ -13,9 +13,9 @@ jobs:
       fail-fast: false 
       matrix:
         include:
-          - { host-os: windows-latest, preset: windows-x64-msvc,          dist-path: "dist/Windows/windows-x64-msvc/plushie-host-windows-*.zip"   }
-          - { host-os: ubuntu-latest,  preset: windows-x64-msvc-cross-ci, dist-path: "dist/Linux/windows-x64-msvc-cross/plushie-host-linux-*.zip" }
-          - { host-os: ubuntu-latest,  preset: linux-x64-clang,           dist-path: "dist/Linux/linux-x64-clang/plushie-host-linux-*.zip"        }
+          - { host-os: windows-latest, target: windows-x64-msvc,      workflow-postfix: "build-package-test", dist-path: "dist/Windows/windows-x64-msvc/plushie-host-windows-*.zip"   }
+          - { host-os: ubuntu-latest,  target: windows-x64-msvc-xwin, workflow-postfix: "build-package-test", dist-path: "dist/Linux/windows-x64-msvc-xwin/plushie-host-linux-*.zip" }
+          - { host-os: ubuntu-latest,  target: linux-x64-clang,       workflow-postfix: "build-package-test", dist-path: "dist/Linux/linux-x64-clang/plushie-host-linux-*.zip"        }
     
     steps:
       - name: Checkout
@@ -28,7 +28,7 @@ jobs:
           preset : ${{ matrix.preset }}
 
       - name: Workflow
-        run: cmake --workflow --preset ${{ matrix.preset }}
+        run: cmake --workflow --preset ${{ matrix.preset }}-${{ matrix.postfix }}
 
       - name: Archive 
         if: matrix.dist-path != ''

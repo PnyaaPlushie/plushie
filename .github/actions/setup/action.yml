@@ -18,5 +18,5 @@ runs:
 
     # For win32 msvc cross compile, we need to get xwin
     - name: XWin
-      if: ${{ inputs.host-os == 'ubuntu-latest' && inputs.preset == 'windows-x64-msvc-cross-ci' }}
+      if: ${{ inputs.host-os == 'ubuntu-latest' && inputs.preset == 'windows-x64-msvc-xwin' }}
       uses: ./.github/actions/setup-xwin
