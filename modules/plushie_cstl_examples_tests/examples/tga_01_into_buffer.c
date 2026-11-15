@@ -21,11 +21,10 @@ int main()
 	// Output file name
 	const char* file_name_raw = "tga_01_from_buffer.tga";
 
-
 	// Forward declare resources that require cleanup
 	PlushieAllocator* alloc = plushie_allocator_get_system(); // Allocator
-	PlushieFileHandle file_handle = { 0 };                  // File handle
-	uint8_t* file_buffer = NULL;                            // Dynamic sized buffer
+	PlushieFileHandle file_handle = { 0 };                    // File handle
+	uint8_t* file_buffer = NULL;                              // Dynamic sized buffer
 	PlushieStr file_name;
 
 	// Rolling return code

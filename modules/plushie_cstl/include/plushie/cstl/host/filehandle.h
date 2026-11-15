@@ -215,7 +215,36 @@ PLUSHIE_CSTL_API PlushieResult plushie_file_handle_write(
 }
 
 
+#elif PLUSHIE_TARGET_OS_ID == PLUSHIE_TARGET_OS_ID_LINUX
+
+PLUSHIE_CSTL_API PlushieResult plushie_file_handle_open(
+	PlushieFileHandle*           out,
+	PlushieFileHandleCreateInfo* info
+)
+{
+	return -1;
+}
+
+PLUSHIE_CSTL_API PlushieResult plushie_file_handle_close(
+	PlushieFileHandle* handle
+)
+{
+	return -1;
+}
+
+PLUSHIE_CSTL_API PlushieResult plushie_file_handle_write(
+	PlushieFileHandle* handle,
+	const void*        ptr,
+	PlushieUSize       len
+)
+{
+	return -1;
+}
+
+#else
+
 #endif // PLUSHIE_TARGET_OS_ID_WINDOWS
+
 
 #endif // !PLUSHIE_CSTL_HOST_FILEHANDLE_PROVIDE_IMPL_GUARD
 #endif // !PLUSHIE_CSTL_HOST_FILEHANDLE_PROVIDE_IMPL

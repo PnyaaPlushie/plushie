@@ -122,7 +122,47 @@ PLUSHIE_CSTL_API PlushieAllocator* plushie_allocator_get_system(
 	return &sLocalPlushieAllocatorWin32;
 }
 
-#endif // PLUSHIE_TARGET_OS_ID_WINDOWS
+#elif PLUSHIE_TARGET_OS_ID == PLUSHIE_TARGET_OS_ID_LINUX
+
+
+static void* s_local_plushie_allocator_linux_alloc(
+	struct PlushieAllocator* allocator,
+	PlushieUSize             size,
+	PlushieUSize             alignment,
+	PlushieUInt32            flags,
+	const char* const        name
+)
+{
+	(void)allocator;
+	(void)name;
+
+	return NULL;
+}
+
+static void s_local_plushie_allocator_linux_free(
+	struct PlushieAllocator* allocator,
+	void*                    ptr
+)
+{
+	
+}
+
+
+static PlushieAllocator sLocalPlushieAllocatorLinux =
+{
+	s_local_plushie_allocator_linux_alloc,
+	NULL,
+	s_local_plushie_allocator_linux_free,
+	NULL
+};
+
+PLUSHIE_CSTL_API PlushieAllocator* plushie_allocator_get_system(
+)
+{
+	return &sLocalPlushieAllocatorLinux;
+}
+
+#endif // PLUSHIE_TARGET_OS_ID
 
 /******************************************************************************
 * End of implementation

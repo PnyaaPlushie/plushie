@@ -46,10 +46,24 @@ PLUSHIE_CSTL_API struct PlushieAllocator* plushie_allocator_get_alloca(
 // you can define them before including the header.
 #if !((defined PLUSHIE_ALLOCATOR_LOCAL_ALLOCA) && (defined PLUSHIE_ALLOCATOR_LOCAL_FREEA))
 
+   /* MSVC has a special header */
 #  if PLUSHIE_COMPILER_ID == PLUSHIE_COMPILER_ID_MSVC
 #    include <malloc.h>
 #    define PLUSHIE_ALLOCATOR_LOCAL_ALLOCA(X) _malloca(X)
 #    define PLUSHIE_ALLOCATOR_LOCAL_FREEA(X)  _freea(X)
+
+   /* Clang provides via a built in */
+#  elif PLUSHIE_COMPILER_ID == PLUSHIE_COMPILER_ID_CLANG
+#    ifndef __has_builtin         // Optional of course.
+#      define __has_builtin(x) 0  // Compatibility with non-clang compilers.
+#    endif
+#    if __has_builtin(__builtin_alloca)
+#      define PLUSHIE_ALLOCATOR_LOCAL_ALLOCA(X) __builtin_alloca(X)
+#      define PLUSHIE_ALLOCATOR_LOCAL_FREEA(X)  (void)(X)
+#    else
+#      error No clang built in primative for alloca
+#    endif 
+
 #  else
 #    error No stack alloc primitive
 #  endif
