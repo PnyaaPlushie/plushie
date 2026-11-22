@@ -11,6 +11,7 @@
         "../targets/linux-x64-clang.json",
         "../targets/linux-x64-gcc.json",
         "../targets/windows-x64-msvc-xwin.json",
-        "../targets/windows-x64-mingw.json"
+        "../targets/windows-x64-mingw.json",
+        "../targets/linux-arm64-clang.json"
     ]
 }
