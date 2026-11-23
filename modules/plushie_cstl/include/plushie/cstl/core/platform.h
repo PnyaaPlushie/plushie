@@ -230,13 +230,14 @@
 * Alignment macro
 *******************************************************************************/
 
-// alignof becomes a keyword in 2023
-#if PLUSHIE_C_STD >= 2023
-#  define PLUSHIE_ALIGNOF(type) alignof(type)
-
-// Msvc has it's own version for older standards
-#elif PLUSHIE_COMPILER_ID == PLUSHIE_COMPILER_ID_MSVC
+// Msvc has it's own version, checked first as it doesn't support the C23 alignof keyword
+// in C mode with /std:clatest (as of 2026-11-23, MSVC 19.44)
+#if PLUSHIE_COMPILER_ID == PLUSHIE_COMPILER_ID_MSVC
 #  define PLUSHIE_ALIGNOF(type) __alignof(type)
+
+// alignof becomes a keyword in 2023
+#elif PLUSHIE_C_STD >= 2023
+#  define PLUSHIE_ALIGNOF(type) alignof(type)
 
 // C11 - C17 has keyword _Alignof. Deprecated in C2023
 #elif PLUSHIE_C_STD >= 2011
