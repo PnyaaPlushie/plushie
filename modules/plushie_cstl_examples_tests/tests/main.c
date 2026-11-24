@@ -14,7 +14,8 @@ static PlushieUSize sTestFuncsCount = sizeof(sTestFuncs) / sizeof(sTestFuncs[0])
 
 void setUp(void) 
 {
-	for (PlushieUSize i = 0; i < sTestFuncsCount; i++)
+	PlushieUSize i;
+	for (i = 0; i < sTestFuncsCount; i++)
 	{
 		if (sTestFuncs[i] == NULL)              continue;
 		if (sTestFuncs[i]->setupPtr == NULL)    continue;
@@ -24,7 +25,8 @@ void setUp(void)
 
 void tearDown(void) 
 {
-	for (PlushieUSize i = 0; i < sTestFuncsCount; i++)
+	PlushieUSize i;
+	for (i = 0; i < sTestFuncsCount; i++)
 	{
 		if (sTestFuncs[i] == NULL)              continue;
 		if (sTestFuncs[i]->teardownPtr == NULL) continue;
@@ -35,8 +37,9 @@ void tearDown(void)
 
 int main(void)
 {
+	PlushieUSize i;
 	UNITY_BEGIN();
-	for (PlushieUSize i = 0; i < sTestFuncsCount; i++)
+	for (i = 0; i < sTestFuncsCount; i++)
 	{
 		if (sTestFuncs[i] == NULL)              continue;
 		if (sTestFuncs[i]->mainPtr == NULL)     continue;

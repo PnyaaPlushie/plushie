@@ -10,7 +10,8 @@
 
 void test_decode_name_nonempty_for_all(void)
 {
-	for (int i = 0; i < kPlushieResultCount; i++)
+	int i;
+	for (i = 0; i < kPlushieResultCount; i++)
 	{
 		const char* name = plushie_result_decode_name((PlushieResult)i);
 		TEST_ASSERT_NOT_NULL(name);
@@ -20,7 +21,8 @@ void test_decode_name_nonempty_for_all(void)
 
 void test_decode_desc_nonempty_for_all(void)
 {
-	for (int i = 0; i < kPlushieResultCount; i++)
+	int i;
+	for (i = 0; i < kPlushieResultCount; i++)
 	{
 		const char* desc = plushie_result_decode_desc((PlushieResult)i);
 		TEST_ASSERT_NOT_NULL(desc);

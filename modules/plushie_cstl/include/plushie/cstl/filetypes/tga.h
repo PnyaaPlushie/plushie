@@ -53,7 +53,7 @@ static PLUSHIE_INLINE void* plushie_tgafile_buffer_init(
     PlushieUInt08 i;
 
     // Todo: Use the zero init function
-    for (PlushieUInt08 i = 0; i < 0x12; i++) { ptr[i] = 0; }
+    for (i = 0; i < 0x12; i++) { ptr[i] = 0; }
 
     ptr[2] = 2;                     // True color no compression
     ptr[12] = 0xff & width;         // little endian width

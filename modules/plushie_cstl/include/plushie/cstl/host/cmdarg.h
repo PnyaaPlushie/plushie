@@ -81,6 +81,7 @@ PLUSHIE_CSTL_API PlushieResult plushie_cmdarg_wwinmain_convert(
     PlushieWinWchar** argv = NULL;
     void* buffer = NULL;
     int argc = 0;
+    PlushieUInt32 i;
 
     do
     {
@@ -94,7 +95,7 @@ PLUSHIE_CSTL_API PlushieResult plushie_cmdarg_wwinmain_convert(
         // PlushieStr alignment > char, don't need to align up
         PlushieUSize alloc_size = argc * sizeof(PlushieStr);
         PlushieUSize str_buff_size = 0;
-        for (PlushieUInt32 i = 0; i < (PlushieUInt32)argc; i++)
+        for (i = 0; i < (PlushieUInt32)argc; i++)
         {
             PlushieUSize req_size = 0;
             res = plushie_str_rawcvrt_wwcstr_size(
@@ -123,7 +124,7 @@ PLUSHIE_CSTL_API PlushieResult plushie_cmdarg_wwinmain_convert(
         PlushieStr* str_plush = (PlushieStr*)buffer;
         (void)str_plush;
         PlushieUPtr str_mem = ((PlushieUPtr)buffer) + alloc_size;
-        for (PlushieUInt32 i = 0; i < (PlushieUInt32)argc; i++)
+        for (i = 0; i < (PlushieUInt32)argc; i++)
         {
             // Convert
             PlushieUSize str_size = 0;

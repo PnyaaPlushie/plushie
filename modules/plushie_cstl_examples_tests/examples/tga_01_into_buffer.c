@@ -26,6 +26,7 @@ int main()
 	PlushieFileHandle file_handle = { 0 };                    // File handle
 	uint8_t* file_buffer = NULL;                              // Dynamic sized buffer
 	PlushieStr file_name;
+	PlushieUInt32 x, y;
 
 	// Rolling return code
 	PlushieResult res = kPlushieResultSuccess;
@@ -61,9 +62,9 @@ int main()
 
 	// Write the image data 
 	// Pixel data is BGR left to right, top to bottom 3bpp
-	for (PlushieUInt32 y = 0; y < 256; y++)
+	for (y = 0; y < 256; y++)
 	{
-		for (PlushieUInt32 x = 0; x < 256; x++)
+		for (x = 0; x < 256; x++)
 		{
 			PlushieUInt32 offset = (x * 3) + (y * 256 * 3);
 			

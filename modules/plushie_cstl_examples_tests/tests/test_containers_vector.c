@@ -16,16 +16,17 @@ void test_vector_push_grows_and_reads_back(void)
 {
 	PlushieAllocator* a = plushie_allocator_get_libc();
 	PlushieVecInt v;
+	int i;
 	TEST_ASSERT_EQUAL(kPlushieResultSuccess, plushie_vec_i32_init(&v, a));
 
-	for (int i = 0; i < 100; i++)
+	for (i = 0; i < 100; i++)
 	{
 		TEST_ASSERT_EQUAL(kPlushieResultSuccess, plushie_vec_i32_push_back(&v, i * i));
 	}
 
 	TEST_ASSERT_EQUAL_UINT(100u, (unsigned)v.size);
 	TEST_ASSERT_TRUE(v.cap >= 100);
-	for (int i = 0; i < 100; i++)
+	for (i = 0; i < 100; i++)
 	{
 		TEST_ASSERT_EQUAL_INT(i * i, v.ptr[i]);
 	}

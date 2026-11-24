@@ -63,7 +63,8 @@ static PLUSHIE_INLINE void plushie_mem_copy(
 	PlushieUSize size
 )
 {
-	for (PlushieUSize i = 0; i < size; i++)
+	PlushieUSize i;
+	for (i = 0; i < size; i++)
 	{
 		((PlushieUInt08*)dst)[i] = ((const PlushieUInt08*)src)[i];
 	}
