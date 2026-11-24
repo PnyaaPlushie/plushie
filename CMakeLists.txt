@@ -86,63 +86,50 @@ if(CMAKE_C_COMPILER_ID STREQUAL "Clang" AND CMAKE_C_COMPILER_FRONTEND_VARIANT ST
 	endif()
 endif()
 
-# --- Plushie Packages Override -------------------------------------------------------------------------
-
-# Override the find package behaviour for the modules which we build 
-FetchContent_Declare(PlushieCStl SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/modules/plushie_cstl OVERRIDE_FIND_PACKAGE)
-FetchContent_MakeAvailable(PlushieCStl)
-
-
 # --- Plushie our modules -------------------------------------------------------------------------------
-set(plushie_search_dirs
-	modules
-	modules_lab
-	games)
 
-if(${PLUSHIE_ROOT_CSTL_ONLY})
-	add_subdirectory("modules/plushie_cstl")
-	add_subdirectory("modules/plushie_cstl_examples_tests")
-else()
-	foreach(search_subdir ${plushie_search_dirs})
-		
-		# Search for different modules 
-		set(source_dir ${CMAKE_CURRENT_LIST_DIR}/${search_subdir})
-		if(EXISTS ${source_dir})
-			message(STATUS "[Plushie::Root] Loading subdir ${search_subdir}")
-		else()
-			message(STATUS "[Plushie::Root] Skipping empty subdir ${search_subdir}")
+# We declare all of the modules first and override find_package, this way all the modules can use 
+# find_package for their dependency management so that if a user has prebuilts installed for a 
+# component it will still build, but the monorepo will build everything from source
+#
+# For example: PlushieCStl will check for PlushieStartup as an optional package via 
+#  `find_package( Plushie::Startup QUIET )` but from this monorepo, it will build from source
+set(_plushie_packages "")
+
+foreach(component_dir_name modules modules_lab)
+	
+	set(_source_dir ${CMAKE_CURRENT_LIST_DIR}/${component_dir_name})
+	if(NOT EXISTS ${_source_dir})
+		continue()
+	endif()
+	file(GLOB _child_entries RELATIVE "${_source_dir}" "${_source_dir}/*")
+	foreach(_entry IN LISTS _child_entries)
+		# set abs path
+		set(_path ${_source_dir}/${_entry})
+
+		# Now we can try and get the package name
+		unset(PLUSHIE_PACKAGE_NAME)
+		include("${_path}/cmake/PlushiePackageName.cmake" OPTIONAL) 
+		if(NOT DEFINED PLUSHIE_PACKAGE_NAME OR "${PLUSHIE_PACKAGE_NAME}" STREQUAL "")
 			continue()
 		endif()
-	
-		# Gather all of the subfolders of the modules
-		file(GLOB CHILD_ENTRIES RELATIVE "${source_dir}" "${source_dir}/*")
-	
-		# For each subfile
-		foreach(_entry IN LISTS CHILD_ENTRIES)
-	
-			# This should be the path to a subproject 
-			set(_path "${source_dir}/${_entry}")		
-			if(NOT (IS_DIRECTORY "${_path}"))
-				continue()
-			endif()
-	
-			# Skip obvious build/artifact directories
-			if(_entry MATCHES "^(build|build_.*|\.git|\.vs)$")
-				continue()
-			endif()
-	
-			# Does this project have a CMake list file?
-			if(NOT EXISTS "${_path}/CMakeLists.txt")
-				continue()
-			endif()
-	
-			message(STATUS "[Plushie::${search_subdir}] Adding subdirectory: ${_entry}")
-			add_subdirectory(${_path})
-	
-	
-		endforeach()
+
+		FetchContent_Declare(${PLUSHIE_PACKAGE_NAME}
+        	SOURCE_DIR "${_path}"
+        	OVERRIDE_FIND_PACKAGE)
+    	list(APPEND _plushie_packages ${PLUSHIE_PACKAGE_NAME})
+
+		message(STATUS "[Plushie::Root] Adding package ${PLUSHIE_PACKAGE_NAME} via "
+			"${component_dir_name}/${_entry}")
+		unset(PLUSHIE_PACKAGE_NAME)
+
 	endforeach()
-endif()
+
+endforeach()
+
+# Make all the packages available
+FetchContent_MakeAvailable(${_plushie_packages})
+
 
 # --- Plushie Packaging ---------------------------------------------------------------------------------
 

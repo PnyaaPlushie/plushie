@@ -58,12 +58,14 @@
             "name": "test-base-dbg",
             "inherits" : [ "test-base" ],
             "configuration": "Debug",
+            "output": { "outputJUnitFile": "ctest-junit-Debug.xml" },
             "hidden": true
         },
         {
             "name": "test-base-rel",
             "inherits" : [ "test-base" ],
             "configuration": "Release",
+            "output": { "outputJUnitFile": "ctest-junit-Release.xml" },
             "hidden": true
         }
     ],

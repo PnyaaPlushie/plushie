@@ -1,0 +1,1 @@
+set(PLUSHIE_PACKAGE_NAME "PlushieCStlTests")
