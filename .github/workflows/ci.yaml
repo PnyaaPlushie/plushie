@@ -36,6 +36,15 @@ jobs:
       - name: Workflow
         run: cmake --workflow --preset ${{ matrix.target }}-${{ matrix.workflow-postfix }}
 
+      - name: Test Summary
+        if: always()
+        shell: bash
+        run: |
+          # Prefer 'python': on Windows 'python3' may be the Microsoft Store stub
+          PY=$(command -v python || command -v python3)
+          shopt -s nullglob
+          "$PY" scripts/ci_test_summary.py "${{ matrix.target }}" build/*/${{ matrix.target }}/ctest-junit-*.xml
+
       - name: Archive 
         if: matrix.dist-path != ''
         uses: actions/upload-artifact@v7
