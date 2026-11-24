@@ -35,14 +35,14 @@ extern "C" {
 *   - *SpanFuncName*_is_empty
 *   - *SpanFuncName*_size
 */
-#define PLUSHIE_SPAN_DEFINE(SpanStructName, SpanFuncName, ElementType)    \
+#define PLUSHIE_SPAN_DEFINE(SpanStructName, SpanFuncName, ElementType)   \
 	typedef struct SpanStructName                                        \
 	{                                                                    \
 		const ElementType* ptr;                                          \
 		PlushieUSize       len;                                          \
 	} SpanStructName;                                                    \
                                                                          \
-	static PLUSHIE_INLINE SpanStructName SpanFuncName##_new(                     \
+	static PLUSHIE_INLINE SpanStructName SpanFuncName##_new(             \
 		const ElementType* ptr,                                          \
 		PlushieUSize       len)                                          \
 	{                                                                    \
@@ -52,14 +52,14 @@ extern "C" {
 		return span;                                                     \
 	}                                                                    \
                                                                          \
-	static PLUSHIE_INLINE int SpanFuncName##_is_empty(                           \
+	static PLUSHIE_INLINE int SpanFuncName##_is_empty(                   \
 		const SpanStructName* span                                       \
 	)                                                                    \
 	{                                                                    \
 		return span->len == 0;                                           \
 	}                                                                    \
                                                                          \
-	static PLUSHIE_INLINE PlushieUSize SpanFuncName##_size(                      \
+	static PLUSHIE_INLINE PlushieUSize SpanFuncName##_size(              \
 		const SpanStructName* span                                       \
 	)                                                                    \
 	{                                                                    \
