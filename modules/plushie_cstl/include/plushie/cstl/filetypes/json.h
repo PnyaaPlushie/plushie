@@ -258,7 +258,7 @@ static PlushieResult s_parse_object(PlushieJson_Value* out_val, PlushieJson_Pars
 	s_skip_whitespace(ctx);
 
 	/* Prepare dynamic array */
-	PlushieJson_Node* members = NULL;
+	PlushieJson_Node* members = PLUSHIE_NULL;
 	PlushieUSize count = 0;
 	PlushieUSize capacity = 0;
 
@@ -268,7 +268,7 @@ static PlushieResult s_parse_object(PlushieJson_Value* out_val, PlushieJson_Pars
 	{
 		s_consume_bytes(ctx, 1); /* consume '}' */
 		out_val->type = kPlushieJson_ValueType_Object;
-		out_val->as.object.members = NULL;
+		out_val->as.object.members = PLUSHIE_NULL;
 		out_val->as.object.count = 0;
 		out_val->as.object.capacity = 0;
 		return kPlushieResultSuccess;
@@ -307,8 +307,8 @@ static PlushieResult s_parse_object(PlushieJson_Value* out_val, PlushieJson_Pars
 			PlushieUSize new_capacity = capacity ? (capacity * 2) : 4;
 			PlushieUSize old_size = capacity * sizeof(PlushieJson_Node);
 			PlushieUSize new_size = new_capacity * sizeof(PlushieJson_Node);
-			void* new_mem = NULL;
-			if (members == NULL)
+			void* new_mem = PLUSHIE_NULL;
+			if (members == PLUSHIE_NULL)
 			{
 				new_mem = plushie_alloc(ctx->allocator, new_size);
 			}
@@ -316,7 +316,7 @@ static PlushieResult s_parse_object(PlushieJson_Value* out_val, PlushieJson_Pars
 			{
 				new_mem = plushie_realloc(ctx->allocator, members, old_size, new_size);
 			}
-			if (new_mem == NULL)
+			if (new_mem == PLUSHIE_NULL)
 			{
 				if (members) plushie_free(ctx->allocator, members);
 				return kPlushieResultErrAllocOom;
@@ -399,10 +399,10 @@ static PlushieResult s_parse_value(PlushieJson_Value* out_val, PlushieJson_Parse
 		if (i == 0) return kPlushieResultErrParse;
 		/* create temporary nul-terminated buffer */
 		char* tmp = (char*)plushie_alloc(ctx->allocator, i + 1);
-		if (tmp == NULL) return kPlushieResultErrAllocOom;
+		if (tmp == PLUSHIE_NULL) return kPlushieResultErrAllocOom;
 		plushie_mem_copy(tmp, ctx->source_span.ptr, i);
 		tmp[i] = '\0';
-		char* endptr = NULL;
+		char* endptr = PLUSHIE_NULL;
 		double val = PLUSHIE_CSTL_JSON_LIBC_STRTOD(tmp, &endptr);
 		int consumed_nothing = (endptr == tmp);
 		plushie_free(ctx->allocator, tmp);
@@ -455,7 +455,7 @@ PLUSHIE_CSTL_API PlushieResult plushie_json_parser_ctx_new(
 	PlushieU8StrSpan       source_span
 )
 {
-	if (out_ctx == NULL) return kPlushieResultErrNullptr;
+	if (out_ctx == PLUSHIE_NULL) return kPlushieResultErrNullptr;
 	out_ctx->allocator = alloc;
 	out_ctx->source_span = source_span;
 	out_ctx->max_depth = PLUSHIE_CSTL_JSON_DEFAULT_MAX_DEPTH;
@@ -467,7 +467,7 @@ PLUSHIE_CSTL_API PlushieResult plushie_json_parse(
 	PlushieJson_ParserCtx* ctx
 )
 {
-	if (out_val == NULL || ctx == NULL) return kPlushieResultErrNullptr;
+	if (out_val == PLUSHIE_NULL || ctx == PLUSHIE_NULL) return kPlushieResultErrNullptr;
 	plushie_zero_set(out_val, sizeof(*out_val));
 	/* operate directly on ctx->source_span (slicing as we consume) */
 	s_skip_whitespace(ctx);

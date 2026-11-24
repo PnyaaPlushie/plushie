@@ -27,7 +27,7 @@ void test_span_size_scales_with_element(void)
 
 void test_span_empty(void)
 {
-	TestU8Span e = test_u8_span_new(NULL, 0);
+	TestU8Span e = test_u8_span_new(PLUSHIE_NULL, 0);
 	TEST_ASSERT_TRUE(test_u8_span_is_empty(&e));
 	TEST_ASSERT_EQUAL_UINT(0u, (unsigned)test_u8_span_size(&e));
 }

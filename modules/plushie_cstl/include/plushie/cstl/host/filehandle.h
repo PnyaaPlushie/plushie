@@ -122,7 +122,7 @@ PLUSHIE_CSTL_API PlushieResult plushie_file_handle_open(
 	PlushieFileHandleCreateInfo* info
 )
 {
-	if (out == NULL || info == NULL) return kPlushieResultErrNullptr;
+	if (out == PLUSHIE_NULL || info == PLUSHIE_NULL) return kPlushieResultErrNullptr;
 	if ((info->path.flags & kPlushieStrFlagStatusHasNullTerm) == 0)
 	{
 		// Paths on windows have to be null terminated
@@ -164,13 +164,13 @@ PLUSHIE_CSTL_API PlushieResult plushie_file_handle_open(
 	{
 		out_handle = CreateFileW(
 			info->path.data.wstr,
-			access_flags, share_mode, NULL, disposition, FILE_ATTRIBUTE_NORMAL, NULL);
+			access_flags, share_mode, PLUSHIE_NULL, disposition, FILE_ATTRIBUTE_NORMAL, PLUSHIE_NULL);
 	}
 	else
 	{
 		out_handle = CreateFileA(
 			info->path.data.str,
-			access_flags, share_mode, NULL, disposition, FILE_ATTRIBUTE_NORMAL, NULL);
+			access_flags, share_mode, PLUSHIE_NULL, disposition, FILE_ATTRIBUTE_NORMAL, PLUSHIE_NULL);
 	}
 	if (out_handle == INVALID_HANDLE_VALUE) return kPlushieResultErrOs;
 
@@ -186,8 +186,8 @@ PLUSHIE_CSTL_API PlushieResult plushie_file_handle_close(
 	PlushieFileHandle* handle
 )
 {
-	if (handle == NULL) return kPlushieResultErrNullptr;
-	if (handle->u.pvoid == NULL || handle->u.pvoid == INVALID_HANDLE_VALUE)
+	if (handle == PLUSHIE_NULL) return kPlushieResultErrNullptr;
+	if (handle->u.pvoid == PLUSHIE_NULL || handle->u.pvoid == INVALID_HANDLE_VALUE)
 	{
 		return kPlushieResultErrInvalidParam;
 	}
@@ -204,11 +204,11 @@ PLUSHIE_CSTL_API PlushieResult plushie_file_handle_write(
 	PlushieUSize       len
 )
 {
-	if (handle == NULL || ptr == NULL) return kPlushieResultErrNullptr;
+	if (handle == PLUSHIE_NULL || ptr == PLUSHIE_NULL) return kPlushieResultErrNullptr;
 
 	DWORD written_amount = 0;
 	BOOL res = WriteFile((HANDLE)handle->u.pvoid, ptr,
-		(DWORD)(len & 0xffffffff), &written_amount, NULL);
+		(DWORD)(len & 0xffffffff), &written_amount, PLUSHIE_NULL);
 
 	if (res == FALSE) return kPlushieResultErrOs;
 	return kPlushieResultSuccess;

@@ -174,7 +174,7 @@ PLUSHIE_CSTL_API PlushieResult plushie_str_new_view_from_cstr(
     PlushieUSize size
 )
 {
-    if (out_str == NULL || ptr == NULL) return kPlushieResultErrNullptr;
+    if (out_str == PLUSHIE_NULL || ptr == PLUSHIE_NULL) return kPlushieResultErrNullptr;
     if (size == 0) return kPlushieResultErrInvalidParam;
 
     *out_str = (PlushieStr)
@@ -195,7 +195,7 @@ PLUSHIE_CSTL_API PlushieResult plushie_str_new_view_from_win32_wstr(
     const wchar_t* ptr
 )
 {
-    if (out_str == NULL || ptr == NULL) return kPlushieResultErrNullptr;
+    if (out_str == PLUSHIE_NULL || ptr == PLUSHIE_NULL) return kPlushieResultErrNullptr;
 
     out_str->data.wstr = ptr;
 
@@ -216,14 +216,14 @@ PLUSHIE_CSTL_API PlushieResult plushie_str_rawcvrt_wwcstr(
     PlushieWinWchar* pwstr
 )
 {
-    if (out_str == NULL || out_size == NULL || pwstr == NULL)
+    if (out_str == PLUSHIE_NULL || out_size == PLUSHIE_NULL || pwstr == PLUSHIE_NULL)
         return kPlushieResultErrNullptr;
 
     // Requires windows 2000 and Kernel32.dll (Fine limitation)
     // TODO [#64] Provide alternative
     int result = WideCharToMultiByte(CP_UTF8, 0, pwstr,
         -1, // Means input is nullterminated like a CStr
-        out_str, (int)buff_size, NULL, NULL);
+        out_str, (int)buff_size, PLUSHIE_NULL, PLUSHIE_NULL);
 
     // Check for success?
     if (result == 0)
@@ -241,13 +241,13 @@ PLUSHIE_CSTL_API PlushieResult plushie_str_rawcvrt_wwcstr_size(
     PlushieWinWchar* pwstr
 )
 {
-    if (out_size == NULL || pwstr == NULL) return kPlushieResultErrNullptr;
+    if (out_size == PLUSHIE_NULL || pwstr == PLUSHIE_NULL) return kPlushieResultErrNullptr;
 
     // Requires windows 2000 and Kernel32.dll (Fine limitation)
     // TODO [#64] Provide alternative
     int size_needed = WideCharToMultiByte(CP_UTF8, 0, pwstr,
         -1, // Means input is nullterminated like a CStr
-        NULL, 0, NULL, NULL);
+        PLUSHIE_NULL, 0, PLUSHIE_NULL, PLUSHIE_NULL);
     if (size_needed <= 0) return kPlushieResultErrOs;
 
     // Cast output

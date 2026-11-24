@@ -38,7 +38,7 @@ void test_elf_ident_truncated(void)
 void test_elf_ident_null(void)
 {
 	TEST_ASSERT_EQUAL(kPlushieResultErrNullptr,
-		plushie_elf_structured_ident_deserialize(NULL, NULL, 0));
+		plushie_elf_structured_ident_deserialize(PLUSHIE_NULL, PLUSHIE_NULL, 0));
 }
 
 void filetypes_elf_main(void)

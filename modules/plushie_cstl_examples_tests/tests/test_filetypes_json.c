@@ -54,7 +54,7 @@ void test_json_parse_error(void)
 
 void test_json_null_args(void)
 {
-	TEST_ASSERT_EQUAL(kPlushieResultErrNullptr, plushie_json_parse(NULL, NULL));
+	TEST_ASSERT_EQUAL(kPlushieResultErrNullptr, plushie_json_parse(PLUSHIE_NULL, PLUSHIE_NULL));
 }
 
 void filetypes_json_main(void)

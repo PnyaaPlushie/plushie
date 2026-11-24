@@ -148,6 +148,29 @@
 #endif
 
 /******************************************************************************
+* Null pointer constant
+*******************************************************************************/
+
+// `NULL` is a libc macro (stddef.h and friends) rather than a keyword, so we
+// provide our own to avoid depending on header include order or availability.
+// C++ can't implicitly convert from `void*`, so it gets `nullptr`, or `0`
+// before C++11. C23 gains the `nullptr` keyword, but MSVC doesn't support it in
+// C mode yet, so it's excluded.
+#ifndef PLUSHIE_NULL
+#  if defined(__cplusplus)
+#    if __cplusplus >= 201103L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201103L)
+#      define PLUSHIE_NULL nullptr
+#    else
+#      define PLUSHIE_NULL 0
+#    endif
+#  elif PLUSHIE_C_STD >= 2023 && PLUSHIE_COMPILER_ID != PLUSHIE_COMPILER_ID_MSVC
+#    define PLUSHIE_NULL nullptr
+#  else
+#    define PLUSHIE_NULL ((void*)0)
+#  endif
+#endif
+
+/******************************************************************************
 * Symbol visibility
 *******************************************************************************/
 #ifndef PLUSHIE_SYMBOL_EXPORT

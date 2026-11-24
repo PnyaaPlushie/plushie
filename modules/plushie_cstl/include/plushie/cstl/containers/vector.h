@@ -103,10 +103,10 @@ extern "C" {
         PlushieAllocator* alloc                                                \
     )                                                                          \
     {                                                                          \
-        if (out_vec == NULL || alloc == NULL)                                  \
+        if (out_vec == PLUSHIE_NULL || alloc == PLUSHIE_NULL)                                  \
             return kPlushieResultErrNullptr;                                   \
         out_vec->alloc = alloc;                                                \
-        out_vec->ptr   = NULL;                                                 \
+        out_vec->ptr   = PLUSHIE_NULL;                                                 \
         out_vec->size  = 0;                                                    \
         out_vec->cap   = 0;                                                    \
         return kPlushieResultSuccess;                                          \
@@ -117,9 +117,9 @@ extern "C" {
         PlushieUSize      new_cap                                              \
     )                                                                          \
     {                                                                          \
-        if (vec == NULL) return kPlushieResultErrNullptr;                      \
+        if (vec == PLUSHIE_NULL) return kPlushieResultErrNullptr;                      \
         if (new_cap <= vec->cap) return kPlushieResultSuccess;                 \
-        if (vec->alloc == NULL || vec->alloc->alloc == NULL)                   \
+        if (vec->alloc == PLUSHIE_NULL || vec->alloc->alloc == PLUSHIE_NULL)                   \
             return kPlushieResultErrAllocPfnMissing;                           \
         if (new_cap > ((PlushieUSize)-1) / sizeof(ElementType))               \
             return kPlushieResultErrRange;                                     \
@@ -127,14 +127,14 @@ extern "C" {
         PlushieUSize bytes = new_cap * sizeof(ElementType);                    \
         ElementType* new_ptr = (ElementType*)vec->alloc->alloc(               \
             vec->alloc, bytes, PLUSHIE_ALIGNOF(ElementType),                   \
-            kPlushieAllocatorAllocFlagsNone, NULL);                            \
-        if (new_ptr == NULL) return kPlushieResultErrAllocOom;                 \
+            kPlushieAllocatorAllocFlagsNone, PLUSHIE_NULL);                            \
+        if (new_ptr == PLUSHIE_NULL) return kPlushieResultErrAllocOom;                 \
                                                                                \
-        if (vec->ptr != NULL)                                                  \
+        if (vec->ptr != PLUSHIE_NULL)                                                  \
         {                                                                      \
             plushie_mem_copy(new_ptr, vec->ptr,                                \
                 vec->size * sizeof(ElementType));                             \
-            if (vec->alloc->free != NULL)                                      \
+            if (vec->alloc->free != PLUSHIE_NULL)                                      \
                 vec->alloc->free(vec->alloc, vec->ptr);                        \
         }                                                                      \
                                                                                \
@@ -148,7 +148,7 @@ extern "C" {
         ElementType       value                                               \
     )                                                                          \
     {                                                                          \
-        if (vec == NULL) return kPlushieResultErrNullptr;                      \
+        if (vec == PLUSHIE_NULL) return kPlushieResultErrNullptr;                      \
         if (vec->size >= vec->cap)                                             \
         {                                                                      \
             PlushieUSize grow = (vec->cap == 0)                                \
@@ -167,11 +167,11 @@ extern "C" {
         OutTypeName*      vec                                                  \
     )                                                                          \
     {                                                                          \
-        if (vec == NULL) return;                                               \
-        if (vec->ptr != NULL && vec->alloc != NULL                            \
-            && vec->alloc->free != NULL)                                       \
+        if (vec == PLUSHIE_NULL) return;                                               \
+        if (vec->ptr != PLUSHIE_NULL && vec->alloc != PLUSHIE_NULL                            \
+            && vec->alloc->free != PLUSHIE_NULL)                                       \
             vec->alloc->free(vec->alloc, vec->ptr);                            \
-        vec->ptr  = NULL;                                                      \
+        vec->ptr  = PLUSHIE_NULL;                                                      \
         vec->size = 0;                                                         \
         vec->cap  = 0;                                                         \
     }

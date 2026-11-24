@@ -17,8 +17,8 @@ void setUp(void)
 	PlushieUSize i;
 	for (i = 0; i < sTestFuncsCount; i++)
 	{
-		if (sTestFuncs[i] == NULL)              continue;
-		if (sTestFuncs[i]->setupPtr == NULL)    continue;
+		if (sTestFuncs[i] == PLUSHIE_NULL)              continue;
+		if (sTestFuncs[i]->setupPtr == PLUSHIE_NULL)    continue;
 		sTestFuncs[i]->setupPtr();
 	}
 }
@@ -28,8 +28,8 @@ void tearDown(void)
 	PlushieUSize i;
 	for (i = 0; i < sTestFuncsCount; i++)
 	{
-		if (sTestFuncs[i] == NULL)              continue;
-		if (sTestFuncs[i]->teardownPtr == NULL) continue;
+		if (sTestFuncs[i] == PLUSHIE_NULL)              continue;
+		if (sTestFuncs[i]->teardownPtr == PLUSHIE_NULL) continue;
 		sTestFuncs[i]->teardownPtr();
 	}
 }
@@ -41,8 +41,8 @@ int main(void)
 	UNITY_BEGIN();
 	for (i = 0; i < sTestFuncsCount; i++)
 	{
-		if (sTestFuncs[i] == NULL)              continue;
-		if (sTestFuncs[i]->mainPtr == NULL)     continue;
+		if (sTestFuncs[i] == PLUSHIE_NULL)              continue;
+		if (sTestFuncs[i]->mainPtr == PLUSHIE_NULL)     continue;
 		sTestFuncs[i]->mainPtr();
 	}
 	return UNITY_END();

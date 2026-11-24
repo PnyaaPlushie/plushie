@@ -54,8 +54,8 @@ void test_vector_reserve_is_monotonic(void)
 
 void test_vector_null_args(void)
 {
-	TEST_ASSERT_EQUAL(kPlushieResultErrNullptr, plushie_vec_i32_init(NULL, NULL));
-	TEST_ASSERT_EQUAL(kPlushieResultErrNullptr, plushie_vec_i32_push_back(NULL, 1));
+	TEST_ASSERT_EQUAL(kPlushieResultErrNullptr, plushie_vec_i32_init(PLUSHIE_NULL, PLUSHIE_NULL));
+	TEST_ASSERT_EQUAL(kPlushieResultErrNullptr, plushie_vec_i32_push_back(PLUSHIE_NULL, 1));
 }
 
 void containers_vector_main(void)

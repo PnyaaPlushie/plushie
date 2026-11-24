@@ -140,7 +140,7 @@ PLUSHIE_CSTL_API PlushieResult plushie_diagnostic_send(
 {
 	(void)signal_val;
 	(void)msg;
-	if (host == NULL) return kPlushieResultErrNullptr;
+	if (host == PLUSHIE_NULL) return kPlushieResultErrNullptr;
 
 	// TODO: fan the message out to each registered sink whose mask matches.
 	return kPlushieResultSuccess;
@@ -154,7 +154,7 @@ PLUSHIE_CSTL_API PlushieResult plushie_diagnostic_send_cstr(
 {
 	(void)signal_val;
 	(void)msg;
-	if (host == NULL) return kPlushieResultErrNullptr;
+	if (host == PLUSHIE_NULL) return kPlushieResultErrNullptr;
 
 	// TODO: wrap msg in a PlushieStr view and forward to plushie_diagnostic_send.
 	return kPlushieResultSuccess;
@@ -173,7 +173,7 @@ PLUSHIE_CSTL_API void plushie_diagnostic_sink_ring_buffer_write(
 	(void)str;
 	(void)mask;
 	PlushieDiagnosticSinkRingBuffer* ring = (PlushieDiagnosticSinkRingBuffer*)udata;
-	if (ring == NULL) return;
+	if (ring == PLUSHIE_NULL) return;
 
 	// TODO: push the entry into the ring, advancing head/tail.
 }

@@ -187,7 +187,7 @@ PLUSHIE_CSTL_API PlushieResult plushie_elf_structured_ident_deserialize(
 	PlushieUSize                bytes_len
 )
 {
-	if (out_ident == NULL || bytes_ptr == NULL)
+	if (out_ident == PLUSHIE_NULL || bytes_ptr == PLUSHIE_NULL)
 	{
 		return kPlushieResultErrNullptr;
 	}

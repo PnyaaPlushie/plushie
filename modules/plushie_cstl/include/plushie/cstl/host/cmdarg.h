@@ -58,9 +58,9 @@ PLUSHIE_CSTL_API PlushieResult plushie_cmdarg_wwinmain_convert(
 )
 {
     // Allocator and out buffers are all required
-    if (out_strs == NULL || out_buffer == NULL || alloc == NULL || cmdarg == NULL)
+    if (out_strs == PLUSHIE_NULL || out_buffer == PLUSHIE_NULL || alloc == PLUSHIE_NULL || cmdarg == PLUSHIE_NULL)
         return kPlushieResultErrNullptr;
-    if (alloc->alloc == NULL)
+    if (alloc->alloc == PLUSHIE_NULL)
         return kPlushieResultErrAllocPfnMissing;
 
     // We use `CommandLineToArgvW` for conversion, it has some odd behaviour.
@@ -71,15 +71,15 @@ PLUSHIE_CSTL_API PlushieResult plushie_cmdarg_wwinmain_convert(
     // we mainly depend on, we add an early exit for empty args.
     if (*cmdarg == L'\0')
     {
-        *out_strs = NULL;
+        *out_strs = PLUSHIE_NULL;
         *out_strs_count = 0;
-        *out_buffer = NULL;
+        *out_buffer = PLUSHIE_NULL;
         return kPlushieResultSuccess;
     }
 
     PlushieResult res = kPlushieResultSuccess;
-    PlushieWinWchar** argv = NULL;
-    void* buffer = NULL;
+    PlushieWinWchar** argv = PLUSHIE_NULL;
+    void* buffer = PLUSHIE_NULL;
     int argc = 0;
     PlushieUInt32 i;
 
@@ -89,7 +89,7 @@ PLUSHIE_CSTL_API PlushieResult plushie_cmdarg_wwinmain_convert(
         // require shell32.dll (6.0+) but for now that's fine as a limit.
         // TODO [#64]: Provide alternative
         argv = CommandLineToArgvW(cmdarg, &argc);
-        if (argv == NULL) { res = kPlushieResultErrOs; break; }
+        if (argv == PLUSHIE_NULL) { res = kPlushieResultErrOs; break; }
 
         // How much memory do we need from the allocator?
         // PlushieStr alignment > char, don't need to align up
@@ -113,8 +113,8 @@ PLUSHIE_CSTL_API PlushieResult plushie_cmdarg_wwinmain_convert(
             kPlushieAllocatorAllocFlagsProtectRead
              | kPlushieAllocatorAllocFlagsProtectWrite
              | kPlushieAllocatorAllocFlagsZeroInit,
-            NULL);
-        if (buffer == NULL)
+            PLUSHIE_NULL);
+        if (buffer == PLUSHIE_NULL)
         {
             res = kPlushieResultErrAllocOom;
             break;
@@ -144,15 +144,15 @@ PLUSHIE_CSTL_API PlushieResult plushie_cmdarg_wwinmain_convert(
     while (0);
 
     // Cleanup os converted argv alloc
-    if (argv != NULL) { LocalFree(argv); }
+    if (argv != PLUSHIE_NULL) { LocalFree(argv); }
 
     // Cleanup the buffer if we failed
     if (res != kPlushieResultSuccess)
     {
-        if (buffer != NULL)
+        if (buffer != PLUSHIE_NULL)
         {
             alloc->free(alloc, buffer);
-            buffer = NULL;
+            buffer = PLUSHIE_NULL;
         }
     }
     // Else return resources to the caller

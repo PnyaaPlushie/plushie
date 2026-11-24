@@ -40,7 +40,7 @@ PLUSHIE_CSTL_API struct PlushieAllocator* plushie_allocator_get_system(
 #include <Windows.h>
 
 static PlushieAtomicUInt16 s_plushie_heap_init = 0;
-static HANDLE s_plushie_process_heap_handle = NULL;
+static HANDLE s_plushie_process_heap_handle = PLUSHIE_NULL;
 
 
 static void* s_local_plushie_allocator_win32_alloc(
@@ -62,7 +62,7 @@ static void* s_local_plushie_allocator_win32_alloc(
 		alloc_flags,
 		PLUSHIE_ALLOCATOR_FAKE_ALIGNED_SIZE(size, alignment)
 	);
-	if (raw_ptr == NULL) return NULL;
+	if (raw_ptr == PLUSHIE_NULL) return PLUSHIE_NULL;
 	void* ptr = plushie_allocator_place_header_for_alignment(raw_ptr, alignment);
 
 	return ptr;
@@ -74,7 +74,7 @@ static void s_local_plushie_allocator_win32_free(
 )
 {
 	(void)allocator;
-	if (ptr == NULL) return;
+	if (ptr == PLUSHIE_NULL) return;
 	HeapFree(
 		s_plushie_process_heap_handle,
 		0,
@@ -85,9 +85,9 @@ static void s_local_plushie_allocator_win32_free(
 static PlushieAllocator sLocalPlushieAllocatorWin32 =
 {
 	s_local_plushie_allocator_win32_alloc,
-	NULL,
+	PLUSHIE_NULL,
 	s_local_plushie_allocator_win32_free,
-	NULL
+	PLUSHIE_NULL
 };
 
 PLUSHIE_CSTL_API PlushieAllocator* plushie_allocator_get_system(
@@ -113,10 +113,10 @@ PLUSHIE_CSTL_API PlushieAllocator* plushie_allocator_get_system(
 	}
 
 	// It is possible for this to fail
-	if (s_plushie_process_heap_handle == NULL
+	if (s_plushie_process_heap_handle == PLUSHIE_NULL
 		|| s_plushie_process_heap_handle == INVALID_HANDLE_VALUE)
 	{
-		return NULL;
+		return PLUSHIE_NULL;
 	}
 
 	return &sLocalPlushieAllocatorWin32;
@@ -136,7 +136,7 @@ static void* s_local_plushie_allocator_linux_alloc(
 	(void)allocator;
 	(void)name;
 
-	return NULL;
+	return PLUSHIE_NULL;
 }
 
 static void s_local_plushie_allocator_linux_free(
@@ -151,9 +151,9 @@ static void s_local_plushie_allocator_linux_free(
 static PlushieAllocator sLocalPlushieAllocatorLinux =
 {
 	s_local_plushie_allocator_linux_alloc,
-	NULL,
+	PLUSHIE_NULL,
 	s_local_plushie_allocator_linux_free,
-	NULL
+	PLUSHIE_NULL
 };
 
 PLUSHIE_CSTL_API PlushieAllocator* plushie_allocator_get_system(

@@ -24,7 +24,7 @@ int main()
 	// Forward declare resources that require cleanup
 	PlushieAllocator* alloc = plushie_allocator_get_system(); // Allocator
 	PlushieFileHandle file_handle = { 0 };                    // File handle
-	uint8_t* file_buffer = NULL;                              // Dynamic sized buffer
+	uint8_t* file_buffer = PLUSHIE_NULL;                              // Dynamic sized buffer
 	PlushieStr file_name;
 	PlushieUInt32 x, y;
 
@@ -42,7 +42,7 @@ int main()
 	if (res != kPlushieResultSuccess) { break; }
 
 	// Getting the allocator CAN fail, i.e window fails to get process heap
-	if (alloc == NULL) { res = kPlushieResultErrAllocOom; break; }
+	if (alloc == PLUSHIE_NULL) { res = kPlushieResultErrAllocOom; break; }
 
 	// Allocate enough for the image
 	PlushieUSize alloc_size = plushie_tgafile_buffer_size(256, 256);
@@ -50,14 +50,14 @@ int main()
 		kPlushieAllocatorAllocFlagsProtectRead
 		  | kPlushieAllocatorAllocFlagsProtectWrite
 		  | kPlushieAllocatorAllocFlagsZeroInit, 
-		NULL);
-	if (file_buffer == NULL) { res = kPlushieResultErrAllocOom; break; }
+		PLUSHIE_NULL);
+	if (file_buffer == PLUSHIE_NULL) { res = kPlushieResultErrAllocOom; break; }
 
 
 	// Since it's uncompressed image data we can write directly into 
 	// the same memory the file buffer is using
 	PlushieUInt08* img = plushie_tgafile_buffer_init(file_buffer, 256, 256);
-	if (img == NULL) { res = kPlushieResultErrUnclassified; break; }
+	if (img == PLUSHIE_NULL) { res = kPlushieResultErrUnclassified; break; }
 
 
 	// Write the image data 
@@ -104,10 +104,10 @@ int main()
 	// Resource cleanup
 
 	// Deallocate
-	if (file_buffer != NULL)
+	if (file_buffer != PLUSHIE_NULL)
 	{
 		alloc->free(alloc, file_buffer);
-		file_buffer = NULL;
+		file_buffer = PLUSHIE_NULL;
 	}
 
 	// File close 

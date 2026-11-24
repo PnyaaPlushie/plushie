@@ -193,9 +193,9 @@ static PLUSHIE_INLINE void* plushie_alloc(
 	PlushieUSize      size
 )
 {
-	if (alloc == NULL || alloc->alloc == NULL) return NULL;
+	if (alloc == PLUSHIE_NULL || alloc->alloc == PLUSHIE_NULL) return PLUSHIE_NULL;
 	return alloc->alloc(alloc, size, PLUSHIE_ALLOC_DEFAULT_ALIGNMENT,
-		kPlushieAllocatorAllocFlagsNone, NULL);
+		kPlushieAllocatorAllocFlagsNone, PLUSHIE_NULL);
 }
 
 // Free memory previously returned by plushie_alloc/plushie_realloc.
@@ -204,7 +204,7 @@ static PLUSHIE_INLINE void plushie_free(
 	void*             ptr
 )
 {
-	if (alloc == NULL || alloc->free == NULL || ptr == NULL) return;
+	if (alloc == PLUSHIE_NULL || alloc->free == PLUSHIE_NULL || ptr == PLUSHIE_NULL) return;
 	alloc->free(alloc, ptr);
 }
 
@@ -219,27 +219,27 @@ static PLUSHIE_INLINE void* plushie_realloc(
 	PlushieUSize      new_size
 )
 {
-	if (alloc == NULL) return NULL;
+	if (alloc == PLUSHIE_NULL) return PLUSHIE_NULL;
 
-	if (alloc->realloc != NULL)
+	if (alloc->realloc != PLUSHIE_NULL)
 	{
 		return alloc->realloc(alloc, ptr, old_size, new_size,
 			PLUSHIE_ALLOC_DEFAULT_ALIGNMENT,
-			kPlushieAllocatorAllocFlagsNone, NULL);
+			kPlushieAllocatorAllocFlagsNone, PLUSHIE_NULL);
 	}
 
-	if (alloc->alloc == NULL) return NULL;
+	if (alloc->alloc == PLUSHIE_NULL) return PLUSHIE_NULL;
 
 	void* new_ptr = alloc->alloc(alloc, new_size,
 		PLUSHIE_ALLOC_DEFAULT_ALIGNMENT,
-		kPlushieAllocatorAllocFlagsNone, NULL);
-	if (new_ptr == NULL) return NULL;
+		kPlushieAllocatorAllocFlagsNone, PLUSHIE_NULL);
+	if (new_ptr == PLUSHIE_NULL) return PLUSHIE_NULL;
 
-	if (ptr != NULL)
+	if (ptr != PLUSHIE_NULL)
 	{
 		PlushieUSize copy_size = old_size < new_size ? old_size : new_size;
 		plushie_mem_copy(new_ptr, ptr, copy_size);
-		if (alloc->free != NULL) alloc->free(alloc, ptr);
+		if (alloc->free != PLUSHIE_NULL) alloc->free(alloc, ptr);
 	}
 
 	return new_ptr;

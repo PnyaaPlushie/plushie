@@ -116,16 +116,16 @@ PLUSHIE_CSTL_API PlushieResult plushie_thread_init(
 	PlushieThreadInitInfo* init
 )
 {
-	if (out_thread == NULL || init == NULL) return kPlushieResultErrNullptr;
+	if (out_thread == PLUSHIE_NULL || init == PLUSHIE_NULL) return kPlushieResultErrNullptr;
 
 #if PLUSHIE_CSTL_THREADING_BACKEND_ID == PLUSHIE_CSTL_THREADING_BACKEND_ID_WIN32
 	// TODO: Pull in the options to configure instead of using default values
 	out_thread->function = init->function;
 	out_thread->thread_handle = CreateThread(
-		NULL,
+		PLUSHIE_NULL,
 		0,
 		(LPTHREAD_START_ROUTINE)init->function,
-		NULL,
+		PLUSHIE_NULL,
 		0,
 		&out_thread->thread_id
 	);
@@ -142,7 +142,7 @@ PLUSHIE_CSTL_API PlushieResult plushie_thread_wait(
 	const struct PlushieThread* thread
 )
 {
-	if (thread == NULL) return kPlushieResultErrNullptr;
+	if (thread == PLUSHIE_NULL) return kPlushieResultErrNullptr;
 
 #if PLUSHIE_CSTL_THREADING_BACKEND_ID == PLUSHIE_CSTL_THREADING_BACKEND_ID_WIN32
 	// TODO: Pull in the options to configure instead of using default values

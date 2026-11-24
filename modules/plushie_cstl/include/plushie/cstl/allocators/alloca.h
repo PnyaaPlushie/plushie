@@ -84,7 +84,7 @@ static void* s_local_plushie_allocator_alloca_alloc(
 
 	void* raw_ptr = PLUSHIE_ALLOCATOR_LOCAL_ALLOCA(
 		PLUSHIE_ALLOCATOR_FAKE_ALIGNED_SIZE(size, alignment));
-	if (raw_ptr == NULL) return NULL;
+	if (raw_ptr == PLUSHIE_NULL) return PLUSHIE_NULL;
 	void* ptr = plushie_allocator_place_header_for_alignment(raw_ptr, alignment);
 
 	// handle 0 init
@@ -102,16 +102,16 @@ static void s_local_plushie_allocator_alloca_free(
 )
 {
 	(void)allocator;
-	if (ptr == NULL) return;
+	if (ptr == PLUSHIE_NULL) return;
 	PLUSHIE_ALLOCATOR_LOCAL_FREEA(plushie_allocator_fetch_header_for_alignment(ptr));
 }
 
 static PlushieAllocator sLocalPlushieAllocatorAlloca =
 {
 	s_local_plushie_allocator_alloca_alloc,
-	NULL,
+	PLUSHIE_NULL,
 	s_local_plushie_allocator_alloca_free,
-	NULL
+	PLUSHIE_NULL
 };
 
 PLUSHIE_CSTL_API PlushieAllocator* plushie_allocator_get_alloca(

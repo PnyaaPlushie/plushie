@@ -147,7 +147,7 @@ static PLUSHIE_INLINE PlushieResult plushie_bmp_file_buffer_size(
 	PlushieBmpDescriptor* desc
 )
 {
-	if (out_size == NULL || desc == NULL) return kPlushieResultErrNullptr;
+	if (out_size == PLUSHIE_NULL || desc == PLUSHIE_NULL) return kPlushieResultErrNullptr;
 
 	PlushieUSize stride = plushie_bmp_line_stride(desc->width, desc->bpp);
 	*out_size = (PlushieUSize)PLUSHIE_BMP_FILE_HEADER_SIZE

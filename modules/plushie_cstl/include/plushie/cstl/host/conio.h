@@ -89,7 +89,7 @@ PLUSHIE_CSTL_API void plushie_conio_write(
 )
 {
 	(void)io;
-	if (msg.data.ptr == NULL || msg.len == 0) return;
+	if (msg.data.ptr == PLUSHIE_NULL || msg.len == 0) return;
 
 	if (msg.flags & kPlushieStrFlagEncodingAscii ||
 		msg.flags & kPlushieStrFlagEncodingUtf8)

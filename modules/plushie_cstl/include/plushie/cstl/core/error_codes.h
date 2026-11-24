@@ -118,18 +118,20 @@ PLUSHIE_CSTL_API const char* plushie_result_decode_name(
 #undef PLUSHIE_X
 
 #define PLUSHIE_X(VAR_NAME, DESC) \
-    case kPlushieResult##VAR_NAME: return DESC;
+    case kPlushieResult##VAR_NAME: ptr = DESC;
 
 PLUSHIE_CSTL_API const char* plushie_result_decode_desc(
     PlushieResult result
 )
 {
+    const char* ptr = PLUSHIE_NULL;
     switch (result)
     {
         PLUSHIE_CSTL_ERROR_CODE_SCHEMA
     default:
-        return "Error not found";
+        ptr = "Error not found";
     }
+    return ptr;
 }
 
 #undef PLUSHIE_X
