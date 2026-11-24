@@ -13,7 +13,7 @@
 #include "plushie/cstl/core/alloc.h"
 #include "plushie/cstl/containers/string.h"
 
-// Macro to force the header to provide the implementation for the functions
+/* Macro to force the header to provide the implementation for the functions */
 #ifndef PLUSHIE_CSTL_HOST_CMDARG_PROVIDE_IMPL
 #  define PLUSHIE_CSTL_HOST_CMDARG_PROVIDE_IMPL 0
 #endif
@@ -57,44 +57,45 @@ PLUSHIE_CSTL_API PlushieResult plushie_cmdarg_wwinmain_convert(
     PlushieWinWchar*         cmdarg
 )
 {
-    // Allocator and out buffers are all required
-    if (out_strs == NULL || out_buffer == NULL || alloc == NULL || cmdarg == NULL)
+    /* Allocator and out buffers are all required */
+    if (out_strs == PLUSHIE_NULL || out_buffer == PLUSHIE_NULL || alloc == PLUSHIE_NULL || cmdarg == PLUSHIE_NULL)
         return kPlushieResultErrNullptr;
-    if (alloc->alloc == NULL)
+    if (alloc->alloc == PLUSHIE_NULL)
         return kPlushieResultErrAllocPfnMissing;
 
-    // We use `CommandLineToArgvW` for conversion, it has some odd behaviour.
-    // If the argstring is empty L"" then it gives you the exe's current path.
-    // This isn't an argument to parse, and a caller couldn't determine if a
-    // user passed one exe path, or if they get back their own exe path without
-    // an opaque check. So although this is different behaviour from the function
-    // we mainly depend on, we add an early exit for empty args.
+    /* We use `CommandLineToArgvW` for conversion, it has some odd behaviour. */
+    /* If the argstring is empty L"" then it gives you the exe's current path. */
+    /* This isn't an argument to parse, and a caller couldn't determine if a */
+    /* user passed one exe path, or if they get back their own exe path without */
+    /* an opaque check. So although this is different behaviour from the function */
+    /* we mainly depend on, we add an early exit for empty args. */
     if (*cmdarg == L'\0')
     {
-        *out_strs = NULL;
+        *out_strs = PLUSHIE_NULL;
         *out_strs_count = 0;
-        *out_buffer = NULL;
+        *out_buffer = PLUSHIE_NULL;
         return kPlushieResultSuccess;
     }
 
     PlushieResult res = kPlushieResultSuccess;
-    PlushieWinWchar** argv = NULL;
-    void* buffer = NULL;
+    PlushieWinWchar** argv = PLUSHIE_NULL;
+    void* buffer = PLUSHIE_NULL;
     int argc = 0;
+    PlushieUInt32 i;
 
     do
     {
-        // Convert the arg from winmain to the classic version. This does
-        // require shell32.dll (6.0+) but for now that's fine as a limit.
-        // TODO [#64]: Provide alternative
+        /* Convert the arg from winmain to the classic version. This does */
+        /* require shell32.dll (6.0+) but for now that's fine as a limit. */
+        /* TODO [#64]: Provide alternative */
         argv = CommandLineToArgvW(cmdarg, &argc);
-        if (argv == NULL) { res = kPlushieResultErrOs; break; }
+        if (argv == PLUSHIE_NULL) { res = kPlushieResultErrOs; break; }
 
-        // How much memory do we need from the allocator?
-        // PlushieStr alignment > char, don't need to align up
+        /* How much memory do we need from the allocator? */
+        /* PlushieStr alignment > char, don't need to align up */
         PlushieUSize alloc_size = argc * sizeof(PlushieStr);
         PlushieUSize str_buff_size = 0;
-        for (PlushieUInt32 i = 0; i < (PlushieUInt32)argc; i++)
+        for (i = 0; i < (PlushieUInt32)argc; i++)
         {
             PlushieUSize req_size = 0;
             res = plushie_str_rawcvrt_wwcstr_size(
@@ -104,7 +105,7 @@ PLUSHIE_CSTL_API PlushieResult plushie_cmdarg_wwinmain_convert(
         }
         if (res != kPlushieResultSuccess) break;
 
-        // Allocate the buffer for utf8 and the PlushieStrs
+        /* Allocate the buffer for utf8 and the PlushieStrs */
         buffer = alloc->alloc(
             alloc,
             alloc_size + str_buff_size,
@@ -112,20 +113,20 @@ PLUSHIE_CSTL_API PlushieResult plushie_cmdarg_wwinmain_convert(
             kPlushieAllocatorAllocFlagsProtectRead
              | kPlushieAllocatorAllocFlagsProtectWrite
              | kPlushieAllocatorAllocFlagsZeroInit,
-            NULL);
-        if (buffer == NULL)
+            PLUSHIE_NULL);
+        if (buffer == PLUSHIE_NULL)
         {
             res = kPlushieResultErrAllocOom;
             break;
         }
 
-        // We have a buffer for the string objects and then the array of memory
+        /* We have a buffer for the string objects and then the array of memory */
         PlushieStr* str_plush = (PlushieStr*)buffer;
         (void)str_plush;
         PlushieUPtr str_mem = ((PlushieUPtr)buffer) + alloc_size;
-        for (PlushieUInt32 i = 0; i < (PlushieUInt32)argc; i++)
+        for (i = 0; i < (PlushieUInt32)argc; i++)
         {
-            // Convert
+            /* Convert */
             PlushieUSize str_size = 0;
             res = plushie_str_rawcvrt_wwcstr((char*)str_mem, &str_size,
                 str_buff_size, argv[i]);
@@ -135,26 +136,26 @@ PLUSHIE_CSTL_API PlushieResult plushie_cmdarg_wwinmain_convert(
                 str_size);
             if (res != kPlushieResultSuccess) break;
 
-            // Move the buffer and remaining allocations
+            /* Move the buffer and remaining allocations */
             str_mem += str_size;
             str_buff_size -= str_size;
         }
     }
     while (0);
 
-    // Cleanup os converted argv alloc
-    if (argv != NULL) { LocalFree(argv); }
+    /* Cleanup os converted argv alloc */
+    if (argv != PLUSHIE_NULL) { LocalFree(argv); }
 
-    // Cleanup the buffer if we failed
+    /* Cleanup the buffer if we failed */
     if (res != kPlushieResultSuccess)
     {
-        if (buffer != NULL)
+        if (buffer != PLUSHIE_NULL)
         {
             alloc->free(alloc, buffer);
-            buffer = NULL;
+            buffer = PLUSHIE_NULL;
         }
     }
-    // Else return resources to the caller
+    /* Else return resources to the caller */
     else
     {
         *out_strs = (PlushieStr*)buffer;
@@ -164,14 +165,14 @@ PLUSHIE_CSTL_API PlushieResult plushie_cmdarg_wwinmain_convert(
 
     return res;
 }
-#endif // PLUSHIE_TARGET_OS_ID_WINDOWS
+#endif /* PLUSHIE_TARGET_OS_ID_WINDOWS */
 
-#endif // PLUSHIE_CSTL_HOST_CMDARG_PROVIDE_IMPL_GUARD
-#endif // PLUSHIE_CSTL_HOST_CMDARG_PROVIDE_IMPL
+#endif /* PLUSHIE_CSTL_HOST_CMDARG_PROVIDE_IMPL_GUARD */
+#endif /* PLUSHIE_CSTL_HOST_CMDARG_PROVIDE_IMPL */
 /******************************************************************************
 * End of file content
 *******************************************************************************/
 #ifdef __cplusplus
 }
 #endif
-#endif // !PLUSHIE_CSTL_HOST_CMDARG_H
+#endif /* !PLUSHIE_CSTL_HOST_CMDARG_H */

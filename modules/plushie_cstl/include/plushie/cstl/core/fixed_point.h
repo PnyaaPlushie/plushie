@@ -31,14 +31,14 @@ typedef PlushieSInt32 PlushieFixed32Q8;
 /**
 * @brief Converts a floating point number into a fixed point 
 */
-static inline PlushieFixed32Q8 plushie_fixed32Q8_to_fixed(float f)
+static PLUSHIE_INLINE PlushieFixed32Q8 plushie_fixed32Q8_to_fixed(float f)
 {
-	float s = f * PLUSHIE_FIXED_32Q8_ONE; // Set base
-	s += (s >= 0.0f ? 0.5f : -0.5f);      // Add bias (Half away from zero)
-	return (PlushieFixed32Q8)s;           // Cast result
+	float s = f * PLUSHIE_FIXED_32Q8_ONE; /* Set base */
+	s += (s >= 0.0f ? 0.5f : -0.5f);      /* Add bias (Half away from zero) */
+	return (PlushieFixed32Q8)s;           /* Cast result */
 }
 
-static inline float plushie_fixed32Q8_to_float(PlushieFixed32Q8 s)
+static PLUSHIE_INLINE float plushie_fixed32Q8_to_float(PlushieFixed32Q8 s)
 {
 	float f = (float)s;
 	return f /= PLUSHIE_FIXED_32Q8_ONE;
@@ -52,4 +52,4 @@ static inline float plushie_fixed32Q8_to_float(PlushieFixed32Q8 s)
 #ifdef __cplusplus
 }
 #endif
-#endif // PLUSHIE_CSTL_CORE_FIXED_POINT
+#endif /* PLUSHIE_CSTL_CORE_FIXED_POINT */

@@ -28,4 +28,4 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-#endif // !PLUSHIE_CSTL_CONTAINERS_RINGBUFFER_H
+#endif /* !PLUSHIE_CSTL_CONTAINERS_RINGBUFFER_H */

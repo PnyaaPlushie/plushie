@@ -23,12 +23,12 @@
 #  define PLUSHIE_CSTL_CORE_DIAGNOSTICS_PROVIDE_IMPL 0
 #endif
 
-// Whether the ring buffer sink is available
+/* Whether the ring buffer sink is available */
 #ifndef PLUSHIE_CSTL_DIAGNOSTICS_RING_BUFF
 #  define PLUSHIE_CSTL_DIAGNOSTICS_RING_BUFF 1
 #endif
 
-// A very small optional static sink for pre-console diagnostics
+/* A very small optional static sink for pre-console diagnostics */
 #ifndef PLUSHIE_CSTL_DIAGNOSTICS_PROVIDE_SINK_STATIC_BUFF
 #  define PLUSHIE_CSTL_DIAGNOSTICS_PROVIDE_SINK_STATIC_BUFF 0
 #endif
@@ -105,9 +105,9 @@ struct PlushieDiagnosticsHost
 	PlushieUInt32            signal_mask;
 };
 
-//
-// Ring buffer
-//
+/* */
+/* Ring buffer */
+/* */
 
 struct PlushieDiagnosticSinkRingBuffer
 {
@@ -140,9 +140,9 @@ PLUSHIE_CSTL_API PlushieResult plushie_diagnostic_send(
 {
 	(void)signal_val;
 	(void)msg;
-	if (host == NULL) return kPlushieResultErrNullptr;
+	if (host == PLUSHIE_NULL) return kPlushieResultErrNullptr;
 
-	// TODO: fan the message out to each registered sink whose mask matches.
+	/* TODO: fan the message out to each registered sink whose mask matches. */
 	return kPlushieResultSuccess;
 }
 
@@ -154,15 +154,15 @@ PLUSHIE_CSTL_API PlushieResult plushie_diagnostic_send_cstr(
 {
 	(void)signal_val;
 	(void)msg;
-	if (host == NULL) return kPlushieResultErrNullptr;
+	if (host == PLUSHIE_NULL) return kPlushieResultErrNullptr;
 
-	// TODO: wrap msg in a PlushieStr view and forward to plushie_diagnostic_send.
+	/* TODO: wrap msg in a PlushieStr view and forward to plushie_diagnostic_send. */
 	return kPlushieResultSuccess;
 }
 
-//
-// Ring buffer
-//
+/* */
+/* Ring buffer */
+/* */
 
 PLUSHIE_CSTL_API void plushie_diagnostic_sink_ring_buffer_write(
 	PlushieStr    str,
@@ -173,16 +173,16 @@ PLUSHIE_CSTL_API void plushie_diagnostic_sink_ring_buffer_write(
 	(void)str;
 	(void)mask;
 	PlushieDiagnosticSinkRingBuffer* ring = (PlushieDiagnosticSinkRingBuffer*)udata;
-	if (ring == NULL) return;
+	if (ring == PLUSHIE_NULL) return;
 
-	// TODO: push the entry into the ring, advancing head/tail.
+	/* TODO: push the entry into the ring, advancing head/tail. */
 }
 
-// Provide the out-of-line definition for the sink vector type
+/* Provide the out-of-line definition for the sink vector type */
 PlushieVectorDefine(PlushieVecDiagnosticSink, PlushieDiagnosticSink, diagnostic_sink);
 
-#endif // !PLUSHIE_CSTL_CORE_DIAGNOSTICS_PROVIDE_IMPL_GUARD
-#endif // !PLUSHIE_CSTL_CORE_DIAGNOSTICS_PROVIDE_IMPL
+#endif /* !PLUSHIE_CSTL_CORE_DIAGNOSTICS_PROVIDE_IMPL_GUARD */
+#endif /* !PLUSHIE_CSTL_CORE_DIAGNOSTICS_PROVIDE_IMPL */
 
 /******************************************************************************
 * End of file
@@ -190,4 +190,4 @@ PlushieVectorDefine(PlushieVecDiagnosticSink, PlushieDiagnosticSink, diagnostic_
 #ifdef __cplusplus
 }
 #endif
-#endif // !PLUSHIE_CSTL_CORE_DIAGNOSTICS_H
+#endif /* !PLUSHIE_CSTL_CORE_DIAGNOSTICS_H */

@@ -13,12 +13,12 @@
 #include "plushie/cstl/core/error_codes.h"
 #include "plushie/cstl/core/serde.h"
 
-// Macro to force the header to provide the implementation for the functions
+/* Macro to force the header to provide the implementation for the functions */
 #ifndef PLUSHIE_CSTL_FILETYPES_BMP_PROVIDE_IMPL
 #  define PLUSHIE_CSTL_FILETYPES_BMP_PROVIDE_IMPL 0
 #endif
 
-// Fixed sizes of the on-disk headers this module understands
+/* Fixed sizes of the on-disk headers this module understands */
 #define PLUSHIE_BMP_FILE_HEADER_SIZE 14
 #define PLUSHIE_BMP_INFO_HEADER_SIZE 40
 
@@ -36,14 +36,14 @@ extern "C" {
 */
 typedef enum PlushieBmpDibHeaderKind
 {
-	kPlushieBmpDibHeaderKindCore,   //
-	kPlushieBmpDibHeaderKindOs21x,  //
-	kPlushieBmpDibHeaderKindOs22x,  //
-	kPlushieBmpDibHeaderKindInfo,   // !< The main supported profile, for win32
-	kPlushieBmpDibHeaderKindInfoV2, //
-	kPlushieBmpDibHeaderKindInfoV3, //
-	kPlushieBmpDibHeaderKindInfoV4, //
-	kPlushieBmpDibHeaderKindInfoV5, //
+	kPlushieBmpDibHeaderKindCore,   /* */
+	kPlushieBmpDibHeaderKindOs21x,  /* */
+	kPlushieBmpDibHeaderKindOs22x,  /* */
+	kPlushieBmpDibHeaderKindInfo,   /* !< The main supported profile, for win32 */
+	kPlushieBmpDibHeaderKindInfoV2, /* */
+	kPlushieBmpDibHeaderKindInfoV3, /* */
+	kPlushieBmpDibHeaderKindInfoV4, /* */
+	kPlushieBmpDibHeaderKindInfoV5, /* */
 }
 PlushieBmpDibHeaderKind;
 
@@ -52,12 +52,12 @@ PlushieBmpDibHeaderKind;
 */
 typedef enum PlushieBmpBppKind
 {
-	kPlushieBmpBppKind1bpp,  // !< Less than a byte - Unsupported rn
-	kPlushieBmpBppKind4bpp,  // !< Less than a byte - Unsupported rn
-	kPlushieBmpBppKind8bpp,  //
-	kPlushieBmpBppKind16bpp, //
-	kPlushieBmpBppKind24bpp, // !< BGR8 no alpha channel main kind
-	kPlushieBmpBppKind32bpp, //
+	kPlushieBmpBppKind1bpp,  /* !< Less than a byte - Unsupported rn */
+	kPlushieBmpBppKind4bpp,  /* !< Less than a byte - Unsupported rn */
+	kPlushieBmpBppKind8bpp,  /* */
+	kPlushieBmpBppKind16bpp, /* */
+	kPlushieBmpBppKind24bpp, /* !< BGR8 no alpha channel main kind */
+	kPlushieBmpBppKind32bpp, /* */
 }
 PlushieBmpBppKind;
 
@@ -73,9 +73,9 @@ typedef struct PlushieBmpDescriptor
 }
 PlushieBmpDescriptor;
 
-//
-// BmpFile::FileHeader
-//
+/* */
+/* BmpFile::FileHeader */
+/* */
 
 #define PLUSHIE_BMP_FILEHEADER_SCHEMA(PLUSHIE_XFIELD, PLUSHIE_XARRAY, PLUSHIE_XBLOB) \
     PLUSHIE_XBLOB(magic             , 2)                      \
@@ -93,9 +93,9 @@ typedef struct PlushieBmpFileHeader
 }
 PlushieBmpFileHeader;
 
-//
-// BmpFile::DIB::BITMAPINFOHEADER
-//
+/* */
+/* BmpFile::DIB::BITMAPINFOHEADER */
+/* */
 
 #define PLUSHIE_BMP_DIPBITMAPINFOHEADER_SCHEMA(PLUSHIE_X)     \
     PLUSHIE_X(PlushieUInt32, sizeof_this,           int32_le) \
@@ -131,7 +131,7 @@ PlushieBmpDipBitmapInfoHeader;
 * @brief Calculates the number of bytes in a single scan line of a bmp file.
 * Rows are padded up to a 4 byte boundary.
 */
-static inline PlushieUSize plushie_bmp_line_stride(
+static PLUSHIE_INLINE PlushieUSize plushie_bmp_line_stride(
 	PlushieUInt32 px_width,
 	PlushieUInt08 bpp)
 {
@@ -142,12 +142,12 @@ static inline PlushieUSize plushie_bmp_line_stride(
 * @brief Calculates the total on-disk byte size of a bmp file described by desc
 * (file header + BITMAPINFOHEADER + padded pixel rows).
 */
-static inline PlushieResult plushie_bmp_file_buffer_size(
+static PLUSHIE_INLINE PlushieResult plushie_bmp_file_buffer_size(
 	PlushieUSize*         out_size,
 	PlushieBmpDescriptor* desc
 )
 {
-	if (out_size == NULL || desc == NULL) return kPlushieResultErrNullptr;
+	if (out_size == PLUSHIE_NULL || desc == PLUSHIE_NULL) return kPlushieResultErrNullptr;
 
 	PlushieUSize stride = plushie_bmp_line_stride(desc->width, desc->bpp);
 	*out_size = (PlushieUSize)PLUSHIE_BMP_FILE_HEADER_SIZE
@@ -160,7 +160,7 @@ static inline PlushieResult plushie_bmp_file_buffer_size(
 * @brief Byte offset of pixel (x, y) within the pixel-data region for a given
 * row stride, top-down. Callers writing a real BMP (bottom-up) should flip y.
 */
-static inline PlushieUSize plushie_bmp_offset_to_pixel(
+static PLUSHIE_INLINE PlushieUSize plushie_bmp_offset_to_pixel(
 	PlushieUInt32 x,
 	PlushieUInt32 y,
 	PlushieUInt32 px_width,
@@ -178,10 +178,10 @@ static inline PlushieUSize plushie_bmp_offset_to_pixel(
 #ifndef PLUSHIE_CSTL_FILETYPES_BMP_PROVIDE_IMPL_GUARD
 #define PLUSHIE_CSTL_FILETYPES_BMP_PROVIDE_IMPL_GUARD
 
-// (No out-of-line implementation yet; all functions above are static inline.)
+/* (No out-of-line implementation yet; all functions above are static inline.) */
 
-#endif // !PLUSHIE_CSTL_FILETYPES_BMP_PROVIDE_IMPL_GUARD
-#endif // !PLUSHIE_CSTL_FILETYPES_BMP_PROVIDE_IMPL
+#endif /* !PLUSHIE_CSTL_FILETYPES_BMP_PROVIDE_IMPL_GUARD */
+#endif /* !PLUSHIE_CSTL_FILETYPES_BMP_PROVIDE_IMPL */
 
 /******************************************************************************
 * End of file content
@@ -189,4 +189,4 @@ static inline PlushieUSize plushie_bmp_offset_to_pixel(
 #ifdef __cplusplus
 }
 #endif
-#endif // !PLUSHIE_CSTL_FILETYPES_BMP_H
+#endif /* !PLUSHIE_CSTL_FILETYPES_BMP_H */

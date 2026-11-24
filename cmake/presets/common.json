@@ -19,11 +19,10 @@
             "toolchainFile"  : "${sourceDir}/cmake/toolchains/${presetName}.cmake",
             "cacheVariables" :
             {
-                "PLUSHIE_PRESET_NAME"            : "${presetName}",
-
-                "PLUSHIE_CSTL_BUILD_HEADER_ONLY" : "ON",
-                "PLUSHIE_CSTL_BUILD_SHARED"      : "ON",
-                "PLUSHIE_CSTL_BUILD_STATIC"      : "ON",
+                "PLUSHIE_PRESET_NAME"               : "${presetName}",
+                "PLUSHIE_CSTL_BUILD_OUTPUT_FLAVOUR_HEADER" : "ON",
+                "PLUSHIE_CSTL_BUILD_OUTPUT_FLAVOUR_STATIC" : "ON",
+                "PLUSHIE_CSTL_BUILD_OUTPUT_FLAVOUR_SHARED" : "ON",
                 "PLUSHIE_CSTL_INCLUDE_CXX"       : "ON"
             }
         },

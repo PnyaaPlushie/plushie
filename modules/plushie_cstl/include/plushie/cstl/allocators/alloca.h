@@ -16,7 +16,7 @@
 
 #include "plushie/cstl/core/alloc.h"
 
-// Macro to force the header to provide the implementation for the functions
+/* Macro to force the header to provide the implementation for the functions */
 #ifndef PLUSHIE_CSTL_ALLOCATORS_ALLOCA_PROVIDE_IMPL
 #  define PLUSHIE_CSTL_ALLOCATORS_ALLOCA_PROVIDE_IMPL 0
 #endif
@@ -41,9 +41,9 @@ PLUSHIE_CSTL_API struct PlushieAllocator* plushie_allocator_get_alloca(
 
 #include "plushie/cstl/core/mem.h"
 
-// Define the stack allocation primitives PLUSHIE_ALLOCATOR_LOCAL_ALLOCA /
-// PLUSHIE_ALLOCATOR_LOCAL_FREEA. If one isn't placed for your platform here,
-// you can define them before including the header.
+/* Define the stack allocation primitives PLUSHIE_ALLOCATOR_LOCAL_ALLOCA / */
+/* PLUSHIE_ALLOCATOR_LOCAL_FREEA. If one isn't placed for your platform here, */
+/* you can define them before including the header. */
 #if !((defined PLUSHIE_ALLOCATOR_LOCAL_ALLOCA) && (defined PLUSHIE_ALLOCATOR_LOCAL_FREEA))
 
    /* MSVC has a special header */
@@ -52,10 +52,15 @@ PLUSHIE_CSTL_API struct PlushieAllocator* plushie_allocator_get_alloca(
 #    define PLUSHIE_ALLOCATOR_LOCAL_ALLOCA(X) _malloca(X)
 #    define PLUSHIE_ALLOCATOR_LOCAL_FREEA(X)  _freea(X)
 
+   /* GCC always has the built in */
+#  elif PLUSHIE_COMPILER_ID == PLUSHIE_COMPILER_ID_GCC
+#    define PLUSHIE_ALLOCATOR_LOCAL_ALLOCA(X) __builtin_alloca(X)
+#    define PLUSHIE_ALLOCATOR_LOCAL_FREEA(X)  (void)(X)
+
    /* Clang provides via a built in */
 #  elif PLUSHIE_COMPILER_ID == PLUSHIE_COMPILER_ID_CLANG
-#    ifndef __has_builtin         // Optional of course.
-#      define __has_builtin(x) 0  // Compatibility with non-clang compilers.
+#    ifndef __has_builtin         /* Optional of course. */
+#      define __has_builtin(x) 0  /* Compatibility with non-clang compilers. */
 #    endif
 #    if __has_builtin(__builtin_alloca)
 #      define PLUSHIE_ALLOCATOR_LOCAL_ALLOCA(X) __builtin_alloca(X)
@@ -70,7 +75,7 @@ PLUSHIE_CSTL_API struct PlushieAllocator* plushie_allocator_get_alloca(
 
 #endif
 
-// Onto actually define the functions
+/* Onto actually define the functions */
 static void* s_local_plushie_allocator_alloca_alloc(
 	struct PlushieAllocator* allocator,
 	PlushieUSize             size,
@@ -84,10 +89,10 @@ static void* s_local_plushie_allocator_alloca_alloc(
 
 	void* raw_ptr = PLUSHIE_ALLOCATOR_LOCAL_ALLOCA(
 		PLUSHIE_ALLOCATOR_FAKE_ALIGNED_SIZE(size, alignment));
-	if (raw_ptr == NULL) return NULL;
+	if (raw_ptr == PLUSHIE_NULL) return PLUSHIE_NULL;
 	void* ptr = plushie_allocator_place_header_for_alignment(raw_ptr, alignment);
 
-	// handle 0 init
+	/* handle 0 init */
 	if (flags & kPlushieAllocatorAllocFlagsZeroInit)
 	{
 		plushie_zero_set(ptr, size);
@@ -102,16 +107,16 @@ static void s_local_plushie_allocator_alloca_free(
 )
 {
 	(void)allocator;
-	if (ptr == NULL) return;
+	if (ptr == PLUSHIE_NULL) return;
 	PLUSHIE_ALLOCATOR_LOCAL_FREEA(plushie_allocator_fetch_header_for_alignment(ptr));
 }
 
 static PlushieAllocator sLocalPlushieAllocatorAlloca =
 {
 	s_local_plushie_allocator_alloca_alloc,
-	NULL,
+	PLUSHIE_NULL,
 	s_local_plushie_allocator_alloca_free,
-	NULL
+	PLUSHIE_NULL
 };
 
 PLUSHIE_CSTL_API PlushieAllocator* plushie_allocator_get_alloca(
@@ -120,15 +125,15 @@ PLUSHIE_CSTL_API PlushieAllocator* plushie_allocator_get_alloca(
 	return &sLocalPlushieAllocatorAlloca;
 }
 
-// Internal helper macros do not leak out of the implementation block
+/* Internal helper macros do not leak out of the implementation block */
 #undef PLUSHIE_ALLOCATOR_LOCAL_ALLOCA
 #undef PLUSHIE_ALLOCATOR_LOCAL_FREEA
 
 /******************************************************************************
 * End of implementation
 *******************************************************************************/
-#endif // !PLUSHIE_CSTL_ALLOCATORS_ALLOCA_PROVIDE_IMPL_GUARD
-#endif // !PLUSHIE_CSTL_ALLOCATORS_ALLOCA_PROVIDE_IMPL
+#endif /* !PLUSHIE_CSTL_ALLOCATORS_ALLOCA_PROVIDE_IMPL_GUARD */
+#endif /* !PLUSHIE_CSTL_ALLOCATORS_ALLOCA_PROVIDE_IMPL */
 
 /******************************************************************************
 * End of file content
@@ -136,4 +141,4 @@ PLUSHIE_CSTL_API PlushieAllocator* plushie_allocator_get_alloca(
 #ifdef __cplusplus
 }
 #endif
-#endif // !PLUSHIE_CSTL_ALLOCATORS_ALLOCA_H
+#endif /* !PLUSHIE_CSTL_ALLOCATORS_ALLOCA_H */

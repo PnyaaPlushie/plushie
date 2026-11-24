@@ -1,5 +1,5 @@
-// Tests the span generator macro (new / is_empty / size).
-// The header is pure macros + static inline, so no PROVIDE_IMPL is needed.
+/* Tests the span generator macro (new / is_empty / size). */
+/* The header is pure macros + static inline, so no PROVIDE_IMPL is needed. */
 #include "tests_shared.h"
 
 #include "plushie/cstl/containers/span.h"
@@ -14,7 +14,7 @@ void test_span_new_and_accessors(void)
 
 	TEST_ASSERT_EQUAL_UINT(4u, (unsigned)s.len);
 	TEST_ASSERT_FALSE(test_u8_span_is_empty(&s));
-	TEST_ASSERT_EQUAL_UINT(4u, (unsigned)test_u8_span_size(&s)); // 4 * sizeof(u8)
+	TEST_ASSERT_EQUAL_UINT(4u, (unsigned)test_u8_span_size(&s)); /* 4 * sizeof(u8) */
 	TEST_ASSERT_EQUAL_PTR(data, s.ptr);
 }
 
@@ -22,12 +22,12 @@ void test_span_size_scales_with_element(void)
 {
 	PlushieUInt32 data[3] = { 10, 20, 30 };
 	TestU32Span s = test_u32_span_new(data, 3);
-	TEST_ASSERT_EQUAL_UINT(12u, (unsigned)test_u32_span_size(&s)); // 3 * sizeof(u32)
+	TEST_ASSERT_EQUAL_UINT(12u, (unsigned)test_u32_span_size(&s)); /* 3 * sizeof(u32) */
 }
 
 void test_span_empty(void)
 {
-	TestU8Span e = test_u8_span_new(NULL, 0);
+	TestU8Span e = test_u8_span_new(PLUSHIE_NULL, 0);
 	TEST_ASSERT_TRUE(test_u8_span_is_empty(&e));
 	TEST_ASSERT_EQUAL_UINT(0u, (unsigned)test_u8_span_size(&e));
 }

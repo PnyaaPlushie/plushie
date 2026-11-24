@@ -29,12 +29,12 @@ extern "C" {
 * @brief Calculates the buffer size the user needs to allocate for a 24bit per
 * pixel true color image inside a tga file
 */
-static inline PlushieUSize plushie_tgafile_buffer_size(
+static PLUSHIE_INLINE PlushieUSize plushie_tgafile_buffer_size(
     PlushieUInt32 width,
     PlushieUInt32 height
 )
 {
-    return 0x12 + width * height * 3; // 18 byte header, uncompressed data
+    return 0x12 + width * height * 3; /* 18 byte header, uncompressed data */
 }
 
 /**
@@ -43,34 +43,35 @@ static inline PlushieUSize plushie_tgafile_buffer_size(
 *
 * @todo Use proper serialization of fields
 */
-static inline void* plushie_tgafile_buffer_init(
+static PLUSHIE_INLINE void* plushie_tgafile_buffer_init(
     void*         start_ptr,
     PlushieUInt32 width,
     PlushieUInt32 height
 )
 {
     PlushieUInt08* ptr = (PlushieUInt08*)start_ptr;
+    PlushieUInt08 i;
 
-    // Todo: Use the zero init function
-    for (PlushieUInt08 i = 0; i < 0x12; i++) { ptr[i] = 0; }
+    /* Todo: Use the zero init function */
+    for (i = 0; i < 0x12; i++) { ptr[i] = 0; }
 
-    ptr[2] = 2;                     // True color no compression
-    ptr[12] = 0xff & width;         // little endian width
+    ptr[2] = 2;                     /* True color no compression */
+    ptr[12] = 0xff & width;         /* little endian width */
     ptr[13] = 0xff & (width >> 8);
-    ptr[14] = 0xff & height;        // little endian height
+    ptr[14] = 0xff & height;        /* little endian height */
     ptr[15] = 0xff & (height >> 8);
-    ptr[16] = 24;                   // bits per pixel
+    ptr[16] = 24;                   /* bits per pixel */
 
 
-    // Image descriptor
-    // [7-6] interleave mode    : None: (00)
-    // [5]   top to bottom?     : Yes : (1)
-    // [4]   right-to-left?     : No  : (0)
-    // [3-0] alpha channel depth: None: (0000)
-    // 00100000 = 32
+    /* Image descriptor */
+    /* [7-6] interleave mode    : None: (00) */
+    /* [5]   top to bottom?     : Yes : (1) */
+    /* [4]   right-to-left?     : No  : (0) */
+    /* [3-0] alpha channel depth: None: (0000) */
+    /* 00100000 = 32 */
     ptr[17] = 32;
 
-    // Return out
+    /* Return out */
     return ptr + 0x12;
 }
 
@@ -81,10 +82,10 @@ static inline void* plushie_tgafile_buffer_init(
 #ifndef PLUSHIE_CSTL_FILETYPES_TGA_PROVIDE_IMPL_GUARD
 #define PLUSHIE_CSTL_FILETYPES_TGA_PROVIDE_IMPL_GUARD
 
-// (No out-of-line implementation yet; all functions above are static inline.)
+/* (No out-of-line implementation yet; all functions above are static inline.) */
 
-#endif // !PLUSHIE_CSTL_FILETYPES_TGA_PROVIDE_IMPL_GUARD
-#endif // !PLUSHIE_CSTL_FILETYPES_TGA_PROVIDE_IMPL
+#endif /* !PLUSHIE_CSTL_FILETYPES_TGA_PROVIDE_IMPL_GUARD */
+#endif /* !PLUSHIE_CSTL_FILETYPES_TGA_PROVIDE_IMPL */
 
 /******************************************************************************
 * End of file
@@ -94,4 +95,4 @@ static inline void* plushie_tgafile_buffer_init(
 }
 #endif
 
-#endif // !PLUSHIE_CSTL_FILETYPES_TGA_H
+#endif /* !PLUSHIE_CSTL_FILETYPES_TGA_H */

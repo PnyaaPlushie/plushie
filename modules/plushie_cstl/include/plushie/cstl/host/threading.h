@@ -11,25 +11,25 @@
 #include "plushie/cstl/core/fixed_width.h"
 #include "plushie/cstl/core/error_codes.h"
 
-// Macro to force the header to provide the implementation for the functions
+/* Macro to force the header to provide the implementation for the functions */
 #ifndef PLUSHIE_CSTL_HOST_THREADING_PROVIDE_IMPL
 #  define PLUSHIE_CSTL_HOST_THREADING_PROVIDE_IMPL 0
 #endif
 
-// Different threading backends by ID
+/* Different threading backends by ID */
 #define PLUSHIE_CSTL_THREADING_BACKEND_ID_NONE     0
 #define PLUSHIE_CSTL_THREADING_BACKEND_ID_WIN32    1
 #define PLUSHIE_CSTL_THREADING_BACKEND_ID_PTHREADS 2
 #define PLUSHIE_CSTL_THREADING_BACKEND_ID_COUNT    3
 
-// Select the backend if not specified
+/* Select the backend if not specified */
 #ifndef PLUSHIE_CSTL_THREADING_BACKEND_ID
 #  if PLUSHIE_TARGET_OS_ID == PLUSHIE_TARGET_OS_ID_WINDOWS
 #    define PLUSHIE_CSTL_THREADING_BACKEND_ID PLUSHIE_CSTL_THREADING_BACKEND_ID_WIN32
 #  else
 #    define PLUSHIE_CSTL_THREADING_BACKEND_ID PLUSHIE_CSTL_THREADING_BACKEND_ID_NONE
-#  endif // !PLUSHIE_TARGET_OS_ID
-#endif // !PLUSHIE_CSTL_THREADING_BACKEND_ID
+#  endif /* !PLUSHIE_TARGET_OS_ID */
+#endif /* !PLUSHIE_CSTL_THREADING_BACKEND_ID */
 
 #ifdef __cplusplus
 extern "C" {
@@ -82,7 +82,7 @@ PLUSHIE_CSTL_API PlushieResult plushie_thread_wait(
 * Per Platform struct definitions
 *******************************************************************************/
 
-// -------------- WIN32 ------------------
+/* -------------- WIN32 ------------------ */
 
 #if PLUSHIE_CSTL_THREADING_BACKEND_ID == PLUSHIE_CSTL_THREADING_BACKEND_ID_WIN32
 #include <Windows.h>
@@ -116,23 +116,23 @@ PLUSHIE_CSTL_API PlushieResult plushie_thread_init(
 	PlushieThreadInitInfo* init
 )
 {
-	if (out_thread == NULL || init == NULL) return kPlushieResultErrNullptr;
+	if (out_thread == PLUSHIE_NULL || init == PLUSHIE_NULL) return kPlushieResultErrNullptr;
 
 #if PLUSHIE_CSTL_THREADING_BACKEND_ID == PLUSHIE_CSTL_THREADING_BACKEND_ID_WIN32
-	// TODO: Pull in the options to configure instead of using default values
+	/* TODO: Pull in the options to configure instead of using default values */
 	out_thread->function = init->function;
 	out_thread->thread_handle = CreateThread(
-		NULL,
+		PLUSHIE_NULL,
 		0,
 		(LPTHREAD_START_ROUTINE)init->function,
-		NULL,
+		PLUSHIE_NULL,
 		0,
 		&out_thread->thread_id
 	);
 	return out_thread->thread_handle == INVALID_HANDLE_VALUE ? kPlushieResultErrOs : kPlushieResultSuccess;
 	
 #else
-	// TODO: spawn the OS thread via the selected backend.
+	/* TODO: spawn the OS thread via the selected backend. */
 	return kPlushieResultErrUnsupported;
 #endif
 }
@@ -142,25 +142,25 @@ PLUSHIE_CSTL_API PlushieResult plushie_thread_wait(
 	const struct PlushieThread* thread
 )
 {
-	if (thread == NULL) return kPlushieResultErrNullptr;
+	if (thread == PLUSHIE_NULL) return kPlushieResultErrNullptr;
 
 #if PLUSHIE_CSTL_THREADING_BACKEND_ID == PLUSHIE_CSTL_THREADING_BACKEND_ID_WIN32
-	// TODO: Pull in the options to configure instead of using default values
+	/* TODO: Pull in the options to configure instead of using default values */
 	WaitForSingleObject(thread->thread_handle, INFINITE);
 	return kPlushieResultSuccess;
 #else
-	// TODO:
+	/* TODO: */
 	return kPlushieResultErrUnsupported;
 #endif
 }
 
 
-#endif // !PLUSHIE_CSTL_HOST_THREADING_PROVIDE_IMPL_GUARD
-#endif // !PLUSHIE_CSTL_HOST_THREADING_PROVIDE_IMPL
+#endif /* !PLUSHIE_CSTL_HOST_THREADING_PROVIDE_IMPL_GUARD */
+#endif /* !PLUSHIE_CSTL_HOST_THREADING_PROVIDE_IMPL */
 /******************************************************************************
 * End of file
 *******************************************************************************/
 #ifdef __cplusplus
 }
 #endif
-#endif // !PLUSHIE_CSTL_HOST_THREADING_H
+#endif /* !PLUSHIE_CSTL_HOST_THREADING_H */

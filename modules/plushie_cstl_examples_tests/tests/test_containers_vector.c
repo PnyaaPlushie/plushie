@@ -1,4 +1,4 @@
-// Tests the collapsed typed vector generator (init / push_back / grow / free).
+/* Tests the collapsed typed vector generator (init / push_back / grow / free). */
 #include "tests_shared.h"
 
 #if PLUSHIE_CSTL_TESTS_PROVIDE_IMPL
@@ -7,8 +7,8 @@
 #include "plushie/cstl/containers/vector.h"
 #include "plushie/cstl/allocators/libc.h"
 
-// A test-local vector type. This is always defined in this TU (the library only
-// ships PlushieVecStr), so it never collides with the linked library.
+/* A test-local vector type. This is always defined in this TU (the library only */
+/* ships PlushieVecStr), so it never collides with the linked library. */
 PlushieVectorDecl(PlushieVecInt, int, i32);
 PlushieVectorDefine(PlushieVecInt, int, i32);
 
@@ -16,16 +16,17 @@ void test_vector_push_grows_and_reads_back(void)
 {
 	PlushieAllocator* a = plushie_allocator_get_libc();
 	PlushieVecInt v;
+	int i;
 	TEST_ASSERT_EQUAL(kPlushieResultSuccess, plushie_vec_i32_init(&v, a));
 
-	for (int i = 0; i < 100; i++)
+	for (i = 0; i < 100; i++)
 	{
 		TEST_ASSERT_EQUAL(kPlushieResultSuccess, plushie_vec_i32_push_back(&v, i * i));
 	}
 
 	TEST_ASSERT_EQUAL_UINT(100u, (unsigned)v.size);
 	TEST_ASSERT_TRUE(v.cap >= 100);
-	for (int i = 0; i < 100; i++)
+	for (i = 0; i < 100; i++)
 	{
 		TEST_ASSERT_EQUAL_INT(i * i, v.ptr[i]);
 	}
@@ -44,7 +45,7 @@ void test_vector_reserve_is_monotonic(void)
 
 	TEST_ASSERT_EQUAL(kPlushieResultSuccess, plushie_vec_i32_reserve(&v, 32));
 	TEST_ASSERT_TRUE(v.cap >= 32);
-	// reserving fewer than current capacity is a no-op success
+	/* reserving fewer than current capacity is a no-op success */
 	TEST_ASSERT_EQUAL(kPlushieResultSuccess, plushie_vec_i32_reserve(&v, 4));
 	TEST_ASSERT_TRUE(v.cap >= 32);
 
@@ -53,8 +54,8 @@ void test_vector_reserve_is_monotonic(void)
 
 void test_vector_null_args(void)
 {
-	TEST_ASSERT_EQUAL(kPlushieResultErrNullptr, plushie_vec_i32_init(NULL, NULL));
-	TEST_ASSERT_EQUAL(kPlushieResultErrNullptr, plushie_vec_i32_push_back(NULL, 1));
+	TEST_ASSERT_EQUAL(kPlushieResultErrNullptr, plushie_vec_i32_init(PLUSHIE_NULL, PLUSHIE_NULL));
+	TEST_ASSERT_EQUAL(kPlushieResultErrNullptr, plushie_vec_i32_push_back(PLUSHIE_NULL, 1));
 }
 
 void containers_vector_main(void)

@@ -44,18 +44,18 @@ extern "C" {
 */
 typedef enum PlushieElf_Ident
 {
-	kPlushieElf_Ident_Magic0       = 0,  // 0x7f
-	kPlushieElf_Ident_Magic1       = 1,  // 'E'
-	kPlushieElf_Ident_Magic2       = 2,  // 'L'
-	kPlushieElf_Ident_Magic3       = 3,  // 'F'
-	kPlushieElf_Ident_FileClass    = 4,  // Index of byte storing the bit width of this elf
-	kPlushieElf_Ident_DataEncoding = 5,  // Index of byte storing the endianness of this elf
-	kPlushieElf_Ident_FileVersion  = 6,  // Index of byte storing file version of this elf
-	kPlushieElf_Ident_OsAbi        = 7,  // Index of byte storing target os and/or abi
-	kPlushieElf_Ident_AbiVersion   = 8,  // Index of byte storing abi ver
-	kPlushieElf_Ident_PadStart     = 9,  // Index of first pad byte
-	kPlushieElf_Ident_PadEnd       = 15, // Index of last pad byte
-	kPlushieElf_Ident_Count        = 16, // Number of bytes you need to read for an ident
+	kPlushieElf_Ident_Magic0       = 0,  /* 0x7f */
+	kPlushieElf_Ident_Magic1       = 1,  /* 'E' */
+	kPlushieElf_Ident_Magic2       = 2,  /* 'L' */
+	kPlushieElf_Ident_Magic3       = 3,  /* 'F' */
+	kPlushieElf_Ident_FileClass    = 4,  /* Index of byte storing the bit width of this elf */
+	kPlushieElf_Ident_DataEncoding = 5,  /* Index of byte storing the endianness of this elf */
+	kPlushieElf_Ident_FileVersion  = 6,  /* Index of byte storing file version of this elf */
+	kPlushieElf_Ident_OsAbi        = 7,  /* Index of byte storing target os and/or abi */
+	kPlushieElf_Ident_AbiVersion   = 8,  /* Index of byte storing abi ver */
+	kPlushieElf_Ident_PadStart     = 9,  /* Index of first pad byte */
+	kPlushieElf_Ident_PadEnd       = 15, /* Index of last pad byte */
+	kPlushieElf_Ident_Count        = 16, /* Number of bytes you need to read for an ident */
 }
 PlushieElf_Ident;
 
@@ -187,7 +187,7 @@ PLUSHIE_CSTL_API PlushieResult plushie_elf_structured_ident_deserialize(
 	PlushieUSize                bytes_len
 )
 {
-	if (out_ident == NULL || bytes_ptr == NULL)
+	if (out_ident == PLUSHIE_NULL || bytes_ptr == PLUSHIE_NULL)
 	{
 		return kPlushieResultErrNullptr;
 	}
@@ -196,7 +196,7 @@ PLUSHIE_CSTL_API PlushieResult plushie_elf_structured_ident_deserialize(
 		return kPlushieResultErrEof;
 	}
 
-	// Check the magic number
+	/* Check the magic number */
 	if (bytes_ptr[kPlushieElf_Ident_Magic0] != 0x7f ||
 		bytes_ptr[kPlushieElf_Ident_Magic1] != 'E' ||
 		bytes_ptr[kPlushieElf_Ident_Magic2] != 'L' ||
@@ -205,12 +205,12 @@ PLUSHIE_CSTL_API PlushieResult plushie_elf_structured_ident_deserialize(
 		return kPlushieResultErrParse;
 	}
 
-	// The file class and the data encodings must both be non-zero, as zero means
-	// invalid.
+	/* The file class and the data encodings must both be non-zero, as zero means */
+	/* invalid. */
 	if (bytes_ptr[kPlushieElf_Ident_FileClass] == 0) return kPlushieResultErrParse;
 	if (bytes_ptr[kPlushieElf_Ident_DataEncoding] == 0) return kPlushieResultErrParse;
 
-	// Output
+	/* Output */
 	out_ident->file_class   = (PlushieElf_FileClass)bytes_ptr[kPlushieElf_Ident_FileClass];
 	out_ident->encoding     = (PlushieElf_DataEncoding)bytes_ptr[kPlushieElf_Ident_DataEncoding];
 	out_ident->file_version = bytes_ptr[kPlushieElf_Ident_FileVersion];
@@ -219,8 +219,8 @@ PLUSHIE_CSTL_API PlushieResult plushie_elf_structured_ident_deserialize(
 	return kPlushieResultSuccess;
 }
 
-#endif // !PLUSHIE_CSTL_FILETYPES_ELF_PROVIDE_IMPL_GUARD
-#endif // !PLUSHIE_CSTL_FILETYPES_ELF_PROVIDE_IMPL
+#endif /* !PLUSHIE_CSTL_FILETYPES_ELF_PROVIDE_IMPL_GUARD */
+#endif /* !PLUSHIE_CSTL_FILETYPES_ELF_PROVIDE_IMPL */
 
 /******************************************************************************
 * End of File
@@ -228,4 +228,4 @@ PLUSHIE_CSTL_API PlushieResult plushie_elf_structured_ident_deserialize(
 #ifdef __cplusplus
 }
 #endif
-#endif // !PLUSHIE_CSTL_FILETYPES_ELF_H
+#endif /* !PLUSHIE_CSTL_FILETYPES_ELF_H */

@@ -62,4 +62,4 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-#endif // !PLUSHIE_CSTL_CORE_CALLING_CONV_H
+#endif /* !PLUSHIE_CSTL_CORE_CALLING_CONV_H */

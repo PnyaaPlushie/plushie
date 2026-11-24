@@ -1,5 +1,5 @@
-// End-to-end test of the json parser after the rewrite (broken includes fixed,
-// PlushieJson_ReturnCode replaced with PlushieResult, allocator wrappers used).
+/* End-to-end test of the json parser after the rewrite (broken includes fixed, */
+/* PlushieJson_ReturnCode replaced with PlushieResult, allocator wrappers used). */
 #include "tests_shared.h"
 #include <string.h>
 
@@ -54,7 +54,7 @@ void test_json_parse_error(void)
 
 void test_json_null_args(void)
 {
-	TEST_ASSERT_EQUAL(kPlushieResultErrNullptr, plushie_json_parse(NULL, NULL));
+	TEST_ASSERT_EQUAL(kPlushieResultErrNullptr, plushie_json_parse(PLUSHIE_NULL, PLUSHIE_NULL));
 }
 
 void filetypes_json_main(void)

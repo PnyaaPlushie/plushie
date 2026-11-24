@@ -16,7 +16,7 @@ option(PLUSHIE_CSTL_INSTALL_TESTS    "include install target for tests"     ON )
 option(PLUSHIE_CSTL_INCLUDE_CXX      "include C++ for tests and examples"   OFF)
 
 if(${PLUSHIE_CSTL_INCLUDE_CXX})
-	message(STATUS "ENABLING CXX")
+	message(STATUS "[Plushie::Cstl::Tests] Enabling Cxx")
 	enable_language(CXX)
 endif()
 
@@ -25,7 +25,7 @@ option(PLUSHIE_CSTL_EXAMPLES_USE_STARTUP "Use custom premain function" OFF)
 option(PLUSHIE_CSTL_TESTS_USE_STARTUP    "Use custom premain function" OFF)
 
 find_package(PlushieCStl QUIET REQUIRED)
-include(GNUInstallDirs)
+
 
 ###############################################################################################
 # Examples
@@ -40,81 +40,5 @@ endif()
 ###############################################################################################
 
 if(${PLUSHIE_CSTL_BUILD_TESTS})
-
-	# We use unity test for the native tests
-	find_package(unity REQUIRED QUIET)
-	enable_testing()
-
-	# List of targets used
-	set(TEST_TARGETS "")
-
-	# Glob all the test files
-	file(GLOB TEST_C_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tests/test_*.c")
-	if(${PLUSHIE_CSTL_INCLUDE_CXX})
-		file(GLOB TEST_CPP_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tests/test_*.cpp")
-	else()
-		set(TEST_CPP_SOURCES "")
-	endif()
-	set(TEST_SOURCES "tests/main.c" "tests/tests_shared.h" ${TEST_C_SOURCES} ${TEST_CPP_SOURCES})
-
-	if(TARGET PlushieCStl)
-		list(APPEND TEST_TARGETS PlushieCStl_Test_HeaderOnly)
-		add_executable(PlushieCStl_Test_HeaderOnly ${TEST_SOURCES})
-		target_link_libraries(PlushieCStl_Test_HeaderOnly PRIVATE PlushieCStl)
-		target_compile_definitions(PlushieCStl_Test_HeaderOnly PRIVATE PLUSHIE_CSTL_TESTS_PROVIDE_IMPL=1)
-	endif()
-
-	if(TARGET PlushieCStl_Static)
-		list(APPEND TEST_TARGETS PlushieCStl_Test_Static)
-		add_executable(PlushieCStl_Test_Static ${TEST_SOURCES})
-		target_link_libraries(PlushieCStl_Test_Static PRIVATE PlushieCStl_Static)
-	endif()
-
-	if(TARGET PlushieCStl_Shared)
-		list(APPEND TEST_TARGETS PlushieCStl_Test_Shared)
-		add_executable(PlushieCStl_Test_Shared ${TEST_SOURCES})
-		target_link_libraries(PlushieCStl_Test_Shared PRIVATE PlushieCStl_Shared)
-	endif()
-
-	# Apply the shared testing properties 
-	foreach(target ${TEST_TARGETS})
-		set_target_properties(${target} PROPERTIES 
-			FOLDER                  "plushie/plushie_cstl/tests"
-			DEBUG_POSTFIX           "Dbg"
-			RELEASE_POSTFIX         "Rel"
-			RELWITHDEBINFO_POSTFIX  "RelDbg"
-			MINSIZEREL_POSTFIX      "RelMin")
-
-		target_link_libraries(${target} PRIVATE unity::framework)
-		add_test(NAME ${target} COMMAND ${target})
-	endforeach()
-
-	# Install the test exes along with the DLLs they need, so the installed /
-	# packaged copies run standalone (the build tree doesn't need this, the root
-	# CMakeLists puts all exes and DLLs in one bin folder).
-	if(POLICY CMP0207)
-  		cmake_policy(SET CMP0207 NEW) # Prevents warning on path seperator conversions
-	endif()
-	if(${PLUSHIE_CSTL_INSTALL_TESTS} AND TARGET PlushieCStl_Shared)
-		install(TARGETS ${TEST_TARGETS}
-			RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}/tests)
-
-		# Runtime dependencies seem to fail to resolve 
-		if(CMAKE_CROSSCOMPILING)
-			# Backup for cross compiling
-    		install(FILES $<TARGET_RUNTIME_DLLS:PlushieCStl_Shared>
-			DESTINATION ${CMAKE_INSTALL_BINDIR}/tests)
-		else()
-		install(TARGETS PlushieCStl_Shared PlushieCStl_Test_Shared
-        	RUNTIME_DEPENDENCY_SET plushie_cstl_runtime_deps
-        	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}/tests)
-
-		install(RUNTIME_DEPENDENCY_SET plushie_cstl_runtime_deps
-        	PRE_EXCLUDE_REGEXES  "api-ms-.*" "ext-ms-.*"            # Windows API sets
-        	POST_EXCLUDE_REGEXES ".*[/\\\\][Ss]ystem32[/\\\\].*"    # Windows system DLLs
-            	                 "^/lib/.*" "^/usr/lib/.*"          # Linux system libraries
-        	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}/tests )
-		endif()
-	endif()
-
+	add_subdirectory(tests)
 endif()

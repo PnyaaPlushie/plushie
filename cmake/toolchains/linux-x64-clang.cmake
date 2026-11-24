@@ -6,7 +6,7 @@ set(PLUSHIE_TARGET_OS          "Linux"                    )
 
 # --- find clang --------------------------------------------
 find_program(CLANG_CC  NAMES clang   QUIET REQUIRED)
-find_package(CLANG_CXX NAMES clang++ QUIET         )
+find_program(CLANG_CXX NAMES clang++ QUIET         )
 
 
 set(CMAKE_C_COMPILER_TARGET   ${PLUSHIE_TARGET_TRIPLE_LLVM})

@@ -16,7 +16,7 @@
 * Target OS detection
 *******************************************************************************/
 
-// list of platform ids
+/* list of platform ids */
 #define PLUSHIE_TARGET_OS_ID_NONE     0
 #define PLUSHIE_TARGET_OS_ID_WINDOWS  1
 #define PLUSHIE_TARGET_OS_ID_LINUX    2
@@ -44,7 +44,7 @@
 * Architecture detection
 *******************************************************************************/
 
-// List of architectures
+/* List of architectures */
 #define PLUSHIE_ARCH_ID_NONE    0
 #define PLUSHIE_ARCH_ID_X86_32  1
 #define PLUSHIE_ARCH_ID_X86_64  2
@@ -56,7 +56,7 @@
 * Compiler detection
 *******************************************************************************/
 
-// List of compilers
+/* List of compilers */
 #define PLUSHIE_COMPILER_ID_NONE     0
 #define PLUSHIE_COMPILER_ID_MSVC     1
 #define PLUSHIE_COMPILER_ID_CLANG    2
@@ -88,9 +88,9 @@
 * C Standard version detection
 *******************************************************************************/
 
-// Normalize based on the stdc macro. We use the year.
+/* Normalize based on the stdc macro. We use the year. */
 
-// Normalize msvc when user hasn't used conformance flag
+/* Normalize msvc when user hasn't used conformance flag */
 #if PLUSHIE_COMPILER_ID == PLUSHIE_COMPILER_ID_MSVC && !defined(PLUSHIE_C_STD)
 
 #  ifndef __STDC_VERSION__
@@ -106,7 +106,7 @@
 
 #endif
 
-// Use __STDC_VERSION__ macro to determine standard
+/* Use __STDC_VERSION__ macro to determine standard */
 #if !defined(PLUSHIE_C_STD) && defined __STDC_VERSION__
 
 #  if __STDC_VERSION__ >= 202311L
@@ -128,6 +128,49 @@
 #endif
 
 /******************************************************************************
+* Inline keyword
+*******************************************************************************/
+
+/* `inline` is only a keyword from C99 (and in C++). Before that we fall back */
+/* to compiler extensions, or nothing (static functions still work, the */
+/* compiler just won't be hinted to inline them). */
+#ifndef PLUSHIE_INLINE
+#  if defined(__cplusplus) || PLUSHIE_C_STD >= 1999
+#    define PLUSHIE_INLINE inline
+#  elif PLUSHIE_COMPILER_ID == PLUSHIE_COMPILER_ID_MSVC
+#    define PLUSHIE_INLINE __inline
+#  elif (PLUSHIE_COMPILER_ID == PLUSHIE_COMPILER_ID_GCC) || \
+        (PLUSHIE_COMPILER_ID == PLUSHIE_COMPILER_ID_CLANG)
+#    define PLUSHIE_INLINE __inline__
+#  else
+#    define PLUSHIE_INLINE
+#  endif
+#endif
+
+/******************************************************************************
+* Null pointer constant
+*******************************************************************************/
+
+/* `NULL` is a libc macro (stddef.h and friends) rather than a keyword, so we */
+/* provide our own to avoid depending on header include order or availability. */
+/* C++ can't implicitly convert from `void*`, so it gets `nullptr`, or `0` */
+/* before C++11. C23 gains the `nullptr` keyword, but MSVC doesn't support it in */
+/* C mode yet, so it's excluded. */
+#ifndef PLUSHIE_NULL
+#  if defined(__cplusplus)
+#    if __cplusplus >= 201103L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201103L)
+#      define PLUSHIE_NULL nullptr
+#    else
+#      define PLUSHIE_NULL 0
+#    endif
+#  elif PLUSHIE_C_STD >= 2023 && PLUSHIE_COMPILER_ID != PLUSHIE_COMPILER_ID_MSVC
+#    define PLUSHIE_NULL nullptr
+#  else
+#    define PLUSHIE_NULL ((void*)0)
+#  endif
+#endif
+
+/******************************************************************************
 * Symbol visibility
 *******************************************************************************/
 #ifndef PLUSHIE_SYMBOL_EXPORT
@@ -146,20 +189,20 @@
 #  endif
 #endif
 
-// Each library needs to have it's own api signal
-#define PLUSHIE_CSTL_USAGE_MODE_HEADER_ONLY   0  // header-only
-#define PLUSHIE_CSTL_USAGE_MODE_STATIC        1  // static library
-#define PLUSHIE_CSTL_USAGE_MODE_SHARED        2  // using the DLL / .so (import)
-#define PLUSHIE_CSTL_USAGE_MODE_SHARED_BUILD  3  // building the DLL / .so (export)
+/* Each library needs to have it's own api signal */
+#define PLUSHIE_CSTL_USAGE_MODE_HEADER_ONLY   0  /* header-only */
+#define PLUSHIE_CSTL_USAGE_MODE_STATIC        1  /* static library */
+#define PLUSHIE_CSTL_USAGE_MODE_SHARED        2  /* using the DLL / .so (import) */
+#define PLUSHIE_CSTL_USAGE_MODE_SHARED_BUILD  3  /* building the DLL / .so (export) */
 
-// By default we assume the user is using the library in header only mode
+/* By default we assume the user is using the library in header only mode */
 #ifndef PLUSHIE_CSTL_USAGE_MODE
 #  define PLUSHIE_CSTL_USAGE_MODE PLUSHIE_CSTL_USAGE_MODE_HEADER_ONLY
 #endif
 
 #ifndef PLUSHIE_CSTL_API
 #  if PLUSHIE_CSTL_USAGE_MODE == PLUSHIE_CSTL_USAGE_MODE_HEADER_ONLY
-#    define PLUSHIE_CSTL_API static inline
+#    define PLUSHIE_CSTL_API static PLUSHIE_INLINE
 #  elif PLUSHIE_CSTL_USAGE_MODE == PLUSHIE_CSTL_USAGE_MODE_SHARED
 #    define PLUSHIE_CSTL_API PLUSHIE_SYMBOL_IMPORT
 #  elif PLUSHIE_CSTL_USAGE_MODE == PLUSHIE_CSTL_USAGE_MODE_SHARED_BUILD
@@ -179,30 +222,30 @@
 * but no malloc support
 *******************************************************************************/
 
-// --- Determine individual headers -------------------------------------------
+/* --- Determine individual headers ------------------------------------------- */
 
-// Default availability of headers for libc.
+/* Default availability of headers for libc. */
 #ifndef PLUSHIE_CSTL_HAS_LIBC_HEADERS
 #  define PLUSHIE_CSTL_HAS_LIBC_HEADERS 1
 #endif
 
-// Stdint can be used without a runtime
+/* Stdint can be used without a runtime */
 #ifndef PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDINT
 #  define PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDINT PLUSHIE_CSTL_HAS_LIBC_HEADERS
 #endif
 
-// Stddef can be used for size_t without a runtime
+/* Stddef can be used for size_t without a runtime */
 #ifndef PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDDEF
 #  define PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDDEF PLUSHIE_CSTL_HAS_LIBC_HEADERS
 #endif
 
-// StdString contains useful implementations like memset.
-// You also might find it being used for compiler built ins
+/* StdString contains useful implementations like memset. */
+/* You also might find it being used for compiler built ins */
 #ifndef PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDSTRING
 #  define PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDSTRING PLUSHIE_CSTL_HAS_LIBC_HEADERS
 #endif
 
-// Stdio contains printf and friends
+/* Stdio contains printf and friends */
 #ifndef PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDIO
 #  define PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDIO PLUSHIE_CSTL_HAS_LIBC_HEADERS
 #endif
@@ -211,9 +254,9 @@
 #  define PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDLIB PLUSHIE_CSTL_HAS_LIBC_HEADERS
 #endif
 
-// --- Determine runtime features ---------------------------------------------
+/* --- Determine runtime features --------------------------------------------- */
 
-// Default availability of c runtime
+/* Default availability of c runtime */
 #ifndef PLUSHIE_CSTL_HAS_LIBC_RUNTIME
 #  define PLUSHIE_CSTL_HAS_LIBC_RUNTIME 1
 #endif
@@ -230,25 +273,26 @@
 * Alignment macro
 *******************************************************************************/
 
-// alignof becomes a keyword in 2023
-#if PLUSHIE_C_STD >= 2023
-#  define PLUSHIE_ALIGNOF(type) alignof(type)
-
-// Msvc has it's own version for older standards
-#elif PLUSHIE_COMPILER_ID == PLUSHIE_COMPILER_ID_MSVC
+/* Msvc has it's own version, checked first as it doesn't support the C23 alignof keyword */
+/* in C mode with /std:clatest (as of 2026-11-23, MSVC 19.44) */
+#if PLUSHIE_COMPILER_ID == PLUSHIE_COMPILER_ID_MSVC
 #  define PLUSHIE_ALIGNOF(type) __alignof(type)
 
-// C11 - C17 has keyword _Alignof. Deprecated in C2023
+/* alignof becomes a keyword in 2023 */
+#elif PLUSHIE_C_STD >= 2023
+#  define PLUSHIE_ALIGNOF(type) alignof(type)
+
+/* C11 - C17 has keyword _Alignof. Deprecated in C2023 */
 #elif PLUSHIE_C_STD >= 2011
 #  define PLUSHIE_ALIGNOF(type) _Alignof(type)
 
-// Gcc/Clang: Use a GNU extension for pre-C11
+/* Gcc/Clang: Use a GNU extension for pre-C11 */
 #elif (PLUSHIE_COMPILER_ID == PLUSHIE_COMPILER_ID_GCC) || \
       (PLUSHIE_COMPILER_ID == PLUSHIE_COMPILER_ID_CLANG)
 #  define PLUSHIE_ALIGNOF(type) __alignof__(type)
 
-// Final guess which is very bad, but if you take the size of the element
-// it will usually work
+/* Final guess which is very bad, but if you take the size of the element */
+/* it will usually work */
 #else
 #  define PLUSHIE_ALIGNOF(type) sizeof(type)
 #endif
@@ -256,4 +300,4 @@
 /******************************************************************************
 * End of file content
 *******************************************************************************/
-#endif // !PLUSHIE_CSTL_CORE_PLATFORM_H
+#endif /* !PLUSHIE_CSTL_CORE_PLATFORM_H */
