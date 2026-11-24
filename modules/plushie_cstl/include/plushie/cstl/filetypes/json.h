@@ -179,7 +179,7 @@ PLUSHIE_CSTL_API PlushieResult plushie_json_parse(
 
 /* Small helpers that operate by slicing ctx->source_span */
 /* Consume n bytes from the ctx source span */
-static inline void s_consume_bytes(PlushieJson_ParserCtx* ctx, PlushieUSize n)
+static PLUSHIE_INLINE void s_consume_bytes(PlushieJson_ParserCtx* ctx, PlushieUSize n)
 {
 	if (n >= ctx->source_span.len)
 	{
@@ -194,7 +194,7 @@ static inline void s_consume_bytes(PlushieJson_ParserCtx* ctx, PlushieUSize n)
 }
 
 /* Skip leading whitespace in the ctx source span */
-static inline void s_skip_whitespace(PlushieJson_ParserCtx* ctx)
+static PLUSHIE_INLINE void s_skip_whitespace(PlushieJson_ParserCtx* ctx)
 {
 	PlushieUSize skip = 0;
 	while (skip < ctx->source_span.len)

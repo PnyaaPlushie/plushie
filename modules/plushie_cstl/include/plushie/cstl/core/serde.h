@@ -56,7 +56,7 @@ extern "C" {
 * @brief Serializes a UInt32 from the current page's endianness to little
 * endian in a buffer
 */
-static inline void plushie_serialize_to_ui32_le(
+static PLUSHIE_INLINE void plushie_serialize_to_ui32_le(
 	PlushieUInt32  value,
 	PlushieUInt08* out_buffer
 )
@@ -71,7 +71,7 @@ static inline void plushie_serialize_to_ui32_le(
 * @brief Serializes a UInt32 from the current page's endianness to big endian
 * in a buffer
 */
-static inline void plushie_serialize_to_ui32_be(
+static PLUSHIE_INLINE void plushie_serialize_to_ui32_be(
 	PlushieUInt32  value,
 	PlushieUInt08* out_buffer
 )

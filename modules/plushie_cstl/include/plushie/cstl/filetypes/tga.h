@@ -29,7 +29,7 @@ extern "C" {
 * @brief Calculates the buffer size the user needs to allocate for a 24bit per
 * pixel true color image inside a tga file
 */
-static inline PlushieUSize plushie_tgafile_buffer_size(
+static PLUSHIE_INLINE PlushieUSize plushie_tgafile_buffer_size(
     PlushieUInt32 width,
     PlushieUInt32 height
 )
@@ -43,13 +43,14 @@ static inline PlushieUSize plushie_tgafile_buffer_size(
 *
 * @todo Use proper serialization of fields
 */
-static inline void* plushie_tgafile_buffer_init(
+static PLUSHIE_INLINE void* plushie_tgafile_buffer_init(
     void*         start_ptr,
     PlushieUInt32 width,
     PlushieUInt32 height
 )
 {
     PlushieUInt08* ptr = (PlushieUInt08*)start_ptr;
+    PlushieUInt08 i;
 
     // Todo: Use the zero init function
     for (PlushieUInt08 i = 0; i < 0x12; i++) { ptr[i] = 0; }

@@ -155,7 +155,7 @@ PlushieAllocatorAllocFlags;
 
 // Helper used for allocators which cannot perform aligned allocs natively. It
 // places a "header" of the actual address just before the aligned pointer.
-static inline void* plushie_allocator_place_header_for_alignment(
+static PLUSHIE_INLINE void* plushie_allocator_place_header_for_alignment(
 	void*        ptr,
 	PlushieUSize alignment
 )
@@ -175,7 +175,7 @@ static inline void* plushie_allocator_place_header_for_alignment(
 
 // Helper to fetch the actual address of the aligned allocation for allocators
 // which don't have native allocation alignment specifiers
-static inline void* plushie_allocator_fetch_header_for_alignment(
+static PLUSHIE_INLINE void* plushie_allocator_fetch_header_for_alignment(
 	void* ptr
 )
 {
@@ -188,7 +188,7 @@ static inline void* plushie_allocator_fetch_header_for_alignment(
 
 // Allocate `size` bytes with the default alignment. Returns NULL on failure or
 // if the allocator cannot allocate.
-static inline void* plushie_alloc(
+static PLUSHIE_INLINE void* plushie_alloc(
 	PlushieAllocator* alloc,
 	PlushieUSize      size
 )
@@ -199,7 +199,7 @@ static inline void* plushie_alloc(
 }
 
 // Free memory previously returned by plushie_alloc/plushie_realloc.
-static inline void plushie_free(
+static PLUSHIE_INLINE void plushie_free(
 	PlushieAllocator* alloc,
 	void*             ptr
 )
@@ -212,7 +212,7 @@ static inline void plushie_free(
 // falls back to alloc + copy + free (needed for backends like libc/system that
 // leave realloc NULL). Returns NULL on failure; the original block is left
 // intact on a failed fallback.
-static inline void* plushie_realloc(
+static PLUSHIE_INLINE void* plushie_realloc(
 	PlushieAllocator* alloc,
 	void*             ptr,
 	PlushieUSize      old_size,

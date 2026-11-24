@@ -25,7 +25,7 @@ extern "C" {
 
 #if PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDSTRING && PLUSHIE_CSTL_HAS_LIBC_RUNTIME
 #include <string.h>
-static inline void plushie_zero_set(
+static PLUSHIE_INLINE void plushie_zero_set(
 	void*        ptr,
 	PlushieUSize size
 )
@@ -33,7 +33,7 @@ static inline void plushie_zero_set(
 	memset(ptr, 0, size);
 }
 
-static inline void plushie_mem_copy(
+static PLUSHIE_INLINE void plushie_mem_copy(
 	void*        dst,
 	const void*  src,
 	PlushieUSize size
@@ -45,18 +45,19 @@ static inline void plushie_mem_copy(
 #else
 
 // TODO [#32]: Speedup for no memset plushie_zero_set
-static inline void plushie_zero_set(
+static PLUSHIE_INLINE void plushie_zero_set(
 	void*        ptr,
 	PlushieUSize size
 )
 {
-	for (PlushieUSize i = 0; i < size; i++)
+	PlushieUSize i;
+	for (i = 0; i < size; i++)
 	{
 		((PlushieUInt08*)ptr)[i] = 0;
 	}
 }
 
-static inline void plushie_mem_copy(
+static PLUSHIE_INLINE void plushie_mem_copy(
 	void*        dst,
 	const void*  src,
 	PlushieUSize size

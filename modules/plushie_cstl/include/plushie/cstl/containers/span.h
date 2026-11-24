@@ -42,7 +42,7 @@ extern "C" {
 		PlushieUSize       len;                                          \
 	} SpanStructName;                                                    \
                                                                          \
-	static inline SpanStructName SpanFuncName##_new(                     \
+	static PLUSHIE_INLINE SpanStructName SpanFuncName##_new(                     \
 		const ElementType* ptr,                                          \
 		PlushieUSize       len)                                          \
 	{                                                                    \
@@ -52,14 +52,14 @@ extern "C" {
 		return span;                                                     \
 	}                                                                    \
                                                                          \
-	static inline int SpanFuncName##_is_empty(                           \
+	static PLUSHIE_INLINE int SpanFuncName##_is_empty(                           \
 		const SpanStructName* span                                       \
 	)                                                                    \
 	{                                                                    \
 		return span->len == 0;                                           \
 	}                                                                    \
                                                                          \
-	static inline PlushieUSize SpanFuncName##_size(                      \
+	static PLUSHIE_INLINE PlushieUSize SpanFuncName##_size(                      \
 		const SpanStructName* span                                       \
 	)                                                                    \
 	{                                                                    \

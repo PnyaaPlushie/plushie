@@ -128,6 +128,26 @@
 #endif
 
 /******************************************************************************
+* Inline keyword
+*******************************************************************************/
+
+// `inline` is only a keyword from C99 (and in C++). Before that we fall back
+// to compiler extensions, or nothing (static functions still work, the
+// compiler just won't be hinted to inline them).
+#ifndef PLUSHIE_INLINE
+#  if defined(__cplusplus) || PLUSHIE_C_STD >= 1999
+#    define PLUSHIE_INLINE inline
+#  elif PLUSHIE_COMPILER_ID == PLUSHIE_COMPILER_ID_MSVC
+#    define PLUSHIE_INLINE __inline
+#  elif (PLUSHIE_COMPILER_ID == PLUSHIE_COMPILER_ID_GCC) || \
+        (PLUSHIE_COMPILER_ID == PLUSHIE_COMPILER_ID_CLANG)
+#    define PLUSHIE_INLINE __inline__
+#  else
+#    define PLUSHIE_INLINE
+#  endif
+#endif
+
+/******************************************************************************
 * Symbol visibility
 *******************************************************************************/
 #ifndef PLUSHIE_SYMBOL_EXPORT
@@ -159,7 +179,7 @@
 
 #ifndef PLUSHIE_CSTL_API
 #  if PLUSHIE_CSTL_USAGE_MODE == PLUSHIE_CSTL_USAGE_MODE_HEADER_ONLY
-#    define PLUSHIE_CSTL_API static inline
+#    define PLUSHIE_CSTL_API static PLUSHIE_INLINE
 #  elif PLUSHIE_CSTL_USAGE_MODE == PLUSHIE_CSTL_USAGE_MODE_SHARED
 #    define PLUSHIE_CSTL_API PLUSHIE_SYMBOL_IMPORT
 #  elif PLUSHIE_CSTL_USAGE_MODE == PLUSHIE_CSTL_USAGE_MODE_SHARED_BUILD

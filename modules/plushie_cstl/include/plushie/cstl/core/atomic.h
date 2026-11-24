@@ -34,7 +34,7 @@ extern "C" {
 /**
 * @brief Sets a u16 to a new value via an atomic operation
 */
-static inline PlushieUInt16 plushie_atomic_u16_exchange(
+static PLUSHIE_INLINE PlushieUInt16 plushie_atomic_u16_exchange(
 	PlushieAtomicUInt16* in_out,
 	PlushieUInt16        set_value
 )
@@ -46,7 +46,7 @@ static inline PlushieUInt16 plushie_atomic_u16_exchange(
 /**
 * @brief Sets a u16 to a new value via an atomic operation
 */
-static inline PlushieUInt32 plushie_atomic_u32_exchange(
+static PLUSHIE_INLINE PlushieUInt32 plushie_atomic_u32_exchange(
 	PlushieAtomicUInt32* in_out,
 	PlushieUInt32        set_value
 )
@@ -56,7 +56,7 @@ static inline PlushieUInt32 plushie_atomic_u32_exchange(
 }
 
 
-static inline PlushieUInt16 plushie_atomic_u16_compare_exchange(
+static PLUSHIE_INLINE PlushieUInt16 plushie_atomic_u16_compare_exchange(
 	PlushieAtomicUInt16* in_out,
 	PlushieUInt16        set_value,
 	PlushieUInt16        compare_value
@@ -78,7 +78,7 @@ static inline PlushieUInt16 plushie_atomic_u16_compare_exchange(
 #define PlushieAtomicUInt32 _Atomic PlushieUInt32
 #define PlushieAtomicUInt64 _Atomic PlushieUInt64
 
-static inline PlushieUInt16 plushie_atomic_u16_exchange(
+static PLUSHIE_INLINE PlushieUInt16 plushie_atomic_u16_exchange(
 	PlushieAtomicUInt16* in_out,
 	PlushieUInt16        set_value
 )
@@ -86,7 +86,7 @@ static inline PlushieUInt16 plushie_atomic_u16_exchange(
 	return atomic_exchange(in_out, set_value);
 }
 
-static inline PlushieUInt16 plushie_atomic_u16_compare_exchange(
+static PLUSHIE_INLINE PlushieUInt16 plushie_atomic_u16_compare_exchange(
 	PlushieAtomicUInt16* in_out,
 	PlushieUInt16        set_value,
 	PlushieUInt16        compare_value
@@ -106,7 +106,7 @@ static inline PlushieUInt16 plushie_atomic_u16_compare_exchange(
 /******************************************************************************
 * Processor yield hint (spin-wait relaxation)
 *******************************************************************************/
-static inline void plushie_yield_processor(
+static PLUSHIE_INLINE void plushie_yield_processor(
 	void
 )
 {

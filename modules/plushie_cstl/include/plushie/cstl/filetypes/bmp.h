@@ -131,7 +131,7 @@ PlushieBmpDipBitmapInfoHeader;
 * @brief Calculates the number of bytes in a single scan line of a bmp file.
 * Rows are padded up to a 4 byte boundary.
 */
-static inline PlushieUSize plushie_bmp_line_stride(
+static PLUSHIE_INLINE PlushieUSize plushie_bmp_line_stride(
 	PlushieUInt32 px_width,
 	PlushieUInt08 bpp)
 {
@@ -142,7 +142,7 @@ static inline PlushieUSize plushie_bmp_line_stride(
 * @brief Calculates the total on-disk byte size of a bmp file described by desc
 * (file header + BITMAPINFOHEADER + padded pixel rows).
 */
-static inline PlushieResult plushie_bmp_file_buffer_size(
+static PLUSHIE_INLINE PlushieResult plushie_bmp_file_buffer_size(
 	PlushieUSize*         out_size,
 	PlushieBmpDescriptor* desc
 )
@@ -160,7 +160,7 @@ static inline PlushieResult plushie_bmp_file_buffer_size(
 * @brief Byte offset of pixel (x, y) within the pixel-data region for a given
 * row stride, top-down. Callers writing a real BMP (bottom-up) should flip y.
 */
-static inline PlushieUSize plushie_bmp_offset_to_pixel(
+static PLUSHIE_INLINE PlushieUSize plushie_bmp_offset_to_pixel(
 	PlushieUInt32 x,
 	PlushieUInt32 y,
 	PlushieUInt32 px_width,
