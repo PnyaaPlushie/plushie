@@ -18,6 +18,7 @@ jobs:
           - { host-os: windows-latest,   target: windows-x64-msvc,      workflow-postfix: "build-package-test", dist-path: "dist/Windows/windows-x64-msvc/plushie-host-windows-*.zip"  }
           - { host-os: ubuntu-latest,    target: windows-x64-msvc-xwin, workflow-postfix: "build-package",      dist-path: "dist/Linux/windows-x64-msvc-xwin/plushie-host-linux-*.zip" }
           - { host-os: ubuntu-latest,    target: linux-x64-clang,       workflow-postfix: "build-package-test", dist-path: "dist/Linux/linux-x64-clang/plushie-host-linux-*.zip"       }
+          - { host-os: ubuntu-latest,    target: linux-x64-gcc,         workflow-postfix: "build-package-test", dist-path: "dist/Linux/linux-x64-gcc/plushie-host-linux-*.zip"         }
           - { host-os: ubuntu-24.04-arm, target: linux-arm64-clang,     workflow-postfix: "build-package-test", dist-path: "dist/Linux/linux-arm64-clang/plushie-host-linux-*.zip"     }
     name: ${{ matrix.target }}
     runs-on: ${{ matrix.host-os }}
