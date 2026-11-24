@@ -92,8 +92,8 @@ static PLUSHIE_INLINE PlushieUInt16 plushie_atomic_u16_compare_exchange(
 	PlushieUInt16        compare_value
 )
 {
-	// Mirror the Win32 Interlocked semantics: return the value that was
-	// observed in *in_out before the operation.
+	/* Mirror the Win32 Interlocked semantics: return the value that was */
+	/* observed in *in_out before the operation. */
 	PlushieUInt16 expected = compare_value;
 	atomic_compare_exchange_strong(in_out, &expected, set_value);
 	return expected;
@@ -120,7 +120,7 @@ static PLUSHIE_INLINE void plushie_yield_processor(
 	__asm__ __volatile__("" ::: "memory");
 #  endif
 #else
-	// No portable hint available; nothing to do.
+	/* No portable hint available; nothing to do. */
 	((void)0);
 #endif
 }
@@ -131,4 +131,4 @@ static PLUSHIE_INLINE void plushie_yield_processor(
 #ifdef __cplusplus
 }
 #endif
-#endif // !PLUSHIE_CSTL_CORE_ATOMIC_H
+#endif /* !PLUSHIE_CSTL_CORE_ATOMIC_H */

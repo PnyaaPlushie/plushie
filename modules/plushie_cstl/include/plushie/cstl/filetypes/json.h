@@ -149,10 +149,10 @@ PLUSHIE_CSTL_API PlushieResult plushie_json_parse(
 *******************************************************************************/
 #if PLUSHIE_CSTL_FILETYPES_JSON_PROVIDE_IMPL
 
-// Define the macros used for memcmp and strtod
+/* Define the macros used for memcmp and strtod */
 #if PLUSHIE_CSTL_JSON_USE_LIBC_RUNTIME
-#  include <string.h> // memcmp
-#  include <stdlib.h> // strtod
+#  include <string.h> /* memcmp */
+#  include <stdlib.h> /* strtod */
 
 #  define PLUSHIE_CSTL_JSON_LIBC_MEMCMP(BUFF1, BUFF2, SIZE) \
      memcmp(BUFF1, BUFF2, SIZE)
@@ -162,7 +162,7 @@ PLUSHIE_CSTL_API PlushieResult plushie_json_parse(
 
 #endif
 
-// Check we have all the runtime libc replacement macros
+/* Check we have all the runtime libc replacement macros */
 #if (!defined PLUSHIE_CSTL_JSON_LIBC_MEMCMP) || \
     (!defined PLUSHIE_CSTL_JSON_LIBC_STRTOD)
 #  error User is required to supply their own macros if they have no libc
@@ -490,8 +490,8 @@ PLUSHIE_CSTL_API PlushieResult plushie_json_parse(
 	return kPlushieResultSuccess;
 }
 
-#endif // !PLUSHIE_CSTL_FILETYPES_JSON_PROVIDE_IMPL_GUARD
-#endif // PLUSHIE_CSTL_FILETYPES_JSON_PROVIDE_IMPL
+#endif /* !PLUSHIE_CSTL_FILETYPES_JSON_PROVIDE_IMPL_GUARD */
+#endif /* PLUSHIE_CSTL_FILETYPES_JSON_PROVIDE_IMPL */
 
 /******************************************************************************
 * End of File
@@ -499,4 +499,4 @@ PLUSHIE_CSTL_API PlushieResult plushie_json_parse(
 #ifdef __cplusplus
 }
 #endif
-#endif // !PLUSHIE_CSTL_FILETYPES_JSON_H
+#endif /* !PLUSHIE_CSTL_FILETYPES_JSON_H */

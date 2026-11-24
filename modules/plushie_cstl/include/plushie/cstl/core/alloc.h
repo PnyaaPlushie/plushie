@@ -14,8 +14,8 @@
 #include "plushie/cstl/core/fixed_width.h"
 #include "plushie/cstl/core/mem.h"
 
-// Default alignment used by the convenience wrappers below when the caller
-// doesn't care. Safe for any of the plushie base types.
+/* Default alignment used by the convenience wrappers below when the caller */
+/* doesn't care. Safe for any of the plushie base types. */
 #ifndef PLUSHIE_ALLOC_DEFAULT_ALIGNMENT
 #  define PLUSHIE_ALLOC_DEFAULT_ALIGNMENT 16
 #endif
@@ -28,8 +28,8 @@ extern "C" {
 * Base allocator
 *******************************************************************************/
 
-// Forward declaration so the function pointer typedefs below refer to the
-// file-scope struct rather than declaring a new prototype-scoped one.
+/* Forward declaration so the function pointer typedefs below refer to the */
+/* file-scope struct rather than declaring a new prototype-scoped one. */
 struct PlushieAllocator;
 
 /**
@@ -92,21 +92,21 @@ typedef enum PlushieAllocatorAllocFlags
 {
 	kPlushieAllocatorAllocFlagsNone            = 0,
 
-	// Initial hints
+	/* Initial hints */
 	kPlushieAllocatorAllocFlagsZeroInit        = 1 << 0,
 	kPlushieAllocatorAllocFlagsNoFallback      = 1 << 1,
 
-	// Page Protection
+	/* Page Protection */
 	kPlushieAllocatorAllocFlagsProtectRead     = 1 << 2,
 	kPlushieAllocatorAllocFlagsProtectWrite    = 1 << 3,
 	kPlushieAllocatorAllocFlagsProtectExecute  = 1 << 4,
 	kPlushieAllocatorAllocFlagsProtectNoCommit = 1 << 5,
 
-	// Visibility
+	/* Visibility */
 	kPlushieAllocatorAllocFlagsThreadLocal     = 1 << 6,
 	kPlushieAllocatorAllocFlagsProcShared      = 1 << 7,
 
-	// Hardware and topology
+	/* Hardware and topology */
 	kPlushieAllocatorAllocFlagsNumaLocal       = 1 << 8,
 	kPlushieAllocatorAllocFlagsHugePages       = 1 << 9,
 	kPlushieAllocatorAllocFlagsCacheAligned    = 1 << 10,
@@ -114,8 +114,8 @@ typedef enum PlushieAllocatorAllocFlags
 }
 PlushieAllocatorAllocFlags;
 
-// Combined masks. These OR together the individual single-bit flags so callers
-// can test a whole category at once.
+/* Combined masks. These OR together the individual single-bit flags so callers */
+/* can test a whole category at once. */
 #define kPlushieAllocatorAllocFlagsReqOnly      (\
   kPlushieAllocatorAllocFlagsZeroInit           |\
   kPlushieAllocatorAllocFlagsNoFallback         |\
@@ -136,7 +136,7 @@ PlushieAllocatorAllocFlags;
   kPlushieAllocatorAllocFlagsReqOnly            |\
   kPlushieAllocatorAllocFlagsHintsOnly          )
 
-// Combined allocation flags which emulate a normal calloc
+/* Combined allocation flags which emulate a normal calloc */
 #define kPlushieAllocatorAllocFlagsCalloc       (\
   kPlushieAllocatorAllocFlagsZeroInit           |\
   kPlushieAllocatorAllocFlagsProtectRead        |\
@@ -147,34 +147,34 @@ PlushieAllocatorAllocFlags;
 * Functions that allocators can use to fake alignment
 *******************************************************************************/
 
-// Helper to calculate how much to allocate if the allocator can't perform
-// aligned allocations natively. Shared by the allocator backends, so it stays
-// defined for consumers of this header (not #undef'd).
+/* Helper to calculate how much to allocate if the allocator can't perform */
+/* aligned allocations natively. Shared by the allocator backends, so it stays */
+/* defined for consumers of this header (not #undef'd). */
 #define PLUSHIE_ALLOCATOR_FAKE_ALIGNED_SIZE(SIZE, ALIGN) \
 	((SIZE) + (ALIGN) + sizeof(void*))
 
-// Helper used for allocators which cannot perform aligned allocs natively. It
-// places a "header" of the actual address just before the aligned pointer.
+/* Helper used for allocators which cannot perform aligned allocs natively. It */
+/* places a "header" of the actual address just before the aligned pointer. */
 static PLUSHIE_INLINE void* plushie_allocator_place_header_for_alignment(
 	void*        ptr,
 	PlushieUSize alignment
 )
 {
-	// Advance to leave enough space for the header
+	/* Advance to leave enough space for the header */
 	PlushieUPtr addr = ((PlushieUPtr)ptr) + sizeof(void*);
 
-	// Align up
+	/* Align up */
 	PlushieUPtr aligned_addr = (addr + (alignment - 1)) & ~(alignment - 1);
 
-	// Store the original address
+	/* Store the original address */
 	((void**)aligned_addr)[-1] = ptr;
 
-	// return the aligned address
+	/* return the aligned address */
 	return (void*)aligned_addr;
 }
 
-// Helper to fetch the actual address of the aligned allocation for allocators
-// which don't have native allocation alignment specifiers
+/* Helper to fetch the actual address of the aligned allocation for allocators */
+/* which don't have native allocation alignment specifiers */
 static PLUSHIE_INLINE void* plushie_allocator_fetch_header_for_alignment(
 	void* ptr
 )
@@ -186,8 +186,8 @@ static PLUSHIE_INLINE void* plushie_allocator_fetch_header_for_alignment(
 * Convenience wrappers over the allocator function pointers
 *******************************************************************************/
 
-// Allocate `size` bytes with the default alignment. Returns NULL on failure or
-// if the allocator cannot allocate.
+/* Allocate `size` bytes with the default alignment. Returns NULL on failure or */
+/* if the allocator cannot allocate. */
 static PLUSHIE_INLINE void* plushie_alloc(
 	PlushieAllocator* alloc,
 	PlushieUSize      size
@@ -198,7 +198,7 @@ static PLUSHIE_INLINE void* plushie_alloc(
 		kPlushieAllocatorAllocFlagsNone, PLUSHIE_NULL);
 }
 
-// Free memory previously returned by plushie_alloc/plushie_realloc.
+/* Free memory previously returned by plushie_alloc/plushie_realloc. */
 static PLUSHIE_INLINE void plushie_free(
 	PlushieAllocator* alloc,
 	void*             ptr
@@ -208,10 +208,10 @@ static PLUSHIE_INLINE void plushie_free(
 	alloc->free(alloc, ptr);
 }
 
-// Resize an allocation. Uses the allocator's realloc if present, otherwise
-// falls back to alloc + copy + free (needed for backends like libc/system that
-// leave realloc NULL). Returns NULL on failure; the original block is left
-// intact on a failed fallback.
+/* Resize an allocation. Uses the allocator's realloc if present, otherwise */
+/* falls back to alloc + copy + free (needed for backends like libc/system that */
+/* leave realloc NULL). Returns NULL on failure; the original block is left */
+/* intact on a failed fallback. */
 static PLUSHIE_INLINE void* plushie_realloc(
 	PlushieAllocator* alloc,
 	void*             ptr,
@@ -251,4 +251,4 @@ static PLUSHIE_INLINE void* plushie_realloc(
 #ifdef __cplusplus
 }
 #endif
-#endif // !PLUSHIE_CSTL_CORE_ALLOC_H
+#endif /* !PLUSHIE_CSTL_CORE_ALLOC_H */

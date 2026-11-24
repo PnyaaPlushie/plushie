@@ -16,13 +16,13 @@
 extern "C" {
 #endif
 
-// Macro to force the header to provide the implementation for the functions
+/* Macro to force the header to provide the implementation for the functions */
 #ifndef PLUSHIE_CSTL_CORE_ERROR_CODES_PROVIDE_IMPL
 #  define PLUSHIE_CSTL_CORE_ERROR_CODES_PROVIDE_IMPL 0
 #endif
 
-// Macro to allow the lookup functions to be generated instead of stubs. Can be
-// disabled to save rom space if you don't need to decode error codes.
+/* Macro to allow the lookup functions to be generated instead of stubs. Can be */
+/* disabled to save rom space if you don't need to decode error codes. */
 #ifndef PLUSHIE_CSTL_CORE_ERROR_CODE_INCLUDE_LOOKUP
 #  define PLUSHIE_CSTL_CORE_ERROR_CODE_INCLUDE_LOOKUP 1
 #endif
@@ -136,9 +136,9 @@ PLUSHIE_CSTL_API const char* plushie_result_decode_desc(
 
 #undef PLUSHIE_X
 
-#else // !PLUSHIE_CSTL_CORE_ERROR_CODE_INCLUDE_LOOKUP
+#else /* !PLUSHIE_CSTL_CORE_ERROR_CODE_INCLUDE_LOOKUP */
 
-// Stub implementation if the user doesn't want any lookup functions
+/* Stub implementation if the user doesn't want any lookup functions */
 
 PLUSHIE_CSTL_API const char* plushie_result_decode_name(
     PlushieResult result
@@ -156,10 +156,10 @@ PLUSHIE_CSTL_API const char* plushie_result_decode_desc(
     return "";
 }
 
-#endif // !PLUSHIE_CSTL_CORE_ERROR_CODE_INCLUDE_LOOKUP
+#endif /* !PLUSHIE_CSTL_CORE_ERROR_CODE_INCLUDE_LOOKUP */
 
-#endif // !PLUSHIE_CSTL_CORE_ERROR_CODES_PROVIDE_IMPL_GUARD
-#endif // !PLUSHIE_CSTL_CORE_ERROR_CODES_PROVIDE_IMPL
+#endif /* !PLUSHIE_CSTL_CORE_ERROR_CODES_PROVIDE_IMPL_GUARD */
+#endif /* !PLUSHIE_CSTL_CORE_ERROR_CODES_PROVIDE_IMPL */
 
 
 /******************************************************************************
@@ -168,4 +168,4 @@ PLUSHIE_CSTL_API const char* plushie_result_decode_desc(
 #ifdef __cplusplus
 }
 #endif
-#endif // !PLUSHIE_CSTL_CORE_ERROR_CODES_H
+#endif /* !PLUSHIE_CSTL_CORE_ERROR_CODES_H */

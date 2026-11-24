@@ -47,11 +47,11 @@ PlushieFileHandleAccessFlag;
 
 typedef enum PlushieFileHandleDisposition
 {
-	kPlushieFileHandleDispositionOpenExisting,      // Exists: Open      | Not Exists: Fail
-	kPlushieFileHandleDispositionOpenOrCreate,      // Exists: Open      | Not Exists: Create
-	kPlushieFileHandleDispositionTruncateExisting,  // Exists: Truncate  | Not Exists: Fail
-	kPlushieFileHandleDispositionTruncateOrCreate,  // Exists: Truncate  | Not Exists: Create
-	kPlushieFileHandleDispositionCreateNew          // Exists: Fail      | Not Exists: Create
+	kPlushieFileHandleDispositionOpenExisting,      /* Exists: Open      | Not Exists: Fail */
+	kPlushieFileHandleDispositionOpenOrCreate,      /* Exists: Open      | Not Exists: Create */
+	kPlushieFileHandleDispositionTruncateExisting,  /* Exists: Truncate  | Not Exists: Fail */
+	kPlushieFileHandleDispositionTruncateOrCreate,  /* Exists: Truncate  | Not Exists: Create */
+	kPlushieFileHandleDispositionCreateNew          /* Exists: Fail      | Not Exists: Create */
 }
 PlushieFileHandleDisposition;
 
@@ -125,13 +125,13 @@ PLUSHIE_CSTL_API PlushieResult plushie_file_handle_open(
 	if (out == PLUSHIE_NULL || info == PLUSHIE_NULL) return kPlushieResultErrNullptr;
 	if ((info->path.flags & kPlushieStrFlagStatusHasNullTerm) == 0)
 	{
-		// Paths on windows have to be null terminated
+		/* Paths on windows have to be null terminated */
 		return kPlushieResultErrInvalidParam;
 	}
 	DWORD access_flags = 0, share_mode = 0, disposition = 0;
 	HANDLE out_handle = INVALID_HANDLE_VALUE;
 
-	// Setup the access flags
+	/* Setup the access flags */
 	if (info->access_flags & kPlushieFileHandleAccessFlagWrite)
 	{
 		access_flags |= GENERIC_WRITE;
@@ -142,7 +142,7 @@ PLUSHIE_CSTL_API PlushieResult plushie_file_handle_open(
 		access_flags |= GENERIC_READ;
 	}
 
-	// Setup the disposition flags
+	/* Setup the disposition flags */
 	switch (info->disposition)
 	{
 	case kPlushieFileHandleDispositionOpenExisting:
@@ -159,7 +159,7 @@ PLUSHIE_CSTL_API PlushieResult plushie_file_handle_open(
 		return kPlushieResultErrInvalidParam;
 	}
 
-	// OS call changes based on path encoding
+	/* OS call changes based on path encoding */
 	if (info->path.flags & kPlushieStrFlagEncodingWide16)
 	{
 		out_handle = CreateFileW(
@@ -174,7 +174,7 @@ PLUSHIE_CSTL_API PlushieResult plushie_file_handle_open(
 	}
 	if (out_handle == INVALID_HANDLE_VALUE) return kPlushieResultErrOs;
 
-	// Output to the caller
+	/* Output to the caller */
 	out->u.pvoid = out_handle;
 	out->status_flags = kPlushieFileHandleStatusFlagIsOpen
 		| kPlushieFileHandleStatusFlagIsOwned;
@@ -243,11 +243,11 @@ PLUSHIE_CSTL_API PlushieResult plushie_file_handle_write(
 
 #else
 
-#endif // PLUSHIE_TARGET_OS_ID_WINDOWS
+#endif /* PLUSHIE_TARGET_OS_ID_WINDOWS */
 
 
-#endif // !PLUSHIE_CSTL_HOST_FILEHANDLE_PROVIDE_IMPL_GUARD
-#endif // !PLUSHIE_CSTL_HOST_FILEHANDLE_PROVIDE_IMPL
+#endif /* !PLUSHIE_CSTL_HOST_FILEHANDLE_PROVIDE_IMPL_GUARD */
+#endif /* !PLUSHIE_CSTL_HOST_FILEHANDLE_PROVIDE_IMPL */
 
 /******************************************************************************
 * End of file
@@ -257,4 +257,4 @@ PLUSHIE_CSTL_API PlushieResult plushie_file_handle_write(
 }
 #endif
 
-#endif // !PLUSHIE_CSTL_HOST_FILEHANDLE_H
+#endif /* !PLUSHIE_CSTL_HOST_FILEHANDLE_H */

@@ -1,5 +1,5 @@
-// End-to-end test of the json parser after the rewrite (broken includes fixed,
-// PlushieJson_ReturnCode replaced with PlushieResult, allocator wrappers used).
+/* End-to-end test of the json parser after the rewrite (broken includes fixed, */
+/* PlushieJson_ReturnCode replaced with PlushieResult, allocator wrappers used). */
 #include "tests_shared.h"
 #include <string.h>
 

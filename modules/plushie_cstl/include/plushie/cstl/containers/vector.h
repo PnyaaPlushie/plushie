@@ -37,7 +37,7 @@
 #  define PLUSHIE_CSTL_VECTOR_USE_CUSTOM_DEFN 0
 #endif
 
-// Growth: capacity used when pushing into an empty vector.
+/* Growth: capacity used when pushing into an empty vector. */
 #ifndef PLUSHIE_CSTL_VECTOR_INITIAL_CAP
 #  define PLUSHIE_CSTL_VECTOR_INITIAL_CAP 8
 #endif
@@ -84,8 +84,8 @@ extern "C" {
         OutTypeName*      vec                                                  \
     );
 
-#endif // !PlushieVectorDecl
-#endif // !PLUSHIE_CSTL_VECTOR_USE_CUSTOM_DECL
+#endif /* !PlushieVectorDecl */
+#endif /* !PLUSHIE_CSTL_VECTOR_USE_CUSTOM_DECL */
 
 /******************************************************************************
 * Definition macro
@@ -176,8 +176,8 @@ extern "C" {
         vec->cap  = 0;                                                         \
     }
 
-#endif // !PlushieVectorDefine
-#endif // !PLUSHIE_CSTL_VECTOR_USE_CUSTOM_DEFN
+#endif /* !PlushieVectorDefine */
+#endif /* !PLUSHIE_CSTL_VECTOR_USE_CUSTOM_DEFN */
 
 /******************************************************************************
 * End of file content
@@ -185,4 +185,4 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-#endif // !PLUSHIE_CSTL_CONTAINERS_VECTOR_H
+#endif /* !PLUSHIE_CSTL_CONTAINERS_VECTOR_H */

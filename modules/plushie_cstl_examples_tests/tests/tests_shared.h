@@ -2,7 +2,7 @@
 #define PLUSHIE_TESTS_SHARED_HEADER_GUARD_H
 #include "unity.h"
 
-// The test files are always compiled as C, but main may be compiled as C++
+/* The test files are always compiled as C, but main may be compiled as C++ */
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -23,7 +23,7 @@ extern TestFunctions gTestFuncsFileTypeElf;
 extern TestFunctions gTestFuncsFileTypeJson;
 
 #ifdef __cplusplus
-} // extern "C"
+} /* extern "C" */
 #endif
 
-#endif //!PLUSHIE_TESTS_SHARED_HEADER_GUARD_H
+#endif /* !PLUSHIE_TESTS_SHARED_HEADER_GUARD_H */

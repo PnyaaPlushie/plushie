@@ -13,12 +13,12 @@
 #include "plushie/cstl/core/error_codes.h"
 #include "plushie/cstl/core/serde.h"
 
-// Macro to force the header to provide the implementation for the functions
+/* Macro to force the header to provide the implementation for the functions */
 #ifndef PLUSHIE_CSTL_FILETYPES_BMP_PROVIDE_IMPL
 #  define PLUSHIE_CSTL_FILETYPES_BMP_PROVIDE_IMPL 0
 #endif
 
-// Fixed sizes of the on-disk headers this module understands
+/* Fixed sizes of the on-disk headers this module understands */
 #define PLUSHIE_BMP_FILE_HEADER_SIZE 14
 #define PLUSHIE_BMP_INFO_HEADER_SIZE 40
 
@@ -36,14 +36,14 @@ extern "C" {
 */
 typedef enum PlushieBmpDibHeaderKind
 {
-	kPlushieBmpDibHeaderKindCore,   //
-	kPlushieBmpDibHeaderKindOs21x,  //
-	kPlushieBmpDibHeaderKindOs22x,  //
-	kPlushieBmpDibHeaderKindInfo,   // !< The main supported profile, for win32
-	kPlushieBmpDibHeaderKindInfoV2, //
-	kPlushieBmpDibHeaderKindInfoV3, //
-	kPlushieBmpDibHeaderKindInfoV4, //
-	kPlushieBmpDibHeaderKindInfoV5, //
+	kPlushieBmpDibHeaderKindCore,   /* */
+	kPlushieBmpDibHeaderKindOs21x,  /* */
+	kPlushieBmpDibHeaderKindOs22x,  /* */
+	kPlushieBmpDibHeaderKindInfo,   /* !< The main supported profile, for win32 */
+	kPlushieBmpDibHeaderKindInfoV2, /* */
+	kPlushieBmpDibHeaderKindInfoV3, /* */
+	kPlushieBmpDibHeaderKindInfoV4, /* */
+	kPlushieBmpDibHeaderKindInfoV5, /* */
 }
 PlushieBmpDibHeaderKind;
 
@@ -52,12 +52,12 @@ PlushieBmpDibHeaderKind;
 */
 typedef enum PlushieBmpBppKind
 {
-	kPlushieBmpBppKind1bpp,  // !< Less than a byte - Unsupported rn
-	kPlushieBmpBppKind4bpp,  // !< Less than a byte - Unsupported rn
-	kPlushieBmpBppKind8bpp,  //
-	kPlushieBmpBppKind16bpp, //
-	kPlushieBmpBppKind24bpp, // !< BGR8 no alpha channel main kind
-	kPlushieBmpBppKind32bpp, //
+	kPlushieBmpBppKind1bpp,  /* !< Less than a byte - Unsupported rn */
+	kPlushieBmpBppKind4bpp,  /* !< Less than a byte - Unsupported rn */
+	kPlushieBmpBppKind8bpp,  /* */
+	kPlushieBmpBppKind16bpp, /* */
+	kPlushieBmpBppKind24bpp, /* !< BGR8 no alpha channel main kind */
+	kPlushieBmpBppKind32bpp, /* */
 }
 PlushieBmpBppKind;
 
@@ -73,9 +73,9 @@ typedef struct PlushieBmpDescriptor
 }
 PlushieBmpDescriptor;
 
-//
-// BmpFile::FileHeader
-//
+/* */
+/* BmpFile::FileHeader */
+/* */
 
 #define PLUSHIE_BMP_FILEHEADER_SCHEMA(PLUSHIE_XFIELD, PLUSHIE_XARRAY, PLUSHIE_XBLOB) \
     PLUSHIE_XBLOB(magic             , 2)                      \
@@ -93,9 +93,9 @@ typedef struct PlushieBmpFileHeader
 }
 PlushieBmpFileHeader;
 
-//
-// BmpFile::DIB::BITMAPINFOHEADER
-//
+/* */
+/* BmpFile::DIB::BITMAPINFOHEADER */
+/* */
 
 #define PLUSHIE_BMP_DIPBITMAPINFOHEADER_SCHEMA(PLUSHIE_X)     \
     PLUSHIE_X(PlushieUInt32, sizeof_this,           int32_le) \
@@ -178,10 +178,10 @@ static PLUSHIE_INLINE PlushieUSize plushie_bmp_offset_to_pixel(
 #ifndef PLUSHIE_CSTL_FILETYPES_BMP_PROVIDE_IMPL_GUARD
 #define PLUSHIE_CSTL_FILETYPES_BMP_PROVIDE_IMPL_GUARD
 
-// (No out-of-line implementation yet; all functions above are static inline.)
+/* (No out-of-line implementation yet; all functions above are static inline.) */
 
-#endif // !PLUSHIE_CSTL_FILETYPES_BMP_PROVIDE_IMPL_GUARD
-#endif // !PLUSHIE_CSTL_FILETYPES_BMP_PROVIDE_IMPL
+#endif /* !PLUSHIE_CSTL_FILETYPES_BMP_PROVIDE_IMPL_GUARD */
+#endif /* !PLUSHIE_CSTL_FILETYPES_BMP_PROVIDE_IMPL */
 
 /******************************************************************************
 * End of file content
@@ -189,4 +189,4 @@ static PLUSHIE_INLINE PlushieUSize plushie_bmp_offset_to_pixel(
 #ifdef __cplusplus
 }
 #endif
-#endif // !PLUSHIE_CSTL_FILETYPES_BMP_H
+#endif /* !PLUSHIE_CSTL_FILETYPES_BMP_H */

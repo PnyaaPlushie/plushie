@@ -69,4 +69,4 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-#endif // !PLUSHIE_CSTL_CONTAINERS_SPAN_H
+#endif /* !PLUSHIE_CSTL_CONTAINERS_SPAN_H */

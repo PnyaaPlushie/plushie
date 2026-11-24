@@ -11,17 +11,17 @@
 #include "plushie/cstl/core/fixed_width.h"
 #include "plushie/cstl/containers/string.h"
 
-// Implementation guard macro
+/* Implementation guard macro */
 #ifndef PLUSHIE_CSTL_HOST_CONIO_PROVIDE_IMPL
 #  define PLUSHIE_CSTL_HOST_CONIO_PROVIDE_IMPL 0
 #endif
 
-// Define different possible backends for writing and reading to consoles
+/* Define different possible backends for writing and reading to consoles */
 #define PLUSHIE_CSTL_CONIO_ID_NONE  0
 #define PLUSHIE_CSTL_CONIO_ID_LIBC  1
 #define PLUSHIE_CSTL_CONIO_ID_WIN32 2
 
-// Determine console backend to use
+/* Determine console backend to use */
 #ifndef PLUSHIE_CSTL_CONIO_ID
 
 #  if PLUSHIE_CSTL_HAS_LIBC_HEADERS_STDIO && PLUSHIE_CSTL_HAS_LIBC_RUNTIME
@@ -33,7 +33,7 @@
 #  else
 #    define PLUSHIE_CSTL_CONIO_ID PLUSHIE_CSTL_CONIO_ID_NONE
 #  endif
-#endif // !PLUSHIE_CSTL_CONIO_ID
+#endif /* !PLUSHIE_CSTL_CONIO_ID */
 
 #ifdef __cplusplus
 extern "C" {
@@ -64,7 +64,7 @@ struct PlushieConIoHost
 	PlushieUInt08 padding;
 };
 
-// TODO: Other implementations
+/* TODO: Other implementations */
 #else
 
 
@@ -77,9 +77,9 @@ struct PlushieConIoHost
 #ifndef PLUSHIE_CSTL_HOST_CONIO_PROVIDE_IMPL_GUARD
 #define PLUSHIE_CSTL_HOST_CONIO_PROVIDE_IMPL_GUARD
 
-//
-// LIBC implementation
-//
+/* */
+/* LIBC implementation */
+/* */
 #if PLUSHIE_CSTL_CONIO_ID == PLUSHIE_CSTL_CONIO_ID_LIBC
 #include <stdio.h>
 
@@ -114,8 +114,8 @@ PLUSHIE_CSTL_API void plushie_conio_write(
 /******************************************************************************
 * End of implementation block
 *******************************************************************************/
-#endif // !PLUSHIE_CSTL_HOST_CONIO_PROVIDE_IMPL_GUARD
-#endif // !PLUSHIE_CSTL_HOST_CONIO_PROVIDE_IMPL
+#endif /* !PLUSHIE_CSTL_HOST_CONIO_PROVIDE_IMPL_GUARD */
+#endif /* !PLUSHIE_CSTL_HOST_CONIO_PROVIDE_IMPL */
 
 /******************************************************************************
 * End of file content
@@ -123,4 +123,4 @@ PLUSHIE_CSTL_API void plushie_conio_write(
 #ifdef __cplusplus
 }
 #endif
-#endif // !PLUSHIE_CSTL_HOST_CONIO_H
+#endif /* !PLUSHIE_CSTL_HOST_CONIO_H */

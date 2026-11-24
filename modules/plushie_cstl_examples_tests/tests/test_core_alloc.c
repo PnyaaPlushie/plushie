@@ -1,6 +1,6 @@
-// Tests the allocator flag masks and the alloc/free/realloc wrappers.
-// Regression guard: the combined flag masks used to be built with bitwise-AND
-// (evaluating to 0); they must be bitwise-OR now.
+/* Tests the allocator flag masks and the alloc/free/realloc wrappers. */
+/* Regression guard: the combined flag masks used to be built with bitwise-AND */
+/* (evaluating to 0); they must be bitwise-OR now. */
 #include "tests_shared.h"
 
 #if PLUSHIE_CSTL_TESTS_PROVIDE_IMPL
@@ -43,8 +43,8 @@ void test_realloc_fallback_preserves_bytes(void)
 	TEST_ASSERT_NOT_NULL(p);
 	p[0] = 1; p[1] = 2; p[2] = 3; p[3] = 4;
 
-	// libc allocator has no realloc pfn, so this exercises the alloc+copy+free
-	// fallback in plushie_realloc.
+	/* libc allocator has no realloc pfn, so this exercises the alloc+copy+free */
+	/* fallback in plushie_realloc. */
 	unsigned char* q = (unsigned char*)plushie_realloc(a, p, 4, 8);
 	TEST_ASSERT_NOT_NULL(q);
 	TEST_ASSERT_EQUAL_UINT8(1, q[0]);

@@ -9,7 +9,7 @@
 
 #include "plushie/cstl/core/alloc.h"
 
-// Macro to force the header to provide the implementation for the functions
+/* Macro to force the header to provide the implementation for the functions */
 #ifndef PLUSHIE_CSTL_ALLOCATORS_SYSTEM_PROVIDE_IMPL
 #  define PLUSHIE_CSTL_ALLOCATORS_SYSTEM_PROVIDE_IMPL 0
 #endif
@@ -93,26 +93,26 @@ static PlushieAllocator sLocalPlushieAllocatorWin32 =
 PLUSHIE_CSTL_API PlushieAllocator* plushie_allocator_get_system(
 )
 {
-	// Get the init status of the atomic, only set to 1 if current val is 0
+	/* Get the init status of the atomic, only set to 1 if current val is 0 */
 	PlushieUInt16 prev = plushie_atomic_u16_compare_exchange(&s_plushie_heap_init, 1, 0);
 	if (prev == 0)
 	{
-		// This thread won the init atomic check
-		// TODO: We could use one new heap for zero init
-		// but then we'd have to destroy the heap too
+		/* This thread won the init atomic check */
+		/* TODO: We could use one new heap for zero init */
+		/* but then we'd have to destroy the heap too */
 		s_plushie_process_heap_handle = GetProcessHeap();
 
-		// We've finished the init process
+		/* We've finished the init process */
 		plushie_atomic_u16_exchange(&s_plushie_heap_init, 2);
 	}
 	else if (prev == 1)
 	{
-		// This thread lost the init check, while the other thread is
-		// still performing the init
+		/* This thread lost the init check, while the other thread is */
+		/* still performing the init */
 		plushie_yield_processor();
 	}
 
-	// It is possible for this to fail
+	/* It is possible for this to fail */
 	if (s_plushie_process_heap_handle == PLUSHIE_NULL
 		|| s_plushie_process_heap_handle == INVALID_HANDLE_VALUE)
 	{
@@ -162,13 +162,13 @@ PLUSHIE_CSTL_API PlushieAllocator* plushie_allocator_get_system(
 	return &sLocalPlushieAllocatorLinux;
 }
 
-#endif // PLUSHIE_TARGET_OS_ID
+#endif /* PLUSHIE_TARGET_OS_ID */
 
 /******************************************************************************
 * End of implementation
 *******************************************************************************/
-#endif // !PLUSHIE_CSTL_ALLOCATORS_SYSTEM_PROVIDE_IMPL_GUARD
-#endif // !PLUSHIE_CSTL_ALLOCATORS_SYSTEM_PROVIDE_IMPL
+#endif /* !PLUSHIE_CSTL_ALLOCATORS_SYSTEM_PROVIDE_IMPL_GUARD */
+#endif /* !PLUSHIE_CSTL_ALLOCATORS_SYSTEM_PROVIDE_IMPL */
 
 /******************************************************************************
 * End of file content
@@ -176,4 +176,4 @@ PLUSHIE_CSTL_API PlushieAllocator* plushie_allocator_get_system(
 #ifdef __cplusplus
 }
 #endif
-#endif // !PLUSHIE_CSTL_ALLOCATORS_SYSTEM_H
+#endif /* !PLUSHIE_CSTL_ALLOCATORS_SYSTEM_H */

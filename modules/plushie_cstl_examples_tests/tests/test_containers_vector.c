@@ -1,4 +1,4 @@
-// Tests the collapsed typed vector generator (init / push_back / grow / free).
+/* Tests the collapsed typed vector generator (init / push_back / grow / free). */
 #include "tests_shared.h"
 
 #if PLUSHIE_CSTL_TESTS_PROVIDE_IMPL
@@ -7,8 +7,8 @@
 #include "plushie/cstl/containers/vector.h"
 #include "plushie/cstl/allocators/libc.h"
 
-// A test-local vector type. This is always defined in this TU (the library only
-// ships PlushieVecStr), so it never collides with the linked library.
+/* A test-local vector type. This is always defined in this TU (the library only */
+/* ships PlushieVecStr), so it never collides with the linked library. */
 PlushieVectorDecl(PlushieVecInt, int, i32);
 PlushieVectorDefine(PlushieVecInt, int, i32);
 
@@ -45,7 +45,7 @@ void test_vector_reserve_is_monotonic(void)
 
 	TEST_ASSERT_EQUAL(kPlushieResultSuccess, plushie_vec_i32_reserve(&v, 32));
 	TEST_ASSERT_TRUE(v.cap >= 32);
-	// reserving fewer than current capacity is a no-op success
+	/* reserving fewer than current capacity is a no-op success */
 	TEST_ASSERT_EQUAL(kPlushieResultSuccess, plushie_vec_i32_reserve(&v, 4));
 	TEST_ASSERT_TRUE(v.cap >= 32);
 

@@ -46,7 +46,7 @@ extern "C" {
 #define PLUSHIE_SERDE_DECL_BLOB(name, count) \
   PlushieUInt08 name[count];
 
-// TODO: field/array/blob serialize X-macro helpers (schema-driven serialize).
+/* TODO: field/array/blob serialize X-macro helpers (schema-driven serialize). */
 
 /******************************************************************************
 * U32
@@ -88,4 +88,4 @@ static PLUSHIE_INLINE void plushie_serialize_to_ui32_be(
 #ifdef __cplusplus
 }
 #endif
-#endif // !PLUSHIE_CSTL_CORE_SERDE_H
+#endif /* !PLUSHIE_CSTL_CORE_SERDE_H */

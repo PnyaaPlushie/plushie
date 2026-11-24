@@ -1,6 +1,6 @@
-// Tests the PlushieResult X-macro schema and the decode lookups.
-// Regression guard: the decode functions used to fall off their non-void
-// default path without a return.
+/* Tests the PlushieResult X-macro schema and the decode lookups. */
+/* Regression guard: the decode functions used to fall off their non-void */
+/* default path without a return. */
 #include "tests_shared.h"
 
 #if PLUSHIE_CSTL_TESTS_PROVIDE_IMPL

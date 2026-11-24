@@ -1,5 +1,5 @@
-// If we're using the header only implementation, then we need to explicitly request them
-// inside this translation unit. This define is compile definition is added in cmake
+/* If we're using the header only implementation, then we need to explicitly request them */
+/* inside this translation unit. This define is compile definition is added in cmake */
 #if PLUSHIE_CSTL_EXAMPLES_PROVIDE_IMPL
 # define PLUSHIE_CSTL_ALLOCATORS_SYSTEM_PROVIDE_IMPL 1
 # define PLUSHIE_CSTL_HOST_FILEHANDLE_PROVIDE_IMPL   1
@@ -18,33 +18,33 @@
 
 int main() 
 {
-	// Output file name
+	/* Output file name */
 	const char* file_name_raw = "tga_01_from_buffer.tga";
 
-	// Forward declare resources that require cleanup
-	PlushieAllocator* alloc = plushie_allocator_get_system(); // Allocator
-	PlushieFileHandle file_handle = { 0 };                    // File handle
-	uint8_t* file_buffer = PLUSHIE_NULL;                              // Dynamic sized buffer
+	/* Forward declare resources that require cleanup */
+	PlushieAllocator* alloc = plushie_allocator_get_system(); /* Allocator */
+	PlushieFileHandle file_handle = { 0 };                    /* File handle */
+	uint8_t* file_buffer = PLUSHIE_NULL;                              /* Dynamic sized buffer */
 	PlushieStr file_name;
 	PlushieUInt32 x, y;
 
-	// Rolling return code
+	/* Rolling return code */
 	PlushieResult res = kPlushieResultSuccess;
 
 	
-	// Failable section begins ------------------------------------------------
+	/* Failable section begins ------------------------------------------------ */
 	do
 	{
 
-	// Convert the file name to be consumed by file handle library, 
-	// realistically this should never fail
+	/* Convert the file name to be consumed by file handle library, */
+	/* realistically this should never fail */
 	res = plushie_str_new_view_from_cstr(&file_name, file_name_raw, sizeof(file_name_raw));
 	if (res != kPlushieResultSuccess) { break; }
 
-	// Getting the allocator CAN fail, i.e window fails to get process heap
+	/* Getting the allocator CAN fail, i.e window fails to get process heap */
 	if (alloc == PLUSHIE_NULL) { res = kPlushieResultErrAllocOom; break; }
 
-	// Allocate enough for the image
+	/* Allocate enough for the image */
 	PlushieUSize alloc_size = plushie_tgafile_buffer_size(256, 256);
 	file_buffer = alloc->alloc(alloc, alloc_size, PLUSHIE_ALIGNOF(void*),
 		kPlushieAllocatorAllocFlagsProtectRead
@@ -54,35 +54,35 @@ int main()
 	if (file_buffer == PLUSHIE_NULL) { res = kPlushieResultErrAllocOom; break; }
 
 
-	// Since it's uncompressed image data we can write directly into 
-	// the same memory the file buffer is using
+	/* Since it's uncompressed image data we can write directly into */
+	/* the same memory the file buffer is using */
 	PlushieUInt08* img = plushie_tgafile_buffer_init(file_buffer, 256, 256);
 	if (img == PLUSHIE_NULL) { res = kPlushieResultErrUnclassified; break; }
 
 
-	// Write the image data 
-	// Pixel data is BGR left to right, top to bottom 3bpp
+	/* Write the image data */
+	/* Pixel data is BGR left to right, top to bottom 3bpp */
 	for (y = 0; y < 256; y++)
 	{
 		for (x = 0; x < 256; x++)
 		{
 			PlushieUInt32 offset = (x * 3) + (y * 256 * 3);
 			
-			// Make blue component brighter on the right 
-			// side of the image
+			/* Make blue component brighter on the right */
+			/* side of the image */
 			img[offset] = (PlushieUInt08)(x);
 
-			// Keep the green component constant
+			/* Keep the green component constant */
 			img[offset + 1] = 128;
 
-			// Make red component brightest at the top
-			// of the image
+			/* Make red component brightest at the top */
+			/* of the image */
 			img[offset + 2] = 255 - y;
 		}
 	}
 
-	// Output the file to a handle to inspect the results 
-	// Now we should output the tga file for inspection
+	/* Output the file to a handle to inspect the results */
+	/* Now we should output the tga file for inspection */
 	res = plushie_file_handle_open(&file_handle,
 		&(PlushieFileHandleCreateInfo)
 		{
@@ -94,23 +94,23 @@ int main()
 	if (res != kPlushieResultSuccess) { break; }
 
 
-	// Write the file out
+	/* Write the file out */
 	res = plushie_file_handle_write(&file_handle, file_buffer, alloc_size);
 
-	// Failable section ends --------------------------------------------------
+	/* Failable section ends -------------------------------------------------- */
 	} 
 	while (0);
 
-	// Resource cleanup
+	/* Resource cleanup */
 
-	// Deallocate
+	/* Deallocate */
 	if (file_buffer != PLUSHIE_NULL)
 	{
 		alloc->free(alloc, file_buffer);
 		file_buffer = PLUSHIE_NULL;
 	}
 
-	// File close 
+	/* File close */
 	if (file_handle.status_flags
 		& (kPlushieFileHandleStatusFlagIsOwned | kPlushieFileHandleStatusFlagIsOpen))
 	{
