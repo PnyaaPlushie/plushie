@@ -1,11 +1,12 @@
 # --- Plushie --------------------------------------------------------------------------------------------
 # Top-level CMake for scanning subdirectories that contain CMakeLists.txt
 cmake_minimum_required(VERSION 4.0.0 FATAL_ERROR)
-option(PLUSHIE_ROOT_CSTL_ONLY "Should plushie root only configure for cstl for smaller build" OFF)
-
 enable_testing()
 project(Plushie VERSION 0.1.0 LANGUAGES C)
 include(FetchContent)
+
+# Enable all the modules to build their full optional components.
+set(PLUSHIE_ENABLE_FULL_BUILD_OPTIONS ON CACHE BOOL "Enable all optional components in build")
 
 # Put every exe and DLL from every module in one folder (bin/<Config> for
 # multi-config generators). Windows has no rpath, so an exe only finds its DLLs
@@ -94,6 +95,10 @@ endif()
 #
 # For example: PlushieCStl will check for PlushieStartup as an optional package via 
 #  `find_package( Plushie::Startup QUIET )` but from this monorepo, it will build from source
+#
+# A component will be picked up by this build when it defines a cmake/PlushiePackageName.cmake file.
+# That package name file can also choose to define the cache variables which include a full 
+# build (For example enabling tests) We gate this behind PLUSHIE_ENABLE_FULL_BUILD_OPTIONS
 set(_plushie_packages "")
 
 foreach(component_dir_name modules modules_lab)

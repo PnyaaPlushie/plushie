@@ -24,15 +24,7 @@
 cmake_minimum_required(VERSION 3.19.0 FATAL_ERROR)
 set(PlushieCStlVersion 0.1.0)
 
-project(PlushieCStl VERSION ${PlushieCStlVersion} LANGUAGES CXX C)
-if(TARGET PlushieCstlGuard)
-	return()
-else()
-	add_library(PlushieCstlGuard INTERFACE)
-endif()
 
-include(CMakePackageConfigHelpers)
-include(GNUInstallDirs)
 option(PLUSHIE_CSTL_BUILD_OUTPUT_FLAVOUR_HEADER  "Include Header only flavours"              ON  )
 option(PLUSHIE_CSTL_BUILD_OUTPUT_FLAVOUR_STATIC  "Include Static library flavours"           OFF )
 option(PLUSHIE_CSTL_BUILD_OUTPUT_FLAVOUR_SHARED  "Include Shared library flavours"           OFF )
@@ -43,6 +35,10 @@ option(PLUSHIE_CSTL_BUILD_LIBC_FLAVOUR_NONE      "Don't link to libc or provide 
 
 option(PLUSHIE_CSTL_INCLUDE_INSTALL       "Include the install target for Plushie Cstl"   ON )
 option(PLUSHIE_CSTL_INSTALL_FOR_LOCAL_DEV "Generate find_package to use dev source files" OFF)
+
+project(PlushieCStl VERSION ${PlushieCStlVersion} LANGUAGES CXX C)
+include(CMakePackageConfigHelpers)
+include(GNUInstallDirs)
 
 ###############################################################################################
 # Helpers
